@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Exam } from "@/data/exams";
 import QuestionCard from "./QuestionCard";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, Send } from "lucide-react";
+import { Send } from "lucide-react";
 
 interface QuizPlayerProps {
   exam: Exam;
@@ -10,12 +10,11 @@ interface QuizPlayerProps {
 }
 
 const QuizPlayer = ({ exam, onFinish }: QuizPlayerProps) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
 
-  const question = exam.questions[currentIndex];
   const total = exam.questions.length;
-  const allAnswered = Object.keys(answers).length === total;
+  const answered = Object.keys(answers).length;
+  const allAnswered = answered === total;
 
   const selectAnswer = (questionId: string, optionId: string) => {
     setAnswers((prev) => ({ ...prev, [questionId]: optionId }));
@@ -29,44 +28,36 @@ const QuizPlayer = ({ exam, onFinish }: QuizPlayerProps) => {
       </div>
 
       {/* Progress bar */}
-      <div className="w-full h-2 rounded-full bg-secondary mb-8 overflow-hidden">
+      <div className="w-full h-2 rounded-full bg-secondary mb-2 overflow-hidden">
         <div
           className="h-full rounded-full bg-primary transition-all duration-500"
-          style={{ width: `${((currentIndex + 1) / total) * 100}%` }}
+          style={{ width: `${(answered / total) * 100}%` }}
         />
       </div>
+      <p className="text-xs text-muted-foreground mb-8">{answered} de {total} respondidas</p>
 
-      <div className="mb-2 text-sm text-muted-foreground flex justify-between">
-        <span>Questão {currentIndex + 1} de {total}</span>
-        <span className="font-medium">
-          Peso: {question.weight} · Nota máx: {question.maxScore}
-        </span>
+      <div className="space-y-6">
+        {exam.questions.map((question, idx) => (
+          <div key={question.id}>
+            <div className="mb-2 text-sm text-muted-foreground flex justify-between">
+              <span>Questão {idx + 1}</span>
+              <span className="font-medium">
+                Peso: {question.weight} · Nota máx: {question.maxScore}
+              </span>
+            </div>
+            <QuestionCard
+              question={question}
+              selectedOption={answers[question.id] || null}
+              onSelect={(optionId) => selectAnswer(question.id, optionId)}
+            />
+          </div>
+        ))}
       </div>
 
-      <QuestionCard
-        question={question}
-        selectedOption={answers[question.id] || null}
-        onSelect={(optionId) => selectAnswer(question.id, optionId)}
-      />
-
-      <div className="flex justify-between mt-8">
-        <Button
-          variant="outline"
-          onClick={() => setCurrentIndex((i) => i - 1)}
-          disabled={currentIndex === 0}
-        >
-          <ChevronLeft className="w-4 h-4 mr-1" /> Anterior
+      <div className="flex justify-end mt-8">
+        <Button size="lg" onClick={() => onFinish(answers)} disabled={!allAnswered}>
+          Finalizar <Send className="w-4 h-4 ml-2" />
         </Button>
-
-        {currentIndex < total - 1 ? (
-          <Button onClick={() => setCurrentIndex((i) => i + 1)}>
-            Próxima <ChevronRight className="w-4 h-4 ml-1" />
-          </Button>
-        ) : (
-          <Button onClick={() => onFinish(answers)} disabled={!allAnswered}>
-            Finalizar <Send className="w-4 h-4 ml-1" />
-          </Button>
-        )}
       </div>
     </div>
   );
