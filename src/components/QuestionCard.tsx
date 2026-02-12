@@ -3,40 +3,34 @@ import { cn } from "@/lib/utils";
 
 interface QuestionCardProps {
   question: Question;
-  selectedOption: string | null;
-  onSelect: (optionId: string) => void;
+  selectedOption: number | null;
+  onSelect: (value: number) => void;
 }
 
 const QuestionCard = ({ question, selectedOption, onSelect }: QuestionCardProps) => {
+  const options = Array.from({ length: question.numOptions }, (_, i) => i + 1);
+
   return (
     <div className="rounded-xl bg-card border border-border p-6 shadow-sm">
-      <h3 className="text-lg font-semibold mb-5 leading-relaxed">{question.text}</h3>
-      <div className="space-y-3">
-        {question.options.map((option, idx) => {
-          const letter = String.fromCharCode(65 + idx);
-          const isSelected = selectedOption === option.id;
+      <h3 className="text-lg font-semibold mb-1 leading-relaxed">{question.text}</h3>
+      {question.inverted && (
+        <p className="text-xs text-muted-foreground mb-4 italic">Pontuação invertida</p>
+      )}
+      <div className="flex gap-3 flex-wrap">
+        {options.map((value) => {
+          const isSelected = selectedOption === value;
           return (
             <button
-              key={option.id}
-              onClick={() => onSelect(option.id)}
+              key={value}
+              onClick={() => onSelect(value)}
               className={cn(
-                "w-full text-left px-4 py-3.5 rounded-lg border-2 transition-all duration-200 flex items-center gap-3 group",
+                "w-12 h-12 rounded-lg border-2 transition-all duration-200 flex items-center justify-center text-sm font-bold",
                 isSelected
-                  ? "border-primary bg-primary/10 shadow-sm"
-                  : "border-border hover:border-primary/40 hover:bg-secondary/60"
+                  ? "border-primary bg-primary text-primary-foreground shadow-sm"
+                  : "border-border hover:border-primary/40 hover:bg-secondary/60 text-muted-foreground"
               )}
             >
-              <span
-                className={cn(
-                  "w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0 transition-colors",
-                  isSelected
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-secondary text-muted-foreground group-hover:bg-primary/20"
-                )}
-              >
-                {letter}
-              </span>
-              <span className="font-medium text-sm">{option.text}</span>
+              {value}
             </button>
           );
         })}

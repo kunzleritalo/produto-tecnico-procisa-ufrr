@@ -8,21 +8,21 @@ import { BookOpen, ArrowRight } from "lucide-react";
 type Phase = "welcome" | "exam1" | "exam2" | "results";
 
 interface ExamAnswers {
-  exam1: Record<string, string>;
-  exam2: Record<string, string>;
+  exam1: Record<string, number>;
+  exam2: Record<string, number>;
 }
 
 const Index = () => {
   const [phase, setPhase] = useState<Phase>("welcome");
   const [answers, setAnswers] = useState<ExamAnswers>({ exam1: {}, exam2: {} });
 
-  const handleFinishExam1 = (a: Record<string, string>) => {
+  const handleFinishExam1 = (a: Record<string, number>) => {
     setAnswers((prev) => ({ ...prev, exam1: a }));
     setPhase("exam2");
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const handleFinishExam2 = (a: Record<string, string>) => {
+  const handleFinishExam2 = (a: Record<string, number>) => {
     setAnswers((prev) => ({ ...prev, exam2: a }));
     setPhase("results");
     window.scrollTo({ top: 0, behavior: "smooth" });
