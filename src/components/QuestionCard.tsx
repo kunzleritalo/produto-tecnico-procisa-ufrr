@@ -6,10 +6,11 @@ interface QuestionCardProps {
   selectedOption: number | null;
   onSelect: (value: number) => void;
   optionLabels?: string[];
+  startFrom?: number;
 }
 
-const QuestionCard = ({ question, selectedOption, onSelect, optionLabels }: QuestionCardProps) => {
-  const options = Array.from({ length: question.numOptions }, (_, i) => i);
+const QuestionCard = ({ question, selectedOption, onSelect, optionLabels, startFrom = 0 }: QuestionCardProps) => {
+  const options = Array.from({ length: question.numOptions }, (_, i) => i + startFrom);
 
   return (
     <div className="rounded-xl bg-card border border-border p-6 shadow-sm">
