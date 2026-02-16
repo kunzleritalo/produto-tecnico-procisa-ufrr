@@ -50,6 +50,7 @@ const QuizPlayer = ({ exam, onFinish }: QuizPlayerProps) => {
               question={question}
               selectedOption={answers[question.id] ?? null}
               onSelect={(value) => selectAnswer(question.id, value)}
+              optionLabels={exam.optionLabels}
             />
           </div>
         ))}
