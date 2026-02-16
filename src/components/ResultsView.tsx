@@ -31,6 +31,15 @@ const ResultsView = ({ results, onRestart }: ResultsViewProps) => {
             return sum + (selected != null ? getScore(q, selected) : 0);
           }, 0);
 
+          const getStressLevel = (score: number) => {
+            if (score <= 18) return { label: "Estresse Baixo", color: "text-green-600" };
+            if (score <= 24) return { label: "Estresse Normal", color: "text-yellow-600" };
+            if (score <= 35) return { label: "Estresse Alto", color: "text-orange-600" };
+            return { label: "Estresse Muito Alto", color: "text-red-600" };
+          };
+
+          const stressLevel = exam.id === "prova1" ? getStressLevel(totalScore) : null;
+
           return (
             <div key={exam.id} className="rounded-xl bg-card border border-border p-6 shadow-sm">
               <div className="flex items-center justify-between mb-5">
@@ -40,6 +49,11 @@ const ResultsView = ({ results, onRestart }: ResultsViewProps) => {
                   <p className="text-3xl font-bold text-primary">
                     {totalScore}<span className="text-base text-muted-foreground font-normal">/{maxPossible}</span>
                   </p>
+                  {stressLevel && (
+                    <p className={`text-sm font-semibold mt-1 ${stressLevel.color}`}>
+                      {stressLevel.label}
+                    </p>
+                  )}
                 </div>
               </div>
 
