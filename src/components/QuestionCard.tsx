@@ -8,7 +8,7 @@ interface QuestionCardProps {
 }
 
 const QuestionCard = ({ question, selectedOption, onSelect }: QuestionCardProps) => {
-  const options = Array.from({ length: question.numOptions }, (_, i) => i + 1);
+  const options = Array.from({ length: question.numOptions }, (_, i) => i);
 
   return (
     <div className="rounded-xl bg-card border border-border p-6 shadow-sm">

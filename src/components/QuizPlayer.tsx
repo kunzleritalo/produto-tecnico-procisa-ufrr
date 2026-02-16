@@ -24,7 +24,12 @@ const QuizPlayer = ({ exam, onFinish }: QuizPlayerProps) => {
     <div className="w-full max-w-2xl mx-auto">
       <div className="mb-6">
         <h2 className="text-2xl font-bold mb-1">{exam.title}</h2>
-        <p className="text-muted-foreground text-sm">{exam.description}</p>
+        <p className="text-muted-foreground text-sm mb-3">{exam.description}</p>
+        {exam.instructions && (
+          <div className="rounded-lg border border-border bg-secondary/40 p-4 text-sm text-foreground whitespace-pre-line">
+            {exam.instructions}
+          </div>
+        )}
       </div>
 
       <div className="w-full h-2 rounded-full bg-secondary mb-2 overflow-hidden">

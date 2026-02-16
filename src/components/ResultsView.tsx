@@ -25,7 +25,7 @@ const ResultsView = ({ results, onRestart }: ResultsViewProps) => {
 
       <div className="grid gap-8">
         {results.map(({ exam, answers }) => {
-          const maxPossible = exam.questions.reduce((sum, q) => sum + q.numOptions, 0);
+          const maxPossible = exam.questions.reduce((sum, q) => sum + (q.numOptions - 1), 0);
           const totalScore = exam.questions.reduce((sum, q) => {
             const selected = answers[q.id];
             return sum + (selected != null ? getScore(q, selected) : 0);
