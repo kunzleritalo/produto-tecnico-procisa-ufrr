@@ -25,7 +25,9 @@ const ResultsView = ({ results, onRestart }: ResultsViewProps) => {
 
       <div className="grid gap-8">
         {results.map(({ exam, answers }) => {
-          const maxPossible = exam.questions.reduce((sum, q) => sum + (q.numOptions - 1), 0);
+          const startFrom = exam.startFrom ?? 0;
+          const maxPerItem = (exam.questions[0]?.numOptions ?? 1) - 1 + startFrom;
+          const maxPossible = exam.questions.length * maxPerItem;
           const totalScore = exam.questions.reduce((sum, q) => {
             const selected = answers[q.id];
             return sum + (selected != null ? getScore(q, selected) : 0);
@@ -38,20 +40,45 @@ const ResultsView = ({ results, onRestart }: ResultsViewProps) => {
             return { label: "Estresse Muito Alto", color: "text-red-600" };
           };
 
+          const getEETStressLevel = (avg: number) => {
+            if (avg < 2.5) return { label: "Estresse Baixo ou Leve", color: "text-green-600" };
+            if (avg === 2.5) return { label: "Estresse Médio/Considerável", color: "text-yellow-600" };
+            return { label: "Estresse Alto", color: "text-red-600" };
+          };
+
           const stressLevel = exam.id === "prova1" ? getStressLevel(totalScore) : null;
+          const eetAvg = exam.id === "prova2" ? parseFloat((totalScore / 23).toFixed(2)) : null;
+          const eetStressLevel = eetAvg != null ? getEETStressLevel(eetAvg) : null;
 
           return (
             <div key={exam.id} className="rounded-xl bg-card border border-border p-6 shadow-sm">
               <div className="flex items-center justify-between mb-5">
                 <h3 className="text-xl font-bold">{exam.title}</h3>
                 <div className="text-right">
-                  <p className="text-xs text-muted-foreground uppercase tracking-wide">Pontuação Total</p>
-                  <p className="text-3xl font-bold text-primary">
-                    {totalScore}<span className="text-base text-muted-foreground font-normal">/{maxPossible}</span>
-                  </p>
+                  {exam.id === "prova1" && (
+                    <>
+                      <p className="text-xs text-muted-foreground uppercase tracking-wide">Pontuação Total</p>
+                      <p className="text-3xl font-bold text-primary">
+                        {totalScore}<span className="text-base text-muted-foreground font-normal">/{maxPossible}</span>
+                      </p>
+                    </>
+                  )}
+                  {exam.id === "prova2" && eetAvg != null && (
+                    <>
+                      <p className="text-xs text-muted-foreground uppercase tracking-wide">Média Final</p>
+                      <p className="text-3xl font-bold text-primary">
+                        {eetAvg.toFixed(2)}
+                      </p>
+                    </>
+                  )}
                   {stressLevel && (
                     <p className={`text-sm font-semibold mt-1 ${stressLevel.color}`}>
                       {stressLevel.label}
+                    </p>
+                  )}
+                  {eetStressLevel && (
+                    <p className={`text-sm font-semibold mt-1 ${eetStressLevel.color}`}>
+                      {eetStressLevel.label}
                     </p>
                   )}
                 </div>
