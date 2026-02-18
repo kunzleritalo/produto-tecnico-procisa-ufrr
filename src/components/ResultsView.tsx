@@ -1,6 +1,7 @@
 import { Exam, getScore } from "@/data/exams";
-import { Brain, RotateCcw, AlertTriangle } from "lucide-react";
+import { Brain, Home, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import procisaLogo from "@/assets/procisa-logo.png";
 
 interface ExamResult {
   exam: Exam;
@@ -25,6 +26,7 @@ const ResultsView = ({ results, mode, onRestart }: ResultsViewProps) => {
   return (
     <div className="w-full max-w-3xl mx-auto">
       <div className="text-center mb-10">
+        <img src={procisaLogo} alt="Logo PROCISA" className="h-14 mx-auto mb-4" />
         <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
           <Brain className="w-8 h-8 text-primary" />
         </div>
@@ -99,7 +101,7 @@ const ResultsView = ({ results, mode, onRestart }: ResultsViewProps) => {
 
       <div className="text-center mt-10">
         <Button onClick={onRestart} size="lg">
-          <RotateCcw className="w-4 h-4 mr-2" /> Refazer
+          <Home className="w-4 h-4 mr-2" /> Retornar à tela inicial
         </Button>
       </div>
     </div>
