@@ -57,6 +57,19 @@ const QuizPlayer = ({ exam, onFinish }: QuizPlayerProps) => {
         ))}
       </div>
 
+      {exam.id === "prova1" && (
+        <div className="rounded-lg border border-border bg-secondary/30 p-4 mt-6 text-xs text-muted-foreground space-y-2">
+          <p>COHEN, S., KAMARCK, T., & MERMELSTEIN, R. (1983). A global measure of perceived stress. <em>Journal of Health and Social Behavior</em>, 24, 385-396.</p>
+          <p>SIQUEIRA REIS, R., FERREIRA HINO, A. A., & ROMÉLIO RODRIGUEZ AÑEZ, C. (2010). Perceived stress scale: Reliability and validity study in Brazil. <em>Journal of health psychology</em>, 15(1), 107-114.</p>
+        </div>
+      )}
+
+      {exam.id === "prova2" && (
+        <div className="rounded-lg border border-border bg-secondary/30 p-4 mt-6 text-xs text-muted-foreground">
+          <p>PASCHOAL, T.; TAMAYO, A. Validação da escala de estresse no trabalho. <em>Estudos de Psicologia (Natal)</em>, v. 9, n. 1, p. 45-52, 2004.</p>
+        </div>
+      )}
+
       <div className="flex justify-end mt-8">
         <Button size="lg" onClick={() => onFinish(answers)} disabled={!allAnswered}>
           Finalizar <Send className="w-4 h-4 ml-2" />
