@@ -87,6 +87,9 @@ const Index = () => {
               <p className="text-muted-foreground text-lg mb-3 max-w-md mx-auto">
                 Você poderá realizar as escalas individualmente ou ambas em sequência. Ao final, serão apresentados os escores obtidos.
               </p>
+              <p className="text-muted-foreground text-sm mb-3 max-w-lg mx-auto">
+                A Escala de Estresse no Trabalho (EET), desenvolvida por Paschoal e Tamayo (2004), busca melhor compreender o construto de "Estresse ocupacional".
+              </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-lg mx-auto mb-6">
                 <div className="rounded-xl border border-border bg-card p-5 text-left">
@@ -97,6 +100,7 @@ const Index = () => {
                   <p className="font-semibold text-sm mb-1">PSS-10 – Escala de Estresse Percebido</p>
                   <p className="text-xs text-muted-foreground">Busca conhecer informações acerca do construto de "Estresse autopercebido"</p>
                   <p className="text-xs text-muted-foreground mt-1">{exams[0].questions.length} itens</p>
+                  <p className="text-[10px] text-muted-foreground/70 mt-2 leading-tight">Cohen, S., Kamarck, T., & Mermelstein, R. (1983); Siqueira Reis, R., Ferreira Hino, A. A., & Romélio Rodriguez Añez, C. (2010).</p>
                 </div>
                 <div className="rounded-xl border border-border bg-card p-5 text-left">
                   <div className="flex items-center gap-2 mb-2">
@@ -106,6 +110,7 @@ const Index = () => {
                   <p className="font-semibold text-sm mb-1">EET – Escala de Estresse no Trabalho</p>
                   <p className="text-xs text-muted-foreground">Busca melhor compreender o construto de "Estresse ocupacional"</p>
                   <p className="text-xs text-muted-foreground mt-1">{exams[1].questions.length} itens</p>
+                  <p className="text-[10px] text-muted-foreground/70 mt-2 leading-tight">PASCHOAL, T.; TAMAYO, A. (2004)</p>
                 </div>
               </div>
 
