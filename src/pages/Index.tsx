@@ -76,8 +76,8 @@ const Index = () => {
       </header>
 
       <main className="px-4 py-10">
-        {phase === "welcome" && (
-          <>
+        {phase === "welcome" &&
+        <>
             <div className="max-w-2xl mx-auto text-center">
               <img src={procisaLogo} alt="Logo PROCISA" className="h-16 mx-auto mb-6" />
               <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-primary/10 mb-6">
@@ -87,9 +87,9 @@ const Index = () => {
               <p className="text-muted-foreground text-lg mb-3 max-w-md mx-auto">
                 Você poderá realizar as escalas individualmente ou ambas em sequência. Ao final, serão apresentados os escores obtidos.
               </p>
-              <p className="text-muted-foreground text-sm mb-3 max-w-lg mx-auto">
-                A Escala de Estresse no Trabalho (EET), desenvolvida por Paschoal e Tamayo (2004), busca melhor compreender o construto de "Estresse ocupacional".
-              </p>
+              
+
+
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-lg mx-auto mb-6">
                 <div className="rounded-xl border border-border bg-card p-5 text-left">
@@ -129,32 +129,32 @@ const Index = () => {
 
             <AboutSection />
           </>
-        )}
+        }
 
-        {phase === "exam1" && (
-          <div className="max-w-2xl mx-auto">
+        {phase === "exam1" &&
+        <div className="max-w-2xl mx-auto">
             <img src={procisaLogo} alt="Logo PROCISA" className="h-12 mx-auto mb-6" />
             <QuizPlayer exam={exams[0]} onFinish={handleFinishExam1} />
           </div>
-        )}
+        }
 
-        {phase === "exam2" && (
-          <div className="max-w-2xl mx-auto">
+        {phase === "exam2" &&
+        <div className="max-w-2xl mx-auto">
             <img src={procisaLogo} alt="Logo PROCISA" className="h-12 mx-auto mb-6" />
             <QuizPlayer exam={exams[1]} onFinish={handleFinishExam2} />
           </div>
-        )}
+        }
 
-        {phase === "results" && (
-          <ResultsView
-            results={getResults()}
-            mode={mode}
-            onRestart={restart}
-          />
-        )}
+        {phase === "results" &&
+        <ResultsView
+          results={getResults()}
+          mode={mode}
+          onRestart={restart} />
+
+        }
       </main>
-    </div>
-  );
+    </div>);
+
 };
 
 export default Index;
