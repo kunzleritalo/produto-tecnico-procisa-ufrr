@@ -98,9 +98,9 @@ const Index = () => {
                     <p className="text-xs text-muted-foreground uppercase tracking-wider">Escala 01</p>
                   </div>
                   <p className="font-semibold text-sm mb-1">PSS-10 – Escala de Estresse Percebido</p>
-                  <p className="text-xs text-muted-foreground">Busca conhecer informações acerca do construto de "Estresse autopercebido"</p>
+                  <p className="text-muted-foreground text-left text-xs">Busca conhecer informações acerca do construto de "Estresse autopercebido"</p>
                   <p className="text-xs text-muted-foreground mt-1">{exams[0].questions.length} itens</p>
-                  <p className="text-[10px] text-muted-foreground/70 mt-2 leading-tight">Cohen, S., Kamarck, T., & Mermelstein, R. (1983); Siqueira Reis, R., Ferreira Hino, A. A., & Romélio Rodriguez Añez, C. (2010).</p>
+                  <p className="text-[10px] text-muted-foreground/70 mt-2 leading-tight text-left">Cohen, S., Kamarck, T., & Mermelstein, R. (1983); Siqueira Reis, R., Ferreira Hino, A. A., & Romélio Rodriguez Añez, C. (2010).</p>
                 </div>
                 <div className="rounded-xl border border-border bg-card p-5 text-left">
                   <div className="flex items-center gap-2 mb-2">

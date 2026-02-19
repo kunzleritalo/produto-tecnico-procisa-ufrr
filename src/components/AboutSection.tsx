@@ -9,7 +9,7 @@ const AboutSection = () => {
 
       <div className="rounded-xl border border-border bg-card p-6 mb-8 text-center">
         <img src={procisaLogo} alt="Logo PROCISA" className="h-20 mx-auto mb-4" />
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-muted-foreground text-center">
           Esta ferramenta digital foi criada pelo Mestre em Ciências da Saúde{" "}
           <strong>Ítalo Ribeiro Kunzler Machado Marques</strong> sob orientação da{" "}
           <strong>Professora Doutora Edilane Nunes Régis Bezerra</strong> dentro do
@@ -29,13 +29,13 @@ const AboutSection = () => {
             <h3 className="font-bold text-sm text-center">Profa. Dra. Edilane Nunes Régis Bezerra</h3>
             <p className="text-xs text-muted-foreground">Orientadora</p>
           </div>
-          <p className="text-xs text-muted-foreground leading-relaxed">
+          <p className="text-xs text-muted-foreground leading-relaxed text-justify">
             Edilane Nunes Régis Bezerra é psicóloga, professora e pesquisadora com ampla experiência na área da Psicologia Social e da Saúde. Doutora em Psicologia Social pela Universidade Federal da Paraíba (2017) e mestre em Psicologia pela Universidade Federal do Rio Grande do Norte (2008), atua como professora adjunta da Universidade Federal de Roraima (UFRR), onde integra o corpo docente do curso de Psicologia e do Programa de Pós-graduação em Ciências da Saúde (PROCISA).
           </p>
-          <p className="text-xs text-muted-foreground leading-relaxed mt-2">
+          <p className="text-xs text-muted-foreground leading-relaxed mt-2 text-justify">
             Na UFRR, coordena o Grupo de Pesquisa em Saúde Mental e Atenção Psicossocial e Primária, desenvolvendo estudos voltados para promoção da saúde, vulnerabilidades e saúde mental. Suas linhas de pesquisa abrangem temas como redes de atenção psicossocial (RAPS), clínica ampliada, reforma psiquiátrica, saúde mental na atenção básica, inserção e prática do psicólogo em políticas públicas de saúde e programas de intervenção comunitária.
           </p>
-          <p className="text-xs text-muted-foreground leading-relaxed mt-2">
+          <p className="text-xs text-muted-foreground leading-relaxed mt-2 text-justify">
             Além de tudo, Edilane contribui diretamente para a formação de novos profissionais e pesquisadores, consolidando sua atuação como referência na interface entre psicologia, saúde mental e políticas públicas. Sua trajetória reflete um compromisso com a construção de práticas de cuidado ampliadas e integradas, voltadas para a promoção da saúde e o fortalecimento das redes de atenção psicossocial.
           </p>
         </div>
@@ -51,16 +51,16 @@ const AboutSection = () => {
             <h3 className="font-bold text-sm text-center">Me. Ítalo Ribeiro Kunzler Machado Marques</h3>
             <p className="text-xs text-muted-foreground">Autor</p>
           </div>
-          <p className="text-xs text-muted-foreground leading-relaxed">
+          <p className="text-xs text-muted-foreground leading-relaxed text-justify">
             Ítalo Ribeiro Kunzler Machado Marques é psicólogo e pesquisador com atuação prática em saúde mental e psicologia organizacional. Graduado em Psicologia pela Universidade Federal de Roraima (2021), onde também desenvolveu seu mestrado em Ciências da Saúde (2025), Ítalo complementou sua trajetória com especializações em Psicologia Organizacional (2023) e Gestão de Pessoas (2023) além de Saúde Mental (2022).
           </p>
-          <p className="text-xs text-muted-foreground leading-relaxed mt-2">
+          <p className="text-xs text-muted-foreground leading-relaxed mt-2 text-justify">
             Atualmente, exerce atividades profissionais em saúde mental e gestão de pessoas, com experiência em projetos voltados à população em situação de rua e pesquisas sobre narratividade e produção de subjetividade. Sua atuação combina prática clínica, pesquisa acadêmica e vivência institucional, refletindo um compromisso em promover o bem-estar psicológico em diferentes contextos sociais e organizacionais.
           </p>
-          <p className="text-xs text-muted-foreground leading-relaxed mt-2">
+          <p className="text-xs text-muted-foreground leading-relaxed mt-2 text-justify">
             Além de sua prática como psicólogo, Ítalo também realiza atividades docentes, contribuindo para a formação de novos profissionais e compartilhando sua experiência em temas relacionados à saúde mental, psicologia organizacional e ciências da saúde. 
           </p>
-          <p className="text-xs text-muted-foreground leading-relaxed mt-2">
+          <p className="text-xs text-muted-foreground leading-relaxed mt-2 text-justify">
             Sua trajetória revela um profissional que transita entre ensino, pesquisa e prática, sempre com o objetivo de ampliar o alcance da psicologia e fortalecer sua contribuição para a sociedade.
           </p>
         </div>
