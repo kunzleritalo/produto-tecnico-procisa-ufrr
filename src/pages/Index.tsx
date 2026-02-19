@@ -110,7 +110,7 @@ const Index = () => {
                   <p className="font-semibold text-sm mb-1">EET – Escala de Estresse no Trabalho</p>
                   <p className="text-xs text-muted-foreground">Busca melhor compreender o construto de "Estresse ocupacional"</p>
                   <p className="text-xs text-muted-foreground mt-1">{exams[1].questions.length} itens</p>
-                  <p className="text-[10px] text-muted-foreground/70 mt-2 leading-tight">PASCHOAL, T.; TAMAYO, A. (2004)</p>
+                  <p className="text-[10px] text-muted-foreground/70 mt-2 leading-tight">PASCHOAL, T.; TAMAYO, A. (2004).</p>
                 </div>
               </div>
 
