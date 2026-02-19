@@ -27,9 +27,9 @@ const ResultsView = ({ results, mode, onRestart }: ResultsViewProps) => {
     <div className="w-full max-w-3xl mx-auto">
       <div className="text-center mb-10">
         <img src={procisaLogo} alt="Logo PROCISA" className="h-14 mx-auto mb-4" />
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
-          <Brain className="w-8 h-8 text-primary" />
-        </div>
+        
+
+
         <h2 className="text-3xl font-bold mb-2">Resultado Final</h2>
         <p className="text-muted-foreground">Escores obtidos nas escalas aplicadas</p>
       </div>
@@ -63,32 +63,32 @@ const ResultsView = ({ results, mode, onRestart }: ResultsViewProps) => {
               <div className="flex items-center justify-between mb-5">
                 <h3 className="text-xl font-bold">{exam.title}</h3>
                 <div className="text-right">
-                  {exam.id === "prova1" && (
-                    <>
+                  {exam.id === "prova1" &&
+                  <>
                       <p className="text-xs text-muted-foreground uppercase tracking-wide">Escore Total</p>
                       <p className="text-3xl font-bold text-primary">{totalScore}</p>
                     </>
-                  )}
-                  {exam.id === "prova2" && eetAvg != null && (
-                    <>
+                  }
+                  {exam.id === "prova2" && eetAvg != null &&
+                  <>
                       <p className="text-xs text-muted-foreground uppercase tracking-wide">Escore Médio</p>
                       <p className="text-3xl font-bold text-primary">{eetAvg.toFixed(2)}</p>
                     </>
-                  )}
-                  {stressLevel && (
-                    <p className={`text-sm font-semibold mt-1 ${stressLevel.color}`}>
+                  }
+                  {stressLevel &&
+                  <p className={`text-sm font-semibold mt-1 ${stressLevel.color}`}>
                       {stressLevel.label}
                     </p>
-                  )}
-                  {eetStressLevel && (
-                    <p className={`text-sm font-semibold mt-1 ${eetStressLevel.color}`}>
+                  }
+                  {eetStressLevel &&
+                  <p className={`text-sm font-semibold mt-1 ${eetStressLevel.color}`}>
                       {eetStressLevel.label}
                     </p>
-                  )}
+                  }
                 </div>
               </div>
-            </div>
-          );
+            </div>);
+
         })}
       </div>
 
@@ -104,8 +104,8 @@ const ResultsView = ({ results, mode, onRestart }: ResultsViewProps) => {
           <Home className="w-4 h-4 mr-2" /> Retornar à tela inicial
         </Button>
       </div>
-    </div>
-  );
+    </div>);
+
 };
 
 export default ResultsView;
