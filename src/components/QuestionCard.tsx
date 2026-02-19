@@ -18,7 +18,7 @@ const QuestionCard = ({ question, selectedOption, onSelect, optionLabels, startF
       {question.inverted &&
       <p className="text-xs text-muted-foreground mb-4 italic">​</p>
       }
-      <div className="flex gap-3 flex-wrap">
+      <div className="grid grid-cols-5 sm:flex sm:flex-wrap gap-2 sm:gap-3">
         {options.map((value) => {
           const isSelected = selectedOption === value;
           return (
