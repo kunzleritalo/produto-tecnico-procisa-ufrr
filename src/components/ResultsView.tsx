@@ -24,7 +24,15 @@ const ResultsView = ({ results, mode, onRestart }: ResultsViewProps) => {
   const disclaimer = mode === "both" ? disclaimerBoth : mode === "pss10" ? disclaimerPSS : disclaimerEET;
 
   const buildEmailBody = () => {
-    let body = "RESULTADO - Escalas de Estresse (PROCISA)\n\n";
+    const now = new Date();
+    const dataHora = now.toLocaleDateString("pt-BR", {
+      day: "2-digit", month: "2-digit", year: "numeric",
+    }) + " às " + now.toLocaleTimeString("pt-BR", {
+      hour: "2-digit", minute: "2-digit",
+    });
+
+    let body = "RESULTADO - Escalas de Estresse (PROCISA)\n";
+    body += `Data e hora da realização: ${dataHora}\n\n`;
 
     results.forEach(({ exam, answers }) => {
       const totalScore = exam.questions.reduce((sum, q) => {
@@ -58,7 +66,26 @@ const ResultsView = ({ results, mode, onRestart }: ResultsViewProps) => {
     });
 
     body += "---\n\n";
-    body += disclaimer.replace(/\n/g, "\n");
+    body += disclaimer;
+    body += "\n\n---\n\n";
+
+    body += "REFERÊNCIAS\n\n";
+    if (mode === "both" || mode === "pss10") {
+      body += "PSS-10:\n";
+      body += "Cohen, S., Kamarck, T., & Mermelstein, R. (1983). A global measure of perceived stress. Journal of Health and Social Behavior, 24(4), 385-396.\n";
+      body += "Siqueira Reis, R., Ferreira Hino, A. A., & Romélio Rodriguez Añez, C. (2010). Perceived Stress Scale: Reliability and validity study in Brazil. Journal of Health Psychology, 15(1), 107-114.\n\n";
+    }
+    if (mode === "both" || mode === "eet") {
+      body += "EET:\n";
+      body += "Paschoal, T., & Tamayo, A. (2004). Validação da Escala de Estresse no Trabalho. Estudos de Psicologia, 9(1), 45-52.\n\n";
+    }
+
+    body += "---\n\n";
+    body += "AVISO SOBRE PROTEÇÃO DE DADOS\n\n";
+    body += "Os dados apresentados neste relatório foram produzidos e coletados em conformidade com a Lei Geral de Proteção de Dados Pessoais (Lei nº 13.709/2018 – LGPD). ";
+    body += "As informações aqui contidas são de caráter pessoal e confidencial, destinando-se exclusivamente ao titular dos dados ou a profissional por ele autorizado. ";
+    body += "O compartilhamento, a reprodução ou a divulgação deste conteúdo a terceiros sem o consentimento do titular é de inteira responsabilidade de quem o fizer. ";
+    body += "Recomenda-se o armazenamento seguro deste documento e o descarte adequado quando não mais necessário.";
 
     return body;
   };
