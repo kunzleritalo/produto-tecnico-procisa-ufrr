@@ -95,7 +95,7 @@ const Index = () => {
                 <div className="rounded-xl border border-border bg-card p-5 text-left">
                   <div className="flex items-center gap-2 mb-2">
                     <HeartPulse className="w-5 h-5 text-primary" />
-                    <p className="text-xs text-muted-foreground uppercase tracking-wider">Escala 1</p>
+                    <p className="text-xs text-muted-foreground uppercase tracking-wider">Escala 01</p>
                   </div>
                   <p className="font-semibold text-sm mb-1">PSS-10 – Escala de Estresse Percebido</p>
                   <p className="text-xs text-muted-foreground">Busca conhecer informações acerca do construto de "Estresse autopercebido"</p>
