@@ -24,8 +24,8 @@ const AboutSection = () => {
             <img
               src={edilanePhoto}
               alt="Profa. Dra. Edilane Nunes Régis Bezerra"
-              className="w-28 h-28 rounded-full object-cover border-2 border-primary/30 mb-3"
-            />
+              className="w-28 h-28 rounded-full object-cover border-2 border-primary/30 mb-3" />
+
             <h3 className="font-bold text-sm text-center">Profa. Dra. Edilane Nunes Régis Bezerra</h3>
             <p className="text-xs text-muted-foreground">Orientadora</p>
           </div>
@@ -46,13 +46,13 @@ const AboutSection = () => {
             <img
               src={italoPhoto}
               alt="Me. Ítalo Ribeiro Kunzler Machado Marques"
-              className="w-28 h-28 rounded-full object-cover border-2 border-primary/30 mb-3"
-            />
+              className="w-28 h-28 rounded-full object-cover border-2 border-primary/30 mb-3" />
+
             <h3 className="font-bold text-sm text-center">Me. Ítalo Ribeiro Kunzler Machado Marques</h3>
             <p className="text-xs text-muted-foreground">Autor</p>
           </div>
           <p className="text-xs text-muted-foreground leading-relaxed">
-            Ítalo Ribeiro Kunzler Machado Marques é psicólogo e pesquisador com atuação prática em saúde mental e psicologia organizacional. Graduado em Psicologia pela Universidade Federal de Roraima (2021), onde também desenvolveu seu mestrado em Ciências da Saúde (2025), Ítalo complementou sua trajetória com especializações em Psicologia Organizacional (2023) e Gestão de Pessoas além de Saúde Mental (2023).
+            Ítalo Ribeiro Kunzler Machado Marques é psicólogo e pesquisador com atuação prática em saúde mental e psicologia organizacional. Graduado em Psicologia pela Universidade Federal de Roraima (2021), onde também desenvolveu seu mestrado em Ciências da Saúde (2025), Ítalo complementou sua trajetória com especializações em Psicologia Organizacional (2023) e Gestão de Pessoas (2023) além de Saúde Mental (2022).
           </p>
           <p className="text-xs text-muted-foreground leading-relaxed mt-2">
             Atualmente, exerce atividades profissionais em saúde mental e gestão de pessoas, com experiência em projetos voltados à população em situação de rua e pesquisas sobre narratividade e produção de subjetividade. Sua atuação combina prática clínica, pesquisa acadêmica e vivência institucional, refletindo um compromisso em promover o bem-estar psicológico em diferentes contextos sociais e organizacionais.
@@ -65,8 +65,8 @@ const AboutSection = () => {
           </p>
         </div>
       </div>
-    </section>
-  );
+    </section>);
+
 };
 
 export default AboutSection;
