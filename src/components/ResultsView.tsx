@@ -1,5 +1,5 @@
 import { Exam, getScore } from "@/data/exams";
-import { Brain, Home, AlertTriangle } from "lucide-react";
+import { Brain, Home, AlertTriangle, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import procisaLogo from "@/assets/procisa-logo.png";
 
@@ -22,6 +22,52 @@ const ResultsView = ({ results, mode, onRestart }: ResultsViewProps) => {
   const disclaimerEET = `Esta escala é uma ferramenta útil para medir possíveis INDICATIVOS de Estresse No Trabalho, deste modo, NÃO DEVE SER UTILIZADA como ferramenta para o diagnóstico. Cabe lembrar que tal instrumento não é de uso privativo.\n\nCaso você perceba que o estresse está sendo prejudicial e atrapalhando seu bem-estar procure ajuda.`;
 
   const disclaimer = mode === "both" ? disclaimerBoth : mode === "pss10" ? disclaimerPSS : disclaimerEET;
+
+  const buildEmailBody = () => {
+    let body = "RESULTADO - Escalas de Estresse (PROCISA)\n\n";
+
+    results.forEach(({ exam, answers }) => {
+      const totalScore = exam.questions.reduce((sum, q) => {
+        const selected = answers[q.id];
+        return sum + (selected != null ? getScore(q, selected) : 0);
+      }, 0);
+
+      body += `--- ${exam.title} ---\n`;
+
+      if (exam.id === "prova1") {
+        const getStressLevel = (score: number) => {
+          if (score <= 18) return "Estresse Baixo";
+          if (score <= 24) return "Estresse Normal";
+          if (score <= 35) return "Estresse Alto";
+          return "Estresse Muito Alto";
+        };
+        body += `Escore Total: ${totalScore}\n`;
+        body += `Classificação: ${getStressLevel(totalScore)}\n\n`;
+      }
+
+      if (exam.id === "prova2") {
+        const avg = parseFloat((totalScore / 23).toFixed(2));
+        const getEETLevel = (a: number) => {
+          if (a < 2.5) return "Estresse Baixo ou Leve";
+          if (a === 2.5) return "Estresse Médio/Considerável";
+          return "Estresse Alto";
+        };
+        body += `Escore Médio: ${avg.toFixed(2)}\n`;
+        body += `Classificação: ${getEETLevel(avg)}\n\n`;
+      }
+    });
+
+    body += "---\n\n";
+    body += disclaimer.replace(/\n/g, "\n");
+
+    return body;
+  };
+
+  const handleSendEmail = () => {
+    const subject = encodeURIComponent("Resultado - Escalas de Estresse (PROCISA)");
+    const body = encodeURIComponent(buildEmailBody());
+    window.open(`mailto:?subject=${subject}&body=${body}`, "_self");
+  };
 
   return (
     <div className="w-full max-w-3xl mx-auto">
@@ -99,7 +145,10 @@ const ResultsView = ({ results, mode, onRestart }: ResultsViewProps) => {
         </div>
       </div>
 
-      <div className="text-center mt-10">
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-10">
+        <Button onClick={handleSendEmail} size="lg" variant="outline">
+          <Mail className="w-4 h-4 mr-2" /> Enviar por e-mail
+        </Button>
         <Button onClick={onRestart} size="lg">
           <Home className="w-4 h-4 mr-2" /> Retornar à tela inicial
         </Button>
