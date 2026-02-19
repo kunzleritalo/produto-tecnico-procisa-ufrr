@@ -73,7 +73,7 @@ export const exams: Exam[] = [
   {
     id: "prova1",
     title: "PSS-10 – Escala de Estresse Percebido",
-    description: "10 itens · Alternativas de 0 a 4 · Itens 4, 5, 7 e 8 com pontuação invertida",
+    description: "10 itens · Alternativas de 0 a 4.",
     instructions: "As questões nesta escala perguntam a respeito dos seus sentimentos e pensamentos durante os últimos 30 dias (último mês). Em cada questão, indique a frequência com que você se sentiu ou pensou a respeito da situação vivenciada, seguindo a escala abaixo:\n\n0 – Nunca | 1 – Quase Nunca | 2 – Às Vezes | 3 – Pouco Frequente | 4 – Muito Frequente",
     optionLabels: ["Nunca", "Quase Nunca", "Às Vezes", "Pouco Frequente", "Muito Frequente"],
     questions: generateQuestions("p1", 10, 5, [4, 5, 7, 8], pss10Texts),
