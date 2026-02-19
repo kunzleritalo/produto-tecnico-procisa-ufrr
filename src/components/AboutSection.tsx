@@ -26,7 +26,7 @@ const AboutSection = () => {
               alt="Profa. Dra. Edilane Nunes Régis Bezerra"
               className="w-28 h-28 rounded-full object-cover border-2 border-primary/30 mb-3" />
 
-            <h3 className="font-bold text-sm text-center">Profa. Dra. Edilane Nunes Régis Bezerra</h3>
+            <h3 className="font-bold text-sm text-center">Prof.ª Dr.ª Edilane Nunes Régis Bezerra</h3>
             <p className="text-xs text-muted-foreground">Orientadora</p>
           </div>
           <p className="text-xs text-muted-foreground leading-relaxed text-justify">
