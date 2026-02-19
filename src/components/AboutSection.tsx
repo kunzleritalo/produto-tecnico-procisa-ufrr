@@ -58,7 +58,7 @@ const AboutSection = () => {
             Atualmente, exerce atividades profissionais em saúde mental e gestão de pessoas, com experiência em projetos voltados à população em situação de rua e pesquisas sobre narratividade e produção de subjetividade. Sua atuação combina prática clínica, pesquisa acadêmica e vivência institucional, refletindo um compromisso em promover o bem-estar psicológico em diferentes contextos sociais e organizacionais.
           </p>
           <p className="text-xs text-muted-foreground leading-relaxed mt-2">
-            Além de sua prática como psicólogo, Ítalo também realiza atividades docentes, contribuindo para a formação de novos profissionais e compartilhando sua experiência em temas relacionados à saúde mental, psicologia organizacional e ciências da saúde. Essa dimensão acadêmica reforça seu papel como educador e pesquisador, ampliando o impacto de sua atuação para além da clínica e da pesquisa, e consolidando sua presença como referência na área.
+            Além de sua prática como psicólogo, Ítalo também realiza atividades docentes, contribuindo para a formação de novos profissionais e compartilhando sua experiência em temas relacionados à saúde mental, psicologia organizacional e ciências da saúde. 
           </p>
           <p className="text-xs text-muted-foreground leading-relaxed mt-2">
             Sua trajetória revela um profissional que transita entre ensino, pesquisa e prática, sempre com o objetivo de ampliar o alcance da psicologia e fortalecer sua contribuição para a sociedade.
