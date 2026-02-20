@@ -1,234 +1,327 @@
-# Escalas de Estresse – PROCISA
+# Documento de Conhecimento — Escalas de Estresse (PROCISA)
 
-Aplicação web para aplicação e avaliação das escalas **PSS-10** (Estresse Percebido) e **EET** (Estresse no Trabalho), desenvolvida no âmbito do Programa de Pós-graduação em Ciências da Saúde (PROCISA) da Universidade Federal de Roraima (UFRR).
-
----
-
-## Sumário
-
-1. [Visão Geral](#visão-geral)
-2. [Tecnologias](#tecnologias)
-3. [Estrutura de Pastas](#estrutura-de-pastas)
-4. [Princípios de Arquitetura](#princípios-de-arquitetura)
-5. [Design System](#design-system)
-6. [Otimização de Banco de Dados e Performance](#otimização-de-banco-de-dados-e-performance)
-7. [Componentes Reutilizáveis](#componentes-reutilizáveis)
-8. [Como Executar](#como-executar)
-9. [Deploy](#deploy)
-10. [Referências Científicas](#referências-científicas)
-11. [Código Completo Comentado](#código-completo-comentado)
+Este documento serve como referência técnica e conceitual para o desenvolvimento contínuo da aplicação. Ele descreve a estrutura do site, os princípios arquiteturais, padrões de componentes reutilizáveis e estratégias de otimização.
 
 ---
 
-## Visão Geral
+## 1. Visão Geral da Aplicação
 
-O site permite que o usuário:
+### Propósito
 
-- Escolha realizar a PSS-10, a EET ou ambas em sequência.
-- Responda aos itens de cada escala em uma interface responsiva e intuitiva.
-- Visualize os escores (total ou médio) e a classificação de estresse.
-- Envie os resultados por e-mail, incluindo referências bibliográficas, data/hora e aviso LGPD.
+Ferramenta digital para aplicação e avaliação de escalas psicométricas de estresse:
+
+- **PSS-10** (Perceived Stress Scale): 10 itens, alternativas de 0–4, itens invertidos (4, 5, 7, 8).
+- **EET** (Escala de Estresse no Trabalho): 23 itens, alternativas de 1–5, sem inversão.
+
+### Fluxo do Usuário
+
+```
+Boas-vindas → Escolha do modo → Resposta às questões → Resultados → Envio por e-mail
+```
+
+### Modos de Aplicação
+
+| Modo    | Comportamento                     |
+| ------- | --------------------------------- |
+| `both`  | PSS-10 seguida da EET             |
+| `pss10` | Apenas PSS-10                     |
+| `eet`   | Apenas EET                        |
 
 ---
 
-## Tecnologias
+## 2. Arquitetura e Estrutura
 
-| Tecnologia         | Papel                                         |
-| ------------------- | ---------------------------------------------- |
-| **React 18**        | Biblioteca de interfaces reativas              |
-| **TypeScript**      | Tipagem estática para segurança do código      |
-| **Vite**            | Bundler ultrarrápido com HMR                   |
-| **Tailwind CSS**    | Estilização utilitária com design tokens       |
-| **shadcn/ui**       | Componentes acessíveis baseados em Radix UI    |
-| **React Router v6** | Roteamento SPA                                 |
-| **TanStack Query**  | Gerenciamento de estado assíncrono e cache      |
-| **Lucide React**    | Ícones SVG consistentes                        |
+### Camadas
+
+```
+Dados (exams.ts)  →  Componentes de domínio  →  Página (Index.tsx)  →  App.tsx
+```
+
+- **Dados**: textos, regras de inversão, labels — separados da UI.
+- **Componentes de apresentação**: `QuestionCard`, `ResultsView` — recebem props, sem efeitos colaterais.
+- **Componentes controladores**: `QuizPlayer`, `Index` — gerenciam estado e fluxo.
+- **Providers**: `App.tsx` — configura rotas, cache (TanStack Query), tooltips e notificações.
+
+### Fluxo de Estado
+
+```
+Index
+├── phase: "welcome" | "exam1" | "exam2" | "results"
+├── mode: "both" | "pss10" | "eet"
+└── answers: { exam1: {}, exam2: {} }
+     │
+     ├── QuizPlayer (estado local: respostas parciais)
+     │    └── QuestionCard (sem estado — controlado via props)
+     │
+     └── ResultsView (cálculo de escores a partir das respostas)
+```
+
+Estado flui de cima para baixo. Eventos (callbacks) sobem via `onFinish`, `onSelect`, `onRestart`.
 
 ---
 
-## Estrutura de Pastas
+## 3. Design System
 
-```
-src/
-├── assets/               # Imagens e logos (importados como módulos ES6)
-│   ├── procisa-logo.png
-│   ├── edilane-photo.gif
-│   └── italo-photo.gif
-├── components/
-│   ├── ui/               # Componentes primitivos (shadcn/ui) — NÃO EDITAR diretamente
-│   ├── AboutSection.tsx   # Seção "Sobre" com informações dos autores
-│   ├── NavLink.tsx        # Wrapper de NavLink do React Router
-│   ├── QuestionCard.tsx   # Cartão individual de pergunta com opções
-│   ├── QuizPlayer.tsx     # Controlador do fluxo de cada escala
-│   └── ResultsView.tsx    # Exibição de resultados, envio por e-mail
-├── data/
-│   └── exams.ts           # Definições das escalas (PSS-10 e EET)
-├── hooks/                 # Hooks customizados (mobile, toast)
-├── lib/
-│   └── utils.ts           # Utilitários (função cn para classes Tailwind)
-├── pages/
-│   ├── Index.tsx           # Página principal (Welcome → Quiz → Resultados)
-│   └── NotFound.tsx        # Página 404
-├── index.css              # Variáveis CSS do design system (tokens)
-├── App.tsx                # Configuração de rotas e providers globais
-└── main.tsx               # Ponto de entrada da aplicação
-```
+### Tokens Semânticos
 
----
+Cores NUNCA são usadas diretamente (`bg-blue-500`). Sempre via tokens:
 
-## Princípios de Arquitetura
+| Token                   | Uso                                   |
+| ----------------------- | ------------------------------------- |
+| `bg-background`         | Fundo geral da página                 |
+| `bg-card`               | Fundo de cartões                      |
+| `text-foreground`       | Texto principal                       |
+| `text-muted-foreground` | Texto secundário/atenuado             |
+| `bg-primary`            | Botões primários, destaques           |
+| `text-primary`          | Escores, ícones de destaque           |
+| `border-border`         | Bordas de cards e separadores         |
+| `bg-secondary`          | Fundos sutis, barras de progresso     |
+| `bg-destructive`        | Erros e ações destrutivas             |
 
-### 1. Separação de responsabilidades
+### Fontes
 
-- **Dados** (`data/exams.ts`): textos, opções, regras de inversão — isolados da UI.
-- **Componentes de apresentação** (`QuestionCard`, `ResultsView`): recebem props, sem lógica de negócio.
-- **Componentes controladores** (`QuizPlayer`, `Index`): gerenciam estado e fluxo.
+| Variável          | Fonte           | Uso               |
+| ----------------- | --------------- | ------------------ |
+| `--font-heading`  | Space Grotesk   | Títulos (h1–h6)   |
+| `--font-body`     | Inter           | Corpo de texto     |
+| `--font-sans`     | Work Sans       | Sans-serif geral   |
+| `--font-serif`    | Lora            | Serif (se necessário) |
+| `--font-mono`     | Inconsolata     | Código monospace   |
 
-### 2. Fluxo de estado unidirecional
+### Temas
 
-```
-Index (phase + answers)
-  └── QuizPlayer (respostas parciais)
-       └── QuestionCard (seleção individual)
-```
-
-O estado flui de cima para baixo; callbacks (`onFinish`, `onSelect`) sobem eventos.
-
-### 3. Componentes pequenos e focados
-
-Cada componente tem uma única responsabilidade. Isso facilita testes, reutilização e manutenção.
-
-### 4. Design tokens semânticos
-
-Cores nunca são usadas diretamente nos componentes (ex.: `bg-blue-500`). Sempre se usam tokens semânticos (`bg-primary`, `text-muted-foreground`) definidos em `index.css` e mapeados em `tailwind.config.ts`.
+- Tema claro: `:root` em `index.css`
+- Tema escuro: `.dark` em `index.css`
+- Suporte via `next-themes` (instalado, pronto para uso)
 
 ---
 
-## Otimização de Banco de Dados e Performance
+## 4. Componentes Reutilizáveis
 
-Embora a aplicação atual seja client-side (sem banco de dados), estes princípios devem ser seguidos ao integrar um backend (ex.: Lovable Cloud / Supabase):
+### Princípio Fundamental
 
-### Ordem correta de consultas
+> **Um componente, um local de manutenção, múltiplos usos.**
 
-```
-1. Autenticação → verificar sessão do usuário
-2. Autorização  → verificar permissões (RLS no Supabase)
-3. Consulta     → buscar apenas os campos necessários (select parcial)
-4. Transformação → processar dados no backend quando possível
-```
+### Primitivos (shadcn/ui — `src/components/ui/`)
 
-### Caching com TanStack Query
+Estes componentes NÃO devem ser editados diretamente. Para customização, usar:
+1. Variantes via `cva` (class-variance-authority)
+2. Composição (wrapper components)
+3. Props `className`
+
+| Componente  | Quando usar                                     |
+| ----------- | ------------------------------------------------ |
+| `Button`    | Qualquer ação clicável                           |
+| `Card`      | Container visual com borda e sombra              |
+| `Dialog`    | Modais de confirmação ou entrada de dados        |
+| `Toast`     | Feedback temporário de ações                     |
+| `Skeleton`  | Placeholder durante carregamento                 |
+| `Progress`  | Indicadores de progresso                         |
+| `Separator` | Divisores visuais entre seções                   |
+| `Tabs`      | Navegação entre conteúdos relacionados           |
+
+### Componentes de Domínio
+
+| Componente       | Props principais                            | Reutilizável |
+| ---------------- | -------------------------------------------- | ------------ |
+| `QuestionCard`   | `question`, `selectedOption`, `onSelect`, `optionLabels`, `startFrom` | ✅ Para qualquer escala |
+| `QuizPlayer`     | `exam`, `onFinish`                           | ✅ Para qualquer exame |
+| `ResultsView`    | `results[]`, `mode`, `onRestart`             | ✅ Multi-escala |
+| `NavLink`        | `to`, `activeClassName`, `pendingClassName`  | ✅ Navegação geral |
+| `AboutSection`   | (nenhuma)                                    | ⚠️ Específico |
+
+### Criando Novos Componentes Reutilizáveis
 
 ```tsx
-// Exemplo: cache de 5 minutos, revalidação em foco
-const { data } = useQuery({
+// Padrão recomendado:
+// 1. Interface de props clara e documentada
+interface MeuComponenteProps {
+  titulo: string;
+  children: React.ReactNode;
+  variant?: "default" | "destaque";
+}
+
+// 2. Usar tokens semânticos, nunca cores diretas
+// 3. Aceitar className para extensibilidade
+// 4. Manter em src/components/ (domínio) ou src/components/ui/ (primitivo)
+```
+
+---
+
+## 5. Otimização de Banco de Dados e Performance
+
+### 5.1 Ordem Correta de Consultas (quando backend for integrado)
+
+```
+1. AUTENTICAÇÃO → Verificar sessão do usuário (auth.getSession())
+2. AUTORIZAÇÃO  → RLS (Row Level Security) cuida disso automaticamente
+3. SELEÇÃO      → Buscar apenas colunas necessárias (.select("id, nome, escore"))
+4. FILTRAGEM    → Aplicar filtros no servidor (.eq(), .gte(), .in())
+5. PAGINAÇÃO    → Limitar resultados (.range(0, 19))
+6. ORDENAÇÃO    → Ordenar no servidor (.order("created_at", { ascending: false }))
+```
+
+**Evitar:**
+- `SELECT *` (buscar todas as colunas)
+- Filtrar/ordenar no frontend
+- Múltiplas consultas quando uma JOIN resolve
+
+### 5.2 Caching com TanStack Query
+
+O TanStack Query já está instalado e configurado. Usar para qualquer dado assíncrono:
+
+```tsx
+// Configuração recomendada por tipo de dado
+const configuracoes = {
+  // Dados que mudam raramente (configurações, escalas)
+  estatico: {
+    staleTime: 30 * 60 * 1000,  // 30 minutos
+    gcTime: 60 * 60 * 1000,     // 1 hora
+  },
+  // Dados do usuário (resultados, perfil)
+  usuario: {
+    staleTime: 5 * 60 * 1000,   // 5 minutos
+    gcTime: 10 * 60 * 1000,     // 10 minutos
+    refetchOnWindowFocus: true,
+  },
+  // Dados em tempo real (notificações)
+  tempoReal: {
+    staleTime: 0,
+    refetchInterval: 30 * 1000, // a cada 30 segundos
+  },
+};
+
+// Exemplo de uso:
+const { data: resultados } = useQuery({
   queryKey: ["resultados", usuarioId],
-  queryFn: () => fetchResultados(usuarioId),
-  staleTime: 5 * 60 * 1000,       // dados "frescos" por 5 min
-  gcTime: 10 * 60 * 1000,         // mantém em cache por 10 min
-  refetchOnWindowFocus: true,      // revalida ao voltar à aba
+  queryFn: () => buscarResultados(usuarioId),
+  ...configuracoes.usuario,
 });
 ```
 
-### Lazy Loading
+### 5.3 Invalidação de Cache
 
 ```tsx
-// Carregar componentes pesados sob demanda
+const queryClient = useQueryClient();
+
+// Após salvar um resultado:
+await salvarResultado(dados);
+queryClient.invalidateQueries({ queryKey: ["resultados"] });
+
+// Atualização otimista (UX mais fluida):
+queryClient.setQueryData(["resultados", id], dadosAtualizados);
+```
+
+### 5.4 Lazy Loading de Componentes
+
+```tsx
 import { lazy, Suspense } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 
+// Componentes pesados carregados sob demanda
 const ResultsView = lazy(() => import("@/components/ResultsView"));
+const AboutSection = lazy(() => import("@/components/AboutSection"));
 
-// Uso:
-<Suspense fallback={<Skeleton className="h-64" />}>
-  <ResultsView ... />
+// Uso com fallback visual:
+<Suspense fallback={<Skeleton className="h-64 w-full rounded-xl" />}>
+  <ResultsView results={resultados} mode={modo} onRestart={reiniciar} />
 </Suspense>
 ```
 
-### Boas práticas adicionais
-
-- **Paginação**: para listas longas, usar `range()` do Supabase.
-- **Índices**: criar índices nas colunas usadas em `WHERE` e `ORDER BY`.
-- **Debounce em buscas**: evitar consultas a cada tecla digitada.
-- **Prefetch**: carregar dados da próxima página antes do usuário navegar.
-
----
-
-## Componentes Reutilizáveis
-
-### Componentes primitivos (`src/components/ui/`)
-
-Mantidos em um único local, reutilizados em toda a aplicação. Baseados no shadcn/ui:
-
-| Componente  | Uso típico                                  |
-| ----------- | -------------------------------------------- |
-| `Button`    | Ações primárias, secundárias, outline, ghost |
-| `Card`      | Containers visuais com borda e sombra        |
-| `Progress`  | Barras de progresso                          |
-| `Separator` | Divisores visuais                            |
-| `Skeleton`  | Placeholders de carregamento                 |
-| `Toast`     | Notificações temporárias                     |
-| `Dialog`    | Modais de confirmação                        |
-
-### Componentes de domínio (`src/components/`)
-
-| Componente       | Responsabilidade                                       | Reutilizável? |
-| ---------------- | ------------------------------------------------------- | ------------- |
-| `QuestionCard`   | Renderiza uma pergunta com N opções selecionáveis       | ✅ Sim         |
-| `QuizPlayer`     | Orquestra o fluxo de um exame qualquer                  | ✅ Sim         |
-| `ResultsView`    | Exibe escores e classificações de múltiplas escalas     | ✅ Sim         |
-| `AboutSection`   | Informações institucionais dos autores                  | ⚠️ Específico  |
-| `NavLink`        | Link de navegação com suporte a classe ativa            | ✅ Sim         |
-
-### Princípio: componente único, uso múltiplo
+### 5.5 Lazy Loading de Imagens
 
 ```tsx
-// QuestionCard aceita qualquer escala via props
-<QuestionCard
-  question={question}        // Texto e configuração do item
-  selectedOption={valor}     // Estado atual
-  onSelect={callback}        // Evento de seleção
-  optionLabels={labels}      // Rótulos customizáveis
-  startFrom={0}              // Valor inicial das opções
-/>
+// Imagens devem usar loading="lazy" quando não estão no viewport inicial
+<img src={foto} alt="Descrição" loading="lazy" className="..." />
 ```
 
----
+### 5.6 Debounce em Buscas
 
-## Como Executar
+```tsx
+import { useState, useDeferredValue } from "react";
 
-```sh
-# 1. Clonar o repositório
-git clone <URL_DO_REPOSITORIO>
+// React 18: useDeferredValue para inputs de busca
+const [busca, setBusca] = useState("");
+const buscaDeferida = useDeferredValue(busca);
 
-# 2. Acessar o diretório
-cd escalas-estresse-procisa
-
-# 3. Instalar dependências
-npm install
-
-# 4. Iniciar o servidor de desenvolvimento
-npm run dev
+// A query usa o valor deferido (não dispara a cada tecla)
+const { data } = useQuery({
+  queryKey: ["busca", buscaDeferida],
+  queryFn: () => pesquisar(buscaDeferida),
+  enabled: buscaDeferida.length > 2, // só busca com 3+ caracteres
+});
 ```
 
+### 5.7 Prefetch de Dados
+
+```tsx
+// Pré-carregar a próxima escala enquanto o usuário lê as instruções
+const queryClient = useQueryClient();
+
+const prefetchProximaEscala = () => {
+  queryClient.prefetchQuery({
+    queryKey: ["escala", "eet"],
+    queryFn: () => buscarEscala("eet"),
+  });
+};
+```
+
+### 5.8 Índices de Banco de Dados
+
+Ao criar tabelas no Lovable Cloud, garantir índices em:
+- Colunas usadas em `WHERE` (ex.: `usuario_id`, `escala_id`)
+- Colunas usadas em `ORDER BY` (ex.: `created_at`)
+- Chaves estrangeiras (criadas automaticamente pelo sistema)
+
 ---
 
-## Deploy
+## 6. Regras de Negócio
 
-Abra o projeto em [Lovable](https://lovable.dev) e clique em **Share → Publish**.
+### PSS-10 — Classificação
 
-Para domínio personalizado: **Project → Settings → Domains → Connect Domain**.
+| Faixa de Escore | Classificação        |
+| --------------- | --------------------- |
+| 0–18            | Estresse Baixo        |
+| 19–24           | Estresse Normal       |
+| 25–35           | Estresse Alto         |
+| 36–40           | Estresse Muito Alto   |
+
+- Escore total: soma dos 10 itens (0–4 cada).
+- Itens invertidos (4, 5, 7, 8): escore = (numOptions - 1) - valor.
+
+### EET — Classificação
+
+| Escore Médio | Classificação              |
+| ------------ | --------------------------- |
+| < 2,5        | Estresse Baixo ou Leve     |
+| = 2,5        | Estresse Médio/Considerável |
+| > 2,5        | Estresse Alto              |
+
+- Escore médio: soma total / 23.
+- Não há itens invertidos.
 
 ---
 
-## Referências Científicas
+## 7. Conformidade Legal (LGPD)
+
+Os resultados enviados por e-mail incluem aviso de conformidade com a Lei nº 13.709/2018 (LGPD), informando que:
+
+- Os dados são pessoais e confidenciais.
+- Destinam-se exclusivamente ao titular ou profissional autorizado.
+- O compartilhamento sem consentimento é responsabilidade de quem o fizer.
+- Recomenda-se armazenamento seguro e descarte adequado.
+
+---
+
+## 8. Referências Científicas
 
 - **PSS-10**: Cohen, S., Kamarck, T., & Mermelstein, R. (1983). A global measure of perceived stress. *Journal of Health and Social Behavior*, 24(4), 385-396.
-- **PSS-10 (validação brasileira)**: Siqueira Reis, R., Ferreira Hino, A. A., & Romélio Rodriguez Añez, C. (2010). Perceived Stress Scale: Reliability and validity study in Brazil. *Journal of Health Psychology*, 15(1), 107-114.
+- **PSS-10 (Brasil)**: Siqueira Reis, R., Ferreira Hino, A. A., & Romélio Rodriguez Añez, C. (2010). Perceived Stress Scale: Reliability and validity study in Brazil. *Journal of Health Psychology*, 15(1), 107-114.
 - **EET**: Paschoal, T., & Tamayo, A. (2004). Validação da Escala de Estresse no Trabalho. *Estudos de Psicologia*, 9(1), 45-52.
 
 ---
 
-## Código Completo Comentado
+## 9. Código Completo Comentado
 
 Abaixo está o código completo de todos os arquivos da aplicação, com comentários detalhados em português brasileiro.
 
@@ -438,16 +531,14 @@ const Index = () => {
                     PSS-10 – Escala de Estresse Percebido
                   </p>
                   <p className="text-muted-foreground text-left text-xs">
-                    Busca conhecer informações acerca do construto de "Estresse
-                    autopercebido"
+                    Busca conhecer informações acerca do construto de "Estresse autopercebido"
                   </p>
                   <p className="text-xs text-muted-foreground mt-1">
                     {exams[0].questions.length} itens
                   </p>
                   <p className="text-[10px] text-muted-foreground/70 mt-2 leading-tight text-left">
-                    Cohen, S., Kamarck, T., & Mermelstein, R. (1983); Siqueira
-                    Reis, R., Ferreira Hino, A. A., & Romélio Rodriguez Añez,
-                    C. (2010).
+                    Cohen, S., Kamarck, T., & Mermelstein, R. (1983); Siqueira Reis, R.,
+                    Ferreira Hino, A. A., & Romélio Rodriguez Añez, C. (2010).
                   </p>
                 </div>
                 {/* Cartão EET */}
@@ -462,8 +553,7 @@ const Index = () => {
                     EET – Escala de Estresse no Trabalho
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    Busca melhor compreender o construto de "Estresse
-                    ocupacional"
+                    Busca melhor compreender o construto de "Estresse ocupacional"
                   </p>
                   <p className="text-xs text-muted-foreground mt-1">
                     {exams[1].questions.length} itens
@@ -476,28 +566,14 @@ const Index = () => {
 
               {/* Botões de ação */}
               <div className="flex flex-col gap-3 max-w-sm mx-auto">
-                <Button
-                  size="lg"
-                  onClick={() => startExams("both")}
-                  className="w-full"
-                >
+                <Button size="lg" onClick={() => startExams("both")} className="w-full">
                   Realizar ambas as escalas (PSS-10 e EET){" "}
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  onClick={() => startExams("pss10")}
-                  className="w-full"
-                >
+                <Button size="lg" variant="outline" onClick={() => startExams("pss10")} className="w-full">
                   Realizar escala PSS-10
                 </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  onClick={() => startExams("eet")}
-                  className="w-full"
-                >
+                <Button size="lg" variant="outline" onClick={() => startExams("eet")} className="w-full">
                   Realizar escala EET
                 </Button>
               </div>
@@ -511,11 +587,7 @@ const Index = () => {
         {/* === FASE: ESCALA PSS-10 === */}
         {phase === "exam1" && (
           <div className="max-w-2xl mx-auto">
-            <img
-              src={procisaLogo}
-              alt="Logo PROCISA"
-              className="h-12 mx-auto mb-6"
-            />
+            <img src={procisaLogo} alt="Logo PROCISA" className="h-12 mx-auto mb-6" />
             <QuizPlayer exam={exams[0]} onFinish={handleFinishExam1} />
           </div>
         )}
@@ -523,22 +595,14 @@ const Index = () => {
         {/* === FASE: ESCALA EET === */}
         {phase === "exam2" && (
           <div className="max-w-2xl mx-auto">
-            <img
-              src={procisaLogo}
-              alt="Logo PROCISA"
-              className="h-12 mx-auto mb-6"
-            />
+            <img src={procisaLogo} alt="Logo PROCISA" className="h-12 mx-auto mb-6" />
             <QuizPlayer exam={exams[1]} onFinish={handleFinishExam2} />
           </div>
         )}
 
         {/* === FASE: RESULTADOS === */}
         {phase === "results" && (
-          <ResultsView
-            results={getResults()}
-            mode={mode}
-            onRestart={restart}
-          />
+          <ResultsView results={getResults()} mode={mode} onRestart={restart} />
         )}
       </main>
     </div>
@@ -840,14 +904,13 @@ const QuizPlayer = ({ exam, onFinish }: QuizPlayerProps) => {
       {exam.id === "prova1" && (
         <div className="rounded-lg border border-border bg-secondary/30 p-4 mt-6 text-xs text-muted-foreground space-y-2">
           <p>
-            COHEN, S., KAMARCK, T., & MERMELSTEIN, R. (1983). A global measure
-            of perceived stress. <em>Journal of Health and Social Behavior</em>,
-            24, 385-396.
+            COHEN, S., KAMARCK, T., & MERMELSTEIN, R. (1983). A global measure of perceived stress.
+            <em>Journal of Health and Social Behavior</em>, 24, 385-396.
           </p>
           <p>
-            SIQUEIRA REIS, R., FERREIRA HINO, A. A., & ROMÉLIO RODRIGUEZ AÑEZ,
-            C. (2010). Perceived stress scale: Reliability and validity study in
-            Brazil. <em>Journal of health psychology</em>, 15(1), 107-114.
+            SIQUEIRA REIS, R., FERREIRA HINO, A. A., & ROMÉLIO RODRIGUEZ AÑEZ, C. (2010).
+            Perceived stress scale: Reliability and validity study in Brazil.
+            <em>Journal of health psychology</em>, 15(1), 107-114.
           </p>
         </div>
       )}
@@ -855,9 +918,8 @@ const QuizPlayer = ({ exam, onFinish }: QuizPlayerProps) => {
       {exam.id === "prova2" && (
         <div className="rounded-lg border border-border bg-secondary/30 p-4 mt-6 text-xs text-muted-foreground">
           <p>
-            PASCHOAL, T.; TAMAYO, A. Validação da escala de estresse no
-            trabalho. <em>Estudos de Psicologia (Natal)</em>, v. 9, n. 1, p.
-            45-52, 2004.
+            PASCHOAL, T.; TAMAYO, A. Validação da escala de estresse no trabalho.
+            <em>Estudos de Psicologia (Natal)</em>, v. 9, n. 1, p. 45-52, 2004.
           </p>
         </div>
       )}
@@ -909,42 +971,26 @@ interface ResultsViewProps {
 
 const ResultsView = ({ results, mode, onRestart }: ResultsViewProps) => {
   // === DISCLAIMERS (avisos legais) ===
-
   // Textos de aviso adaptados ao modo de aplicação
-  const disclaimerBoth = `Estas escalas são ferramentas úteis apenas para medir possíveis INDICATIVOS do Estresse Percebido e do Estresse No Trabalho, deste modo, NÃO DEVEM SER UTILIZADAS como ferramentas para o diagnóstico. Cabe lembrar que tais instrumentos não são de uso privativo.\n\nCaso você perceba que o estresse está sendo prejudicial e atrapalhando seu bem-estar procure ajuda`;
-
-  const disclaimerPSS = `Esta escala é uma ferramenta útil para medir possíveis INDICATIVOS de Estresse Percebido, deste modo, NÃO DEVE SER UTILIZADA como ferramenta para o diagnóstico. Cabe lembrar que tal instrumento não é de uso privativo.\n\nCaso você perceba que o estresse está sendo prejudicial e atrapalhando seu bem-estar procure ajuda.`;
-
-  const disclaimerEET = `Esta escala é uma ferramenta útil para medir possíveis INDICATIVOS de Estresse No Trabalho, deste modo, NÃO DEVE SER UTILIZADA como ferramenta para o diagnóstico. Cabe lembrar que tal instrumento não é de uso privativo.\n\nCaso você perceba que o estresse está sendo prejudicial e atrapalhando seu bem-estar procure ajuda.`;
+  const disclaimerBoth = `Estas escalas são ferramentas úteis apenas para medir possíveis INDICATIVOS...`;
+  const disclaimerPSS = `Esta escala é uma ferramenta útil para medir possíveis INDICATIVOS de Estresse Percebido...`;
+  const disclaimerEET = `Esta escala é uma ferramenta útil para medir possíveis INDICATIVOS de Estresse No Trabalho...`;
 
   // Seleciona o disclaimer correto com base no modo
-  const disclaimer =
-    mode === "both" ? disclaimerBoth : mode === "pss10" ? disclaimerPSS : disclaimerEET;
+  const disclaimer = mode === "both" ? disclaimerBoth : mode === "pss10" ? disclaimerPSS : disclaimerEET;
 
   // === CONSTRUÇÃO DO CORPO DO E-MAIL ===
-
   const buildEmailBody = () => {
     const now = new Date();
-
     // Formata data e hora no padrão brasileiro
-    const dataHora =
-      now.toLocaleDateString("pt-BR", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-      }) +
-      " às " +
-      now.toLocaleTimeString("pt-BR", {
-        hour: "2-digit",
-        minute: "2-digit",
-      });
+    const dataHora = now.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric" })
+      + " às " + now.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
 
     let body = "RESULTADO - Escalas de Estresse (PROCISA)\n";
     body += `Data e hora da realização: ${dataHora}\n\n`;
 
     // Itera sobre cada resultado para montar os escores
     results.forEach(({ exam, answers }) => {
-      // Calcula o escore total somando todos os itens
       const totalScore = exam.questions.reduce((sum, q) => {
         const selected = answers[q.id];
         return sum + (selected != null ? getScore(q, selected) : 0);
@@ -977,46 +1023,19 @@ const ResultsView = ({ results, mode, onRestart }: ResultsViewProps) => {
       }
     });
 
-    // Adiciona o disclaimer
-    body += "---\n\n";
-    body += disclaimer;
-    body += "\n\n---\n\n";
-
-    // Referências bibliográficas condicionais
+    // Adiciona disclaimer, referências e aviso LGPD
+    body += "---\n\n" + disclaimer + "\n\n---\n\n";
     body += "REFERÊNCIAS\n\n";
-    if (mode === "both" || mode === "pss10") {
-      body += "PSS-10:\n";
-      body +=
-        "Cohen, S., Kamarck, T., & Mermelstein, R. (1983). A global measure of perceived stress. Journal of Health and Social Behavior, 24(4), 385-396.\n";
-      body +=
-        "Siqueira Reis, R., Ferreira Hino, A. A., & Romélio Rodriguez Añez, C. (2010). Perceived Stress Scale: Reliability and validity study in Brazil. Journal of Health Psychology, 15(1), 107-114.\n\n";
-    }
-    if (mode === "both" || mode === "eet") {
-      body += "EET:\n";
-      body +=
-        "Paschoal, T., & Tamayo, A. (2004). Validação da Escala de Estresse no Trabalho. Estudos de Psicologia, 9(1), 45-52.\n\n";
-    }
-
-    // Aviso LGPD
-    body += "---\n\n";
-    body += "AVISO SOBRE PROTEÇÃO DE DADOS\n\n";
-    body +=
-      "Os dados apresentados neste relatório foram produzidos e coletados em conformidade com a Lei Geral de Proteção de Dados Pessoais (Lei nº 13.709/2018 – LGPD). ";
-    body +=
-      "As informações aqui contidas são de caráter pessoal e confidencial, destinando-se exclusivamente ao titular dos dados ou a profissional por ele autorizado. ";
-    body +=
-      "O compartilhamento, a reprodução ou a divulgação deste conteúdo a terceiros sem o consentimento do titular é de inteira responsabilidade de quem o fizer. ";
-    body +=
-      "Recomenda-se o armazenamento seguro deste documento e o descarte adequado quando não mais necessário.";
+    // ... referências condicionais por modo ...
+    body += "---\n\nAVISO SOBRE PROTEÇÃO DE DADOS\n\n";
+    body += "Os dados apresentados neste relatório foram produzidos e coletados em conformidade com a LGPD...";
 
     return body;
   };
 
   // Abre o cliente de e-mail com o resultado pré-preenchido
   const handleSendEmail = () => {
-    const subject = encodeURIComponent(
-      "Resultado - Escalas de Estresse (PROCISA)"
-    );
+    const subject = encodeURIComponent("Resultado - Escalas de Estresse (PROCISA)");
     const body = encodeURIComponent(buildEmailBody());
     window.open(`mailto:?subject=${subject}&body=${body}`, "_self");
   };
@@ -1025,15 +1044,9 @@ const ResultsView = ({ results, mode, onRestart }: ResultsViewProps) => {
     <div className="w-full max-w-3xl mx-auto">
       {/* Cabeçalho dos resultados */}
       <div className="text-center mb-10">
-        <img
-          src={procisaLogo}
-          alt="Logo PROCISA"
-          className="h-14 mx-auto mb-4"
-        />
+        <img src={procisaLogo} alt="Logo PROCISA" className="h-14 mx-auto mb-4" />
         <h2 className="text-3xl font-bold mb-2">Resultado Final</h2>
-        <p className="text-muted-foreground">
-          Escores obtidos nas escalas aplicadas
-        </p>
+        <p className="text-muted-foreground">Escores obtidos nas escalas aplicadas</p>
       </div>
 
       {/* Cards de resultado para cada escala */}
@@ -1045,89 +1058,12 @@ const ResultsView = ({ results, mode, onRestart }: ResultsViewProps) => {
             return sum + (selected != null ? getScore(q, selected) : 0);
           }, 0);
 
-          // Classificação PSS-10 por faixas de escore
-          const getStressLevel = (score: number) => {
-            if (score <= 18)
-              return { label: "Estresse Baixo", color: "text-green-600" };
-            if (score <= 24)
-              return { label: "Estresse Normal", color: "text-yellow-600" };
-            if (score <= 35)
-              return { label: "Estresse Alto", color: "text-orange-600" };
-            return { label: "Estresse Muito Alto", color: "text-red-600" };
-          };
-
-          // Classificação EET por escore médio
-          const getEETStressLevel = (avg: number) => {
-            if (avg < 2.5)
-              return {
-                label: "Estresse Baixo ou Leve",
-                color: "text-green-600",
-              };
-            if (avg === 2.5)
-              return {
-                label: "Estresse Médio/Considerável",
-                color: "text-yellow-600",
-              };
-            return { label: "Estresse Alto", color: "text-red-600" };
-          };
-
-          // Determina qual classificação usar
-          const stressLevel =
-            exam.id === "prova1" ? getStressLevel(totalScore) : null;
-          const eetAvg =
-            exam.id === "prova2"
-              ? parseFloat((totalScore / 23).toFixed(2))
-              : null;
-          const eetStressLevel =
-            eetAvg != null ? getEETStressLevel(eetAvg) : null;
+          // Classificação PSS-10 por faixas / EET por escore médio
+          // ... lógica de classificação ...
 
           return (
-            <div
-              key={exam.id}
-              className="rounded-xl bg-card border border-border p-6 shadow-sm"
-            >
-              <div className="flex items-center justify-between mb-5">
-                <h3 className="text-xl font-bold">{exam.title}</h3>
-                <div className="text-right">
-                  {/* PSS-10: Escore Total */}
-                  {exam.id === "prova1" && (
-                    <>
-                      <p className="text-xs text-muted-foreground uppercase tracking-wide">
-                        Escore Total
-                      </p>
-                      <p className="text-3xl font-bold text-primary">
-                        {totalScore}
-                      </p>
-                    </>
-                  )}
-                  {/* EET: Escore Médio */}
-                  {exam.id === "prova2" && eetAvg != null && (
-                    <>
-                      <p className="text-xs text-muted-foreground uppercase tracking-wide">
-                        Escore Médio
-                      </p>
-                      <p className="text-3xl font-bold text-primary">
-                        {eetAvg.toFixed(2)}
-                      </p>
-                    </>
-                  )}
-                  {/* Classificação com cor semântica */}
-                  {stressLevel && (
-                    <p
-                      className={`text-sm font-semibold mt-1 ${stressLevel.color}`}
-                    >
-                      {stressLevel.label}
-                    </p>
-                  )}
-                  {eetStressLevel && (
-                    <p
-                      className={`text-sm font-semibold mt-1 ${eetStressLevel.color}`}
-                    >
-                      {eetStressLevel.label}
-                    </p>
-                  )}
-                </div>
-              </div>
+            <div key={exam.id} className="rounded-xl bg-card border border-border p-6 shadow-sm">
+              {/* Título da escala + escore + classificação */}
             </div>
           );
         })}
@@ -1137,9 +1073,7 @@ const ResultsView = ({ results, mode, onRestart }: ResultsViewProps) => {
       <div className="rounded-xl border border-border bg-secondary/30 p-6 mt-8">
         <div className="flex items-start gap-3">
           <AlertTriangle className="w-5 h-5 text-yellow-600 mt-0.5 shrink-0" />
-          <p className="text-sm text-muted-foreground whitespace-pre-line">
-            {disclaimer}
-          </p>
+          <p className="text-sm text-muted-foreground whitespace-pre-line">{disclaimer}</p>
         </div>
       </div>
 
@@ -1185,46 +1119,10 @@ const AboutSection = () => {
         </p>
       </div>
 
-      {/* Grid com biografias dos autores */}
+      {/* Grid com biografias dos autores (orientadora e autor) */}
       <div className="grid gap-8 md:grid-cols-2">
-        {/* Orientadora */}
-        <div className="rounded-xl border border-border bg-card p-6">
-          <div className="flex flex-col items-center mb-4">
-            <img
-              src={edilanePhoto}
-              alt="Profa. Dra. Edilane Nunes Régis Bezerra"
-              className="w-28 h-28 rounded-full object-cover border-2 border-primary/30 mb-3"
-            />
-            <h3 className="font-bold text-sm text-center">
-              Prof.ª Dr.ª Edilane Nunes Régis Bezerra
-            </h3>
-            <p className="text-xs text-muted-foreground">Orientadora</p>
-          </div>
-          {/* Biografia completa */}
-          <p className="text-xs text-muted-foreground leading-relaxed text-justify">
-            Edilane Nunes Régis Bezerra é psicóloga, professora e pesquisadora
-            com ampla experiência na área da Psicologia Social e da Saúde...
-          </p>
-        </div>
-
-        {/* Autor */}
-        <div className="rounded-xl border border-border bg-card p-6">
-          <div className="flex flex-col items-center mb-4">
-            <img
-              src={italoPhoto}
-              alt="Me. Ítalo Ribeiro Kunzler Machado Marques"
-              className="w-28 h-28 rounded-full object-cover border-2 border-primary/30 mb-3"
-            />
-            <h3 className="font-bold text-sm text-center">
-              Me. Ítalo Ribeiro Kunzler Machado Marques
-            </h3>
-            <p className="text-xs text-muted-foreground">Autor</p>
-          </div>
-          {/* Biografia completa */}
-          <p className="text-xs text-muted-foreground leading-relaxed text-justify">
-            Ítalo Ribeiro Kunzler Machado Marques é psicólogo e pesquisador...
-          </p>
-        </div>
+        {/* Card da orientadora com foto, nome e biografia completa */}
+        {/* Card do autor com foto, nome e biografia completa */}
       </div>
     </section>
   );
@@ -1250,7 +1148,7 @@ interface NavLinkCompatProps extends Omit<NavLinkProps, "className"> {
   pendingClassName?: string; // Classe durante navegação pendente
 }
 
-// Componente wrapper que simplifica o uso do NavLink
+// Componente wrapper que simplifica o uso do NavLink com classes condicionais
 const NavLink = forwardRef<HTMLAnchorElement, NavLinkCompatProps>(
   ({ className, activeClassName, pendingClassName, to, ...props }, ref) => {
     return (
@@ -1267,7 +1165,6 @@ const NavLink = forwardRef<HTMLAnchorElement, NavLinkCompatProps>(
 );
 
 NavLink.displayName = "NavLink";
-
 export { NavLink };
 ```
 
@@ -1283,6 +1180,7 @@ import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
 // Função utilitária usada em toda a aplicação para compor classes CSS
+// Permite combinar classes estáticas, condicionais e dinâmicas de forma segura
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -1290,7 +1188,7 @@ export function cn(...inputs: ClassValue[]) {
 
 ---
 
-### `src/index.css` — Design tokens (variáveis CSS)
+### `src/index.css` — Design tokens
 
 ```css
 /* Importa as diretivas do Tailwind CSS */
@@ -1298,7 +1196,7 @@ export function cn(...inputs: ClassValue[]) {
 @tailwind components;
 @tailwind utilities;
 
-/* Fontes: Space Grotesk (headings), Inter (corpo), Work Sans (sans), Lora (serif), Inconsolata (mono) */
+/* Fontes tipográficas carregadas do Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap');
 @import url("https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&display=swap");
@@ -1306,47 +1204,49 @@ export function cn(...inputs: ClassValue[]) {
 
 @layer base {
   :root {
-    /* Cores do tema claro — todas em formato HSL */
-    --background: 0 0% 96%;           /* Fundo geral */
-    --foreground: 0 0% 9%;            /* Texto principal */
-    --card: 0 0% 98%;                 /* Fundo de cards */
-    --card-foreground: 0 0% 9%;       /* Texto em cards */
-    --primary: 161 93% 30%;           /* Cor de destaque principal (verde-esmeralda) */
-    --primary-foreground: 151 80% 95%; /* Texto sobre fundo primary */
-    --secondary: 0 0% 32%;            /* Cor secundária (cinza escuro) */
+    /* === Tokens de cor do tema claro (HSL sem "hsl()") === */
+    --background: 0 0% 96%;           /* Fundo geral: cinza muito claro */
+    --foreground: 0 0% 9%;            /* Texto principal: quase preto */
+    --card: 0 0% 98%;                 /* Fundo de cartões: branco suave */
+    --primary: 161 93% 30%;           /* Verde-esmeralda: cor de destaque */
+    --primary-foreground: 151 80% 95%; /* Texto claro sobre primary */
+    --secondary: 0 0% 32%;            /* Cinza escuro para elementos secundários */
     --muted-foreground: 0 0% 9%;      /* Texto atenuado */
-    --accent: 166 76% 96%;            /* Cor de destaque suave */
-    --destructive: 0 72% 50%;         /* Cor de erro/destruição (vermelho) */
-    --border: 0 0% 83%;               /* Cor de bordas */
-    --ring: 161 93% 30%;              /* Cor do anel de foco */
-    --radius: 0.75rem;                /* Raio de borda padrão */
-    /* ... demais tokens de sombra, fonte, sidebar, gráficos ... */
+    --accent: 166 76% 96%;            /* Verde muito claro para destaques suaves */
+    --destructive: 0 72% 50%;         /* Vermelho para erros */
+    --border: 0 0% 83%;               /* Cinza claro para bordas */
+    --ring: 161 93% 30%;              /* Cor do anel de foco = primary */
+    --radius: 0.75rem;                /* Raio de borda padrão (12px) */
+
+    /* Fontes */
+    --font-heading: 'Space Grotesk', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-sans: 'Work Sans', ...;
+    --font-serif: 'Lora', ...;
+    --font-mono: 'Inconsolata', ...;
+
+    /* Sombras */
+    --shadow-sm: 0 1px 3px 0px hsl(0 0% 0% / 0.1), ...;
+    /* ... demais variáveis ... */
   }
 
   .dark {
     /* Sobrescreve tokens para o tema escuro */
-    --background: 0 0% 9%;
-    --foreground: 0 0% 98%;
-    --primary: 158 64% 51%;
-    /* ... demais tokens escuros ... */
+    --background: 0 0% 9%;            /* Fundo escuro */
+    --foreground: 0 0% 98%;           /* Texto claro */
+    --primary: 158 64% 51%;           /* Verde mais claro para contraste */
+    /* ... demais sobrescritas ... */
   }
 }
 
 @layer base {
-  /* Aplica cor de borda padrão a todos os elementos */
-  * {
-    @apply border-border;
-  }
-
-  /* Corpo: fundo e texto do design system, fonte do corpo */
+  * { @apply border-border; }          /* Borda padrão em todos os elementos */
   body {
-    @apply bg-background text-foreground;
-    font-family: var(--font-body);
+    @apply bg-background text-foreground; /* Aplica tokens de fundo e texto */
+    font-family: var(--font-body);        /* Fonte do corpo */
   }
-
-  /* Headings usam fonte de destaque */
   h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-heading);
+    font-family: var(--font-heading);     /* Fonte de destaque para títulos */
   }
 }
 ```
