@@ -50,7 +50,8 @@ const ResultsView = ({ results, mode, onRestart }: ResultsViewProps) => {
           return "Estresse Muito Alto";
         };
         body += `Escore Total: ${totalScore}\n`;
-        body += `Classificação: ${getStressLevel(totalScore)}\n\n`;
+        body += `Classificação: ${getStressLevel(totalScore)}\n`;
+        body += `Valores categorizados a partir de: OLIVEIRA, J. C. et al. The impact of COVID-19 on the physical and emotional health of health professionals in the municipality of Baixada Maranhense. Research, Society and Development, v. 10, n. 10, 2021. p. e163101018744.\n\n`;
       }
 
       if (exam.id === "prova2") {
@@ -160,6 +161,11 @@ const ResultsView = ({ results, mode, onRestart }: ResultsViewProps) => {
                   }
                 </div>
               </div>
+              {exam.id === "prova1" &&
+                <p className="text-[11px] text-muted-foreground/70 leading-snug mt-2">
+                  Valores organizados e categorizados a partir de: OLIVEIRA, J. C. et al. The impact of COVID-19 on the physical and emotional health of health professionals in the municipality of Baixada Maranhense. <em>Research, Society and Development</em>, v. 10, n. 10, 2021. p. e163101018744.
+                </p>
+              }
             </div>);
 
         })}
