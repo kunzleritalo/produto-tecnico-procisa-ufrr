@@ -62,7 +62,8 @@ const ResultsView = ({ results, mode, onRestart }: ResultsViewProps) => {
           return "Estresse Alto";
         };
         body += `Escore Médio: ${avg.toFixed(2)}\n`;
-        body += `Classificação: ${getEETLevel(avg)}\n\n`;
+        body += `Classificação: ${getEETLevel(avg)}\n`;
+        body += `Valores categorizados a partir de: PASCHOAL, T.; TAMAYO, A. Validação da escala de estresse no trabalho. Estudos de Psicologia (Natal), v. 9, n. 1, p. 45-52, 2004.\n\n`;
       }
     });
 
@@ -164,6 +165,11 @@ const ResultsView = ({ results, mode, onRestart }: ResultsViewProps) => {
               {exam.id === "prova1" &&
                 <p className="text-[11px] text-muted-foreground/70 leading-snug mt-2">
                   Valores organizados e categorizados a partir de: OLIVEIRA, J. C. et al. The impact of COVID-19 on the physical and emotional health of health professionals in the municipality of Baixada Maranhense. <em>Research, Society and Development</em>, v. 10, n. 10, 2021. p. e163101018744.
+                </p>
+              }
+              {exam.id === "prova2" &&
+                <p className="text-[11px] text-muted-foreground/70 leading-snug mt-2">
+                  Valores organizados e categorizados a partir de: PASCHOAL, T.; TAMAYO, A. Validação da escala de estresse no trabalho. <em>Estudos de Psicologia (Natal)</em>, v. 9, n. 1, p. 45-52, 2004.
                 </p>
               }
             </div>);
