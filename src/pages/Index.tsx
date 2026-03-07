@@ -161,8 +161,8 @@ const Index = () => {
             Todos os direitos sobre as escalas pertencem aos seus respectivos criadores. Qualquer uso com finalidade diferente da pedagógica não é de responsabilidade dos criadores desta ferramenta.
           </p>
           <div className="space-y-1">
-            <p><strong>PSS-10:</strong> Produzida por Cohen, S., Kamarck, T., &amp; Mermelstein, R. (1983). Adaptação e tradução por Siqueira Reis, R., Ferreira Hino, A. A., &amp; Romélio Rodriguez Añez, C. (2010).</p>
-            <p><strong>EET:</strong> Produzida por Paschoal, T. &amp; Tamayo, A. (2004).</p>
+            <p><strong>PSS-10</strong> Produzida por Cohen, S., Kamarck, T., &amp; Mermelstein, R. (1983). Adaptação e tradução por Siqueira Reis, R., Ferreira Hino, A. A., &amp; Romélio Rodriguez Añez, C. (2010).</p>
+            <p><strong>EET</strong> Produzida por Paschoal, T. &amp; Tamayo, A. (2004).</p>
           </div>
         </div>
       </footer>
