@@ -160,6 +160,11 @@ const ResultsView = ({ results, mode, onRestart }: ResultsViewProps) => {
                   }
                 </div>
               </div>
+              {exam.id === "prova1" &&
+                <p className="text-[11px] text-muted-foreground/70 leading-snug mt-2">
+                  Valores organizados e categorizados a partir de: OLIVEIRA, J. C. et al. The impact of COVID-19 on the physical and emotional health of health professionals in the municipality of Baixada Maranhense. <em>Research, Society and Development</em>, v. 10, n. 10, 2021. p. e163101018744.
+                </p>
+              }
             </div>);
 
         })}
