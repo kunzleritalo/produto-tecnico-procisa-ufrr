@@ -62,7 +62,8 @@ const ResultsView = ({ results, mode, onRestart }: ResultsViewProps) => {
           return "Estresse Alto";
         };
         body += `Escore Médio: ${avg.toFixed(2)}\n`;
-        body += `Classificação: ${getEETLevel(avg)}\n\n`;
+        body += `Classificação: ${getEETLevel(avg)}\n`;
+        body += `Valores categorizados a partir de: PASCHOAL, T.; TAMAYO, A. Validação da escala de estresse no trabalho. Estudos de Psicologia (Natal), v. 9, n. 1, p. 45-52, 2004.\n\n`;
       }
     });
 
