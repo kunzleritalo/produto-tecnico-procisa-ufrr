@@ -153,6 +153,19 @@ const Index = () => {
 
         }
       </main>
+
+      <footer className="w-full border-t border-border bg-secondary/30 mt-16 py-6 px-4">
+        <div className="max-w-3xl mx-auto text-center text-[11px] text-muted-foreground/80 leading-relaxed space-y-3">
+          <p className="font-semibold text-muted-foreground">Esta ferramenta tem finalidade exclusivamente pedagógica.</p>
+          <p>
+            Todos os direitos sobre as escalas pertencem aos seus respectivos criadores. Qualquer uso com finalidade diferente da pedagógica não é de responsabilidade dos criadores desta ferramenta.
+          </p>
+          <div className="space-y-1">
+            <p><strong>PSS-10:</strong> Criação de Cohen, S., Kamarck, T., &amp; Mermelstein, R. (1983). Adaptação e tradução por Siqueira Reis, R., Ferreira Hino, A. A., &amp; Romélio Rodriguez Añez, C. (2010).</p>
+            <p><strong>EET:</strong> Criação de Paschoal, T. &amp; Tamayo, A. (2004).</p>
+          </div>
+        </div>
+      </footer>
     </div>);
 
 };
