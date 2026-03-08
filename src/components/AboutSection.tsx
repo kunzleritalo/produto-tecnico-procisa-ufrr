@@ -15,6 +15,13 @@ const AboutSection = () => {
           <strong>Professora Doutora Edilane Nunes Régis Bezerra</strong> dentro do
           Programa de Pós-graduação em Ciências da Saúde PROCISA – UFRR.
         </p>
+        <p className="text-sm text-muted-foreground text-center mt-3">
+          Esta ferramenta foi desenvolvida em estrita consonância com as diretrizes da
+          Coordenação de Aperfeiçoamento de Pessoal de Nível Superior (CAPES) para a
+          produção de Produtos Técnicos e Tecnológicos (PTT). Seu desenvolvimento
+          fundamenta-se nos critérios de avaliação estabelecidos pelo Relatório do
+          Grupo de Trabalho (GT) de Produção Técnica da CAPES.
+        </p>
       </div>
 
       <div className="grid gap-8 md:grid-cols-2">
@@ -24,8 +31,8 @@ const AboutSection = () => {
             <img
               src={edilanePhoto}
               alt="Profa. Dra. Edilane Nunes Régis Bezerra"
+              loading="lazy"
               className="w-28 h-28 rounded-full object-cover border-2 border-primary/30 mb-3" />
-
             <h3 className="font-bold text-sm text-center">Prof.ª Dr.ª Edilane Nunes Régis Bezerra</h3>
             <p className="text-xs text-muted-foreground">Orientadora</p>
           </div>
@@ -46,8 +53,8 @@ const AboutSection = () => {
             <img
               src={italoPhoto}
               alt="Me. Ítalo Ribeiro Kunzler Machado Marques"
+              loading="lazy"
               className="w-28 h-28 rounded-full object-cover border-2 border-primary/30 mb-3" />
-
             <h3 className="font-bold text-sm text-center">Me. Ítalo Ribeiro Kunzler Machado Marques</h3>
             <p className="text-xs text-muted-foreground">Autor</p>
           </div>
@@ -65,8 +72,8 @@ const AboutSection = () => {
           </p>
         </div>
       </div>
-    </section>);
-
+    </section>
+  );
 };
 
 export default AboutSection;
