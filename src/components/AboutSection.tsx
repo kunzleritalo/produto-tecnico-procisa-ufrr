@@ -8,7 +8,7 @@ const AboutSection = () => {
     <section className="max-w-3xl mx-auto mt-16 mb-10">
       <h2 className="text-2xl font-bold text-center mb-6">Sobre</h2>
 
-      <div className="rounded-xl border border-border bg-card p-6 mb-8 text-center card-elevated">
+      <div className="rounded-xl border border-border bg-card p-6 mb-8 text-center">
         <div className="flex items-center justify-center gap-5 mb-5">
           <img src={procisaLogo} alt="Logo PROCISA" className="h-20 object-contain" />
           <div className="w-px h-14 bg-border" />
