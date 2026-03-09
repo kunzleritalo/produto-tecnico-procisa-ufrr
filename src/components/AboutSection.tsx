@@ -12,7 +12,7 @@ const AboutSection = () => {
         <p className="text-sm text-muted-foreground text-justify">
           Esta ferramenta digital foi criada pelo Mestre em Ciências da Saúde{" "}
           <strong>Ítalo Ribeiro Kunzler Machado Marques</strong> sob orientação da{" "}
-          <strong>Professora Doutora Edilane Nunes Régis Bezerra</strong> dentro do
+          Professora Doutora <strong>Edilane Nunes Régis Bezerra</strong> dentro do
           Programa de Pós-graduação em Ciências da Saúde PROCISA – UFRR. Esta aplicação foi desenvolvida em estrita consonância com as diretrizes da Coordenação de Aperfeiçoamento de Pessoal de Nível Superior (CAPES) para a produção de Produtos Técnicos e Tecnológicos (PTT). Seu desenvolvimento fundamenta-se nos critérios de avaliação estabelecidos pelo Relatório do Grupo de Trabalho (GT) de Produção Técnica da CAPES de 2019.
         </p>
         <p className="text-sm text-muted-foreground text-center mt-3">
