@@ -174,10 +174,7 @@ const Index = () => {
                     onClick={() => startExams("eet")}
                     className="group w-full rounded-xl border-2 border-border bg-card hover:border-primary/40 hover:bg-accent/30 px-4 py-3.5 transition-all duration-300 hover:-translate-y-0.5 card-elevated"
                   >
-                    <span className="flex items-center justify-center gap-2 mb-1">
-                      <Briefcase className="w-4 h-4 text-primary" />
-                      <span className="font-semibold text-sm">Realizar a Escala EET</span>
-                    </span>
+                    <span className="block font-semibold text-sm mb-1">Realizar a Escala EET</span>
                     <span className="flex items-center justify-center gap-1 text-[11px] text-muted-foreground">
                       <span>Estresse no Trabalho</span>
                       <span>·</span>
