@@ -3,6 +3,7 @@ import { Exam, getScore } from "@/data/exams";
 import { Home, AlertTriangle, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import procisaLogo from "@/assets/procisa-logo.png";
+import ufrrLogo from "@/assets/ufrr-logo.png";
 
 interface ExamResult {
   exam: Exam;
@@ -129,7 +130,11 @@ const ResultsView = memo(({ results, mode, onRestart }: ResultsViewProps) => {
   return (
     <div className="w-full max-w-3xl mx-auto">
       <div className="text-center mb-10">
-        <img src={procisaLogo} alt="Logo PROCISA" className="h-14 mx-auto mb-4" />
+        <div className="flex items-center justify-center gap-4 mb-4">
+          <img src={procisaLogo} alt="Logo PROCISA" className="h-14 object-contain" />
+          <div className="w-px h-10 bg-border" />
+          <img src={ufrrLogo} alt="Brasão UFRR" className="h-14 object-contain" />
+        </div>
         <h2 className="text-3xl font-bold mb-2">Resultado Final</h2>
         <p className="text-muted-foreground">Escores obtidos nas escalas aplicadas</p>
       </div>
@@ -140,7 +145,7 @@ const ResultsView = memo(({ results, mode, onRestart }: ResultsViewProps) => {
           const eetStressLevel = eetAvg != null ? getEETLevel(eetAvg) : null;
 
           return (
-            <div key={exam.id} className="rounded-xl bg-card border border-border p-6 shadow-sm">
+            <div key={exam.id} className="rounded-xl bg-card border border-border p-6 card-elevated">
               <div className="flex items-center justify-between mb-5">
                 <h3 className="text-xl font-bold">{exam.title}</h3>
                 <div className="text-right">

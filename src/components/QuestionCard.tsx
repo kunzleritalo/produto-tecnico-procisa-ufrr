@@ -14,7 +14,7 @@ const QuestionCard = memo(({ question, selectedOption, onSelect, optionLabels, s
   const options = Array.from({ length: question.numOptions }, (_, i) => i + startFrom);
 
   return (
-    <div className="rounded-xl bg-card border border-border p-6 shadow-sm">
+    <div className="rounded-xl bg-card border border-border p-6 card-elevated">
       <h3 className="text-lg font-semibold mb-1 leading-relaxed">{question.text}</h3>
       {question.inverted && (
         <p className="text-xs text-muted-foreground mb-4 italic">​</p>

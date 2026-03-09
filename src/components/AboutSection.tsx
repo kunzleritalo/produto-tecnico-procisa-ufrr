@@ -1,4 +1,5 @@
 import procisaLogo from "@/assets/procisa-logo.png";
+import ufrrLogo from "@/assets/ufrr-logo.png";
 import edilanePhoto from "@/assets/edilane-photo.gif";
 import italoPhoto from "@/assets/italo-photo.gif";
 
@@ -7,26 +8,23 @@ const AboutSection = () => {
     <section className="max-w-3xl mx-auto mt-16 mb-10">
       <h2 className="text-2xl font-bold text-center mb-6">Sobre</h2>
 
-      <div className="rounded-xl border border-border bg-card p-6 mb-8 text-center">
-        <img src={procisaLogo} alt="Logo PROCISA" className="h-20 mx-auto mb-4" />
+      <div className="rounded-xl border border-border bg-card p-6 mb-8 text-center card-elevated">
+        <div className="flex items-center justify-center gap-5 mb-5">
+          <img src={procisaLogo} alt="Logo PROCISA" className="h-20 object-contain" />
+          <div className="w-px h-14 bg-border" />
+          <img src={ufrrLogo} alt="Brasão UFRR" className="h-20 object-contain" />
+        </div>
         <p className="text-sm text-muted-foreground text-justify">
           Esta ferramenta digital foi criada pelo Mestre em Ciências da Saúde{" "}
           <strong>Ítalo Ribeiro Kunzler Machado Marques</strong> sob orientação da{" "}
           Professora Doutora <strong>Edilane Nunes Régis Bezerra</strong> dentro do
           Programa de Pós-graduação em Ciências da Saúde PROCISA – UFRR. Esta aplicação foi desenvolvida em estrita consonância com as diretrizes da Coordenação de Aperfeiçoamento de Pessoal de Nível Superior (CAPES) para a produção de Produtos Técnicos e Tecnológicos (PTT). Seu desenvolvimento fundamenta-se nos critérios de avaliação estabelecidos pelo Relatório do Grupo de Trabalho (GT) de Produção Técnica da CAPES de 2019.
         </p>
-        <p className="text-sm text-muted-foreground text-center mt-3">
-
-
-
-
-
-        </p>
       </div>
 
       <div className="grid gap-8 md:grid-cols-2">
         {/* Edilane */}
-        <div className="rounded-xl border border-border bg-card p-6">
+        <div className="rounded-xl border border-border bg-card p-6 card-elevated">
           <div className="flex flex-col items-center mb-4">
             <img
               src={edilanePhoto}
@@ -48,7 +46,7 @@ const AboutSection = () => {
         </div>
 
         {/* Ítalo */}
-        <div className="rounded-xl border border-border bg-card p-6">
+        <div className="rounded-xl border border-border bg-card p-6 card-elevated">
           <div className="flex flex-col items-center mb-4">
             <img
               src={italoPhoto}

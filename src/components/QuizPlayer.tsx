@@ -32,9 +32,9 @@ const QuizPlayer = ({ exam, onFinish }: QuizPlayerProps) => {
         )}
       </div>
 
-      <div className="w-full h-2 rounded-full bg-secondary mb-2 overflow-hidden">
+      <div className="w-full h-2.5 rounded-full bg-secondary/40 mb-2 overflow-hidden">
         <div
-          className="h-full rounded-full bg-primary transition-all duration-500"
+          className="h-full rounded-full bg-gradient-to-r from-primary to-primary/70 transition-all duration-500 ease-out"
           style={{ width: `${(answered / total) * 100}%` }}
         />
       </div>
