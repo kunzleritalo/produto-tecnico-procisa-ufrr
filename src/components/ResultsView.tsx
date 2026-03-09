@@ -77,22 +77,23 @@ const ResultsView = memo(({ results, mode, onRestart }: ResultsViewProps) => {
       hour: "2-digit", minute: "2-digit",
     });
 
-    let body = "RESULTADO - Escalas de Estresse (PROCISA)\n";
+    let body = "RESULTADO FINAL - Escalas de Estresse (PROCISA/UFRR)\n";
+    body += "Escores obtidos nas escalas aplicadas\n";
     body += `Data e hora da realização: ${dataHora}\n\n`;
 
     computedResults.forEach(({ exam, totalScore, eetAvg }) => {
-      body += `--- ${exam.title} ---\n`;
+      body += `━━━ ${exam.title} ━━━\n\n`;
 
       if (exam.id === "prova1") {
         body += `Escore Total: ${totalScore}\n`;
-        body += `Classificação: ${getPSSLevelText(totalScore)}\n`;
+        body += `Classificação: ${getPSSLevelText(totalScore)}\n\n`;
         body += `Os resultados aqui apresentados foram organizados e categorizados a partir do trabalho de OLIVEIRA, J. C. et al. The impact of COVID-19 on the physical and emotional health of health professionals in the municipality of Baixada Maranhense. Research, Society and Development, v. 10, n. 10, 2021. p. e163101018744.\n\n`;
       }
 
       if (exam.id === "prova2" && eetAvg != null) {
         body += `Escore Médio: ${eetAvg.toFixed(2)}\n`;
-        body += `Classificação: ${getEETLevelText(eetAvg)}\n`;
-        body += `Valores categorizados a partir de: PASCHOAL, T.; TAMAYO, A. Validação da escala de estresse no trabalho. Estudos de Psicologia (Natal), v. 9, n. 1, p. 45-52, 2004.\n\n`;
+        body += `Classificação: ${getEETLevelText(eetAvg)}\n\n`;
+        body += `Os resultados aqui apresentados foram organizados e categorizados a partir do trabalho de: PASCHOAL, T.; TAMAYO, A. Validação da escala de estresse no trabalho. Estudos de Psicologia (Natal), v. 9, n. 1, p. 45-52, 2004.\n\n`;
       }
     });
 
