@@ -64,11 +64,9 @@ const Index = () => {
         {phase === "welcome" && (
           <>
             <div className="max-w-2xl mx-auto text-center">
-              {/* Logos */}
-              <div className="flex items-center justify-center gap-6 mb-8">
+              {/* Logo */}
+              <div className="flex items-center justify-center mb-8">
                 <img src={procisaLogo} alt="Logo PROCISA" className="h-16 object-contain" />
-                <div className="w-px h-12 bg-border" />
-                <img src={ufrrLogo} alt="Brasão UFRR" className="h-16 object-contain" />
               </div>
 
               {/* Hero */}
