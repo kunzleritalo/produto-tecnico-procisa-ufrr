@@ -145,7 +145,7 @@ const ResultsView = memo(({ results, mode, onRestart }: ResultsViewProps) => {
           const eetStressLevel = eetAvg != null ? getEETLevel(eetAvg) : null;
 
           return (
-            <div key={exam.id} className="rounded-xl bg-card border border-border p-6 shadow-sm">
+            <div key={exam.id} className="rounded-xl bg-card border border-border p-6 card-elevated">
               <div className="flex items-center justify-between mb-5">
                 <h3 className="text-xl font-bold">{exam.title}</h3>
                 <div className="text-right">
