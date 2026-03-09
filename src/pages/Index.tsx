@@ -140,16 +140,45 @@ const Index = () => {
                 </div>
               </div>
 
-              <div className="flex flex-col gap-3 max-w-sm mx-auto">
-                <Button size="lg" onClick={() => startExams("both")} className="w-full shadow-md hover:shadow-lg transition-shadow">
-                  Realizar ambas as escalas (PSS-10 e EET) <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
-                <Button size="lg" variant="outline" onClick={() => startExams("pss10")} className="w-full hover:bg-accent/50 transition-colors">
-                  Realizar escala PSS-10
-                </Button>
-                <Button size="lg" variant="outline" onClick={() => startExams("eet")} className="w-full hover:bg-accent/50 transition-colors">
-                  Realizar escala EET
-                </Button>
+              <div className="flex flex-col gap-3 max-w-md mx-auto">
+                {/* Botão principal — ambas as escalas */}
+                <button
+                  onClick={() => startExams("both")}
+                  className="group relative w-full rounded-xl bg-gradient-to-r from-primary to-primary/80 text-primary-foreground px-6 py-4 font-semibold text-base shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5 overflow-hidden"
+                >
+                  <span className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary-foreground/10 to-primary/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+                  <span className="relative flex items-center justify-center gap-2">
+                    Realizar ambas as escalas (PSS-10 e EET)
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </span>
+                  <span className="relative block text-xs font-normal opacity-80 mt-1">Recomendado · ~10 min</span>
+                </button>
+
+                <div className="grid grid-cols-2 gap-3">
+                  {/* Botão PSS-10 */}
+                  <button
+                    onClick={() => startExams("pss10")}
+                    className="group w-full rounded-xl border-2 border-border bg-card hover:border-primary/40 hover:bg-accent/30 px-4 py-3.5 transition-all duration-300 hover:-translate-y-0.5 card-elevated"
+                  >
+                    <span className="flex items-center justify-center gap-2 mb-1">
+                      <HeartPulse className="w-4 h-4 text-primary" />
+                      <span className="font-semibold text-sm">Escala PSS-10</span>
+                    </span>
+                    <span className="block text-[11px] text-muted-foreground">Estresse Percebido · ~3 min</span>
+                  </button>
+
+                  {/* Botão EET */}
+                  <button
+                    onClick={() => startExams("eet")}
+                    className="group w-full rounded-xl border-2 border-border bg-card hover:border-primary/40 hover:bg-accent/30 px-4 py-3.5 transition-all duration-300 hover:-translate-y-0.5 card-elevated"
+                  >
+                    <span className="flex items-center justify-center gap-2 mb-1">
+                      <Briefcase className="w-4 h-4 text-primary" />
+                      <span className="font-semibold text-sm">Escala EET</span>
+                    </span>
+                    <span className="block text-[11px] text-muted-foreground">Estresse no Trabalho · ~7 min</span>
+                  </button>
+                </div>
               </div>
             </div>
 
