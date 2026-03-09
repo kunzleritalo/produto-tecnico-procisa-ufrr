@@ -1,342 +1,261 @@
-# Documento de Conhecimento — Escalas de Estresse (PROCISA)
+# Documento de Conhecimento — Estresse PROCISA
 
 Este documento serve como referência técnica e conceitual para o desenvolvimento contínuo da aplicação. Ele descreve a estrutura do site, os princípios arquiteturais, padrões de componentes reutilizáveis e estratégias de otimização.
 
 ---
 
-## 1. Visão Geral da Aplicação
+## 1. Visão Geral
 
-### Propósito
+Ferramenta digital para aplicação das escalas **PSS-10** (Estresse Percebido) e **EET** (Estresse no Trabalho), desenvolvida no Programa de Pós-graduação em Ciências da Saúde (PROCISA) da UFRR.
 
-Ferramenta digital para aplicação e avaliação de escalas psicométricas de estresse, desenvolvida em consonância com as diretrizes da CAPES para Produtos Técnicos e Tecnológicos (PTT):
-
-- **PSS-10** (Perceived Stress Scale): 10 itens, alternativas de 0–4, itens invertidos (4, 5, 7, 8).
-- **EET** (Escala de Estresse no Trabalho): 23 itens, alternativas de 1–5, sem inversão.
-
-### Fluxo do Usuário
-
-```
-Boas-vindas (instruções gerais) → Escolha do modo → Resposta às questões → Resultados → Envio por e-mail
-```
-
-### Modos de Aplicação
-
-| Modo    | Comportamento                     |
-| ------- | --------------------------------- |
-| `both`  | PSS-10 seguida da EET             |
-| `pss10` | Apenas PSS-10                     |
-| `eet`   | Apenas EET                        |
+**Características fundamentais:**
+- Processamento 100% local (nenhum dado é enviado a servidores)
+- Interface responsiva e acessível
+- Resultado com classificação de nível de estresse
+- Envio de relatório por e-mail com referências e aviso LGPD
 
 ---
 
-## 2. Arquitetura e Estrutura
+## 2. Arquitetura
 
-### Camadas
-
-```
-Dados (exams.ts)  →  Componentes de domínio  →  Página (Index.tsx)  →  App.tsx
-```
-
-- **Dados**: textos, regras de inversão, labels — separados da UI.
-- **Componentes de apresentação**: `QuestionCard`, `ResultsView` — recebem props, sem efeitos colaterais. Usam `React.memo`.
-- **Componentes controladores**: `QuizPlayer`, `Index` — gerenciam estado e fluxo. Usam `useCallback`, `useMemo`.
-- **Providers**: `App.tsx` — configura rotas, cache (TanStack Query), tooltips e notificações.
-
-### Fluxo de Estado
+### 2.1 Estrutura de Pastas
 
 ```
-Index
-├── phase: "welcome" | "exam1" | "exam2" | "results"
-├── mode: "both" | "pss10" | "eet"
-└── answers: { exam1: {}, exam2: {} }
-     │
-     ├── QuizPlayer (estado local: respostas parciais)
-     │    └── QuestionCard (sem estado — controlado via props, memo)
-     │
-     └── ResultsView (cálculo de escores via useMemo, memo)
+src/
+├── assets/              # Imagens estáticas (logos, fotos)
+├── components/
+│   ├── ui/              # Componentes base shadcn/ui (Button, Card, Skeleton, etc.)
+│   ├── AboutSection.tsx # Seção institucional "Sobre"
+│   ├── NavLink.tsx      # Wrapper reutilizável do NavLink
+│   ├── QuestionCard.tsx # Cartão de questão (memoizado com React.memo)
+│   ├── QuizPlayer.tsx   # Controlador do fluxo de questões
+│   └── ResultsView.tsx  # Exibição de resultados e e-mail
+├── data/
+│   └── exams.ts         # Definição das escalas e função de pontuação
+├── hooks/               # Hooks personalizados
+├── lib/
+│   └── utils.ts         # Utilitário cn() para classes Tailwind
+├── pages/
+│   ├── Index.tsx        # Página principal (orquestrador de fases)
+│   └── NotFound.tsx     # Página 404
+├── App.tsx              # Roteamento e providers
+├── main.tsx             # Ponto de entrada
+└── index.css            # Design tokens CSS
 ```
 
-Estado flui de cima para baixo. Eventos (callbacks) sobem via `onFinish`, `onSelect`, `onRestart`.
+### 2.2 Separação de Responsabilidades
+
+| Camada           | Responsabilidade                          | Arquivos                       |
+|------------------|-------------------------------------------|--------------------------------|
+| **Dados**        | Escalas, questões, pontuação              | `data/exams.ts`                |
+| **Apresentação** | UI sem lógica de negócio                  | `QuestionCard`, `AboutSection` |
+| **Controle**     | Fluxo de fases, estado, orquestração      | `Index.tsx`, `QuizPlayer`      |
+| **Resultados**   | Cálculo de escores, relatório             | `ResultsView`                  |
+| **Design**       | Tokens visuais, tipografia, tema          | `index.css`, `tailwind.config` |
+
+### 2.3 Fluxo de Fases
+
+```
+welcome → exam1 (PSS-10) → exam2 (EET) → results   [modo: both]
+welcome → exam1 (PSS-10) → results                  [modo: pss10]
+welcome → exam2 (EET) → results                     [modo: eet]
+```
 
 ---
 
 ## 3. Design System
 
-### Tokens Semânticos
+### 3.1 Tokens de Cor (HSL)
 
-Cores NUNCA são usadas diretamente (`bg-blue-500`). Sempre via tokens:
+Todas as cores são definidas como variáveis CSS em `index.css` e mapeadas em `tailwind.config.ts`. **Nunca usar classes de cor direta** nos componentes.
 
-| Token                   | Uso                                   |
-| ----------------------- | ------------------------------------- |
-| `bg-background`         | Fundo geral da página                 |
-| `bg-card`               | Fundo de cartões                      |
-| `text-foreground`       | Texto principal                       |
-| `text-muted-foreground` | Texto secundário/atenuado             |
-| `bg-primary`            | Botões primários, destaques           |
-| `text-primary`          | Escores, ícones de destaque           |
-| `border-border`         | Bordas de cards e separadores         |
-| `bg-secondary`          | Fundos sutis, barras de progresso     |
-| `text-success`          | Classificação positiva                |
-| `text-warning`          | Classificação intermediária           |
-| `text-destructive`      | Classificação alta/alertas            |
+| Token                  | Valor (claro)          | Uso                          |
+|------------------------|------------------------|------------------------------|
+| `--primary`            | `161 93% 30%`          | Verde esmeralda principal    |
+| `--primary-foreground` | `151 80% 95%`          | Texto sobre primary          |
+| `--accent`             | `166 76% 96%`          | Fundo de destaque suave      |
+| `--success`            | `152 60% 40%`          | Indicadores positivos        |
+| `--warning`            | `38 90% 55%`           | Alertas moderados            |
+| `--destructive`        | `0 72% 50%`            | Indicadores críticos         |
+| `--muted-foreground`   | `160 5% 35%`           | Texto secundário/discreto    |
 
-### Fontes
+### 3.2 Tipografia
 
-| Variável          | Fonte           | Uso               |
-| ----------------- | --------------- | ------------------ |
-| `--font-heading`  | Space Grotesk   | Títulos (h1–h6)   |
-| `--font-body`     | Inter           | Corpo de texto     |
-| `--font-sans`     | Work Sans       | Sans-serif geral   |
-| `--font-serif`    | Lora            | Serif (se necessário) |
-| `--font-mono`     | Inconsolata     | Código monospace   |
+| Variável           | Fonte          | Uso                   |
+|--------------------|----------------|-----------------------|
+| `--font-heading`   | Space Grotesk  | Títulos e destaques   |
+| `--font-body`      | Inter          | Corpo de texto        |
+| `--font-sans`      | Work Sans      | Fallback sans-serif   |
+| `--font-serif`     | Lora           | Citações acadêmicas   |
+| `--font-mono`      | Inconsolata    | Dados numéricos       |
 
-### Temas
+### 3.3 Classes Utilitárias Customizadas
 
-- Tema claro: `:root` em `index.css`
-- Tema escuro: `.dark` em `index.css`
-- Suporte via `next-themes` (instalado, pronto para uso)
+| Classe                    | Efeito                                                |
+|---------------------------|-------------------------------------------------------|
+| `.card-elevated`          | Sombra + hover com elevação e translateY(-2px)        |
+| `.gradient-hero`          | Gradiente sutil primary → accent para seções hero     |
+| `.gradient-primary-subtle`| Gradiente leve primary → accent                      |
+| `.text-gradient-primary`  | Texto com gradiente primary → glow                   |
 
----
+### 3.4 Regra Crítica
 
-## 4. Componentes Reutilizáveis
-
-### Princípio Fundamental
-
-> **Um componente, um local de manutenção, múltiplos usos.**
-
-### Primitivos (shadcn/ui — `src/components/ui/`)
-
-Estes componentes NÃO devem ser editados diretamente. Para customização, usar:
-1. Variantes via `cva` (class-variance-authority)
-2. Composição (wrapper components)
-3. Props `className`
-
-| Componente  | Quando usar                                     |
-| ----------- | ------------------------------------------------ |
-| `Button`    | Qualquer ação clicável                           |
-| `Card`      | Container visual com borda e sombra              |
-| `Dialog`    | Modais de confirmação ou entrada de dados        |
-| `Toast`     | Feedback temporário de ações                     |
-| `Skeleton`  | Placeholder durante carregamento (lazy loading)  |
-| `Progress`  | Indicadores de progresso                         |
-| `Separator` | Divisores visuais entre seções                   |
-| `Tabs`      | Navegação entre conteúdos relacionados           |
-
-### Componentes de Domínio
-
-| Componente       | Props principais                            | Memo | Reutilizável |
-| ---------------- | -------------------------------------------- | ---- | ------------ |
-| `QuestionCard`   | `question`, `selectedOption`, `onSelect`, `optionLabels`, `startFrom` | ✅ | ✅ Para qualquer escala |
-| `QuizPlayer`     | `exam`, `onFinish`                           | — | ✅ Para qualquer exame |
-| `ResultsView`    | `results[]`, `mode`, `onRestart`             | ✅ | ✅ Multi-escala |
-| `NavLink`        | `to`, `activeClassName`, `pendingClassName`  | — | ✅ Navegação geral |
-| `AboutSection`   | (nenhuma)                                    | — | ⚠️ Específico |
-
-### Criando Novos Componentes Reutilizáveis
-
-```tsx
-// Padrão recomendado:
-// 1. Interface de props clara e documentada
-interface MeuComponenteProps {
-  titulo: string;
-  children: React.ReactNode;
-  variant?: "default" | "destaque";
-}
-
-// 2. Usar tokens semânticos, nunca cores diretas
-// 3. Aceitar className para extensibilidade
-// 4. Usar React.memo para componentes de apresentação puros
-// 5. Manter em src/components/ (domínio) ou src/components/ui/ (primitivo)
-```
+> **Nunca usar classes de cor direta** (`text-white`, `bg-black`, `bg-green-500`) nos componentes.
+> Sempre usar tokens semânticos (`text-primary-foreground`, `bg-card`, `text-muted-foreground`).
 
 ---
 
-## 5. Otimização de Performance
+## 4. Princípios de Otimização
 
-### 5.1 React.memo e Hooks de Otimização
+### 4.1 Lazy Loading (Carregamento Sob Demanda)
 
-```tsx
-// QuestionCard e ResultsView usam React.memo para evitar re-renders desnecessários
-const QuestionCard = memo(({ question, ... }: Props) => { ... });
-
-// Index usa useCallback para estabilizar callbacks passados a filhos
-const handleFinish = useCallback((a) => { ... }, [mode]);
-
-// ResultsView usa useMemo para calcular escores uma única vez
-const computedResults = useMemo(() => results.map(...), [results]);
-```
-
-### 5.2 Code Splitting (Lazy Loading de Componentes)
+Componentes pesados são carregados apenas quando necessários:
 
 ```tsx
-// Componentes pesados carregados sob demanda via React.lazy
 const ResultsView = lazy(() => import("@/components/ResultsView"));
 const AboutSection = lazy(() => import("@/components/AboutSection"));
-
-// Uso com fallback visual (Skeleton do shadcn/ui)
-<Suspense fallback={<Skeleton className="h-64 w-full rounded-xl" />}>
-  <ResultsView results={results} mode={mode} onRestart={restart} />
-</Suspense>
 ```
 
-### 5.3 Lazy Loading de Imagens
+Wrapped em `<Suspense>` com fallback `<Skeleton>`.
+
+### 4.2 Memoização
+
+| Técnica          | Onde                          | Por quê                                    |
+|------------------|-------------------------------|---------------------------------------------|
+| `React.memo`     | `QuestionCard`, `ResultsView` | Evita re-renders quando props não mudam     |
+| `useMemo`        | Cálculo de escores            | Recalcula apenas quando dados mudam         |
+| `useCallback`    | Handlers de evento            | Mantém referências estáveis entre renders   |
+
+### 4.3 Imagens
+
+- Logos carregam normalmente (acima do fold)
+- Fotos dos autores usam `loading="lazy"` (abaixo do fold)
+
+### 4.4 Otimização de Consultas ao Banco de Dados
+
+Quando integrar com banco de dados (ex.: Supabase via Lovable Cloud), seguir a ordem:
+
+```
+1. Autenticação    → Verificar sessão do usuário (auth.uid())
+2. RLS             → Políticas de segurança por linha no servidor
+3. Seleção         → SELECT apenas colunas necessárias
+4. Filtragem       → WHERE/filtros no servidor, NÃO no cliente
+5. Ordenação       → ORDER BY no servidor
+6. Paginação       → LIMIT/OFFSET para limitar dados transferidos
+7. Cache           → TanStack Query com staleTime e gcTime
+```
+
+**Exemplo com TanStack Query:**
 
 ```tsx
-// Imagens fora do viewport inicial usam loading="lazy"
-<img src={foto} alt="Descrição" loading="lazy" className="..." />
-```
-
-### 5.4 Ordem Correta de Consultas ao Backend
-
-Ao integrar Lovable Cloud, seguir esta ordem:
-
-```
-1. AUTENTICAÇÃO → Verificar sessão do usuário (auth.getSession())
-2. AUTORIZAÇÃO  → RLS (Row Level Security) cuida disso automaticamente
-3. SELEÇÃO      → Buscar apenas colunas necessárias (.select("id, nome, escore"))
-4. FILTRAGEM    → Aplicar filtros no servidor (.eq(), .gte(), .in())
-5. PAGINAÇÃO    → Limitar resultados (.range(0, 19))
-6. ORDENAÇÃO    → Ordenar no servidor (.order("created_at", { ascending: false }))
-```
-
-**Evitar:**
-- `SELECT *` (buscar todas as colunas)
-- Filtrar/ordenar no frontend
-- Múltiplas consultas quando uma JOIN resolve
-
-### 5.5 Caching com TanStack Query
-
-```tsx
-const configuracoes = {
-  // Dados que mudam raramente (configurações, escalas)
-  estatico: { staleTime: 30 * 60 * 1000, gcTime: 60 * 60 * 1000 },
-  // Dados do usuário (resultados, perfil)
-  usuario: { staleTime: 5 * 60 * 1000, gcTime: 10 * 60 * 1000, refetchOnWindowFocus: true },
-  // Dados em tempo real
-  tempoReal: { staleTime: 0, refetchInterval: 30 * 1000 },
-};
-```
-
-### 5.6 Invalidação de Cache
-
-```tsx
-const queryClient = useQueryClient();
-await salvarResultado(dados);
-queryClient.invalidateQueries({ queryKey: ["resultados"] });
-```
-
-### 5.7 Debounce em Buscas
-
-```tsx
-import { useState, useDeferredValue } from "react";
-const [busca, setBusca] = useState("");
-const buscaDeferida = useDeferredValue(busca);
-```
-
-### 5.8 Prefetch de Dados
-
-```tsx
-queryClient.prefetchQuery({
-  queryKey: ["escala", "eet"],
-  queryFn: () => buscarEscala("eet"),
+const { data } = useQuery({
+  queryKey: ['exams', examId],        // Chave única e granular
+  queryFn: () => fetchExam(examId),   // Função de busca
+  staleTime: 5 * 60 * 1000,          // 5 min antes de refetch
+  gcTime: 30 * 60 * 1000,            // 30 min no garbage collector
+  select: (data) => data.questions,   // Transforma no cliente (cache da resposta completa)
 });
 ```
 
-### 5.9 Índices de Banco de Dados
-
-Ao criar tabelas, garantir índices em:
-- Colunas usadas em `WHERE` (ex.: `usuario_id`, `escala_id`)
-- Colunas usadas em `ORDER BY` (ex.: `created_at`)
-- Chaves estrangeiras (criadas automaticamente)
-
----
-
-## 6. Regras de Negócio
-
-### PSS-10 — Classificação
-
-| Faixa de Escore | Classificação        |
-| --------------- | --------------------- |
-| 0–18            | Estresse Baixo        |
-| 19–24           | Estresse Normal       |
-| 25–35           | Estresse Alto         |
-| 36–40           | Estresse Muito Alto   |
-
-- Escore total: soma dos 10 itens (0–4 cada).
-- Itens invertidos (4, 5, 7, 8): escore = (numOptions - 1) - valor.
-- Referência da classificação: Oliveira, J. C. et al. (2021).
-
-### EET — Classificação
-
-| Escore Médio | Classificação              |
-| ------------ | --------------------------- |
-| < 2,5        | Estresse Baixo ou Leve     |
-| = 2,5        | Estresse Médio/Considerável |
-| > 2,5        | Estresse Alto              |
-
-- Escore médio: soma total / 23.
-- Não há itens invertidos.
-- Referência: Paschoal, T. & Tamayo, A. (2004).
+**Anti-padrões a evitar:**
+- ❌ Buscar todas as colunas (`SELECT *`)
+- ❌ Filtrar dados no cliente após buscar tudo
+- ❌ Fazer queries dentro de loops (N+1 problem)
+- ❌ Não usar cache (refetch em toda navegação)
 
 ---
 
-## 7. Conformidade Legal (LGPD)
+## 5. Componentes Reutilizáveis
 
-Os resultados enviados por e-mail incluem aviso de conformidade com a Lei nº 13.709/2018 (LGPD), informando que:
+### 5.1 Componentes Base (shadcn/ui)
 
-- Os dados são pessoais e confidenciais.
-- Destinam-se exclusivamente ao titular ou profissional autorizado.
-- O compartilhamento sem consentimento é responsabilidade de quem o fizer.
-- Recomenda-se armazenamento seguro e descarte adequado.
+Mantidos em `src/components/ui/` — customizados via tokens do design system:
 
----
+| Componente    | Uso                                       |
+|--------------|-------------------------------------------|
+| `Button`     | Botões com variantes (default, outline, destructive, ghost, link) |
+| `Card`       | Container com borda e sombra              |
+| `Skeleton`   | Placeholder de carregamento               |
+| `Progress`   | Barra de progresso                        |
+| `Badge`      | Labels e tags                             |
+| `Toast`      | Notificações temporárias                  |
+| `Tooltip`    | Dicas contextuais                         |
 
-## 8. Textos e Disclaimers
+**Princípio:** Estes componentes são mantidos em um único local (`src/components/ui/`) e reutilizados em toda a aplicação. Qualquer alteração visual reflete automaticamente em todos os usos.
 
-### Tela de Boas-vindas
+### 5.2 Componentes de Domínio
 
-- Instruções gerais comuns às escalas (não há respostas certas/erradas, responder espontaneamente, dados não armazenados).
-- Descrição das possibilidades de uso (realizar escalas individualmente ou em sequência).
+| Componente       | Props Principais                                 | Descrição                          |
+|-----------------|--------------------------------------------------|------------------------------------|
+| `QuestionCard`  | `question`, `selectedOption`, `onSelect`          | Cartão de pergunta memoizado       |
+| `QuizPlayer`    | `exam`, `onFinish`                               | Controlador do quiz com progresso  |
+| `ResultsView`   | `results`, `mode`, `onRestart`                   | Exibição de resultados + e-mail    |
+| `AboutSection`  | (sem props)                                       | Seção institucional                |
+| `NavLink`       | `to`, `className`, `activeClassName`              | Wrapper NavLink reutilizável       |
 
-### Tela de Resultados
+### 5.3 Utilitário `cn()`
 
-- PSS-10: "Os resultados aqui apresentados foram organizados e categorizados a partir do trabalho de..."
-- EET: "Valores organizados e categorizados a partir de..."
-- Disclaimer: "...procure ajuda qualificada."
-
-### Rodapé Pedagógico
-
-- Finalidade exclusivamente pedagógica.
-- Direitos pertencem aos respectivos criadores.
-- "Produzida por" (sem dois-pontos após nome da escala).
-
-### Seção Sobre
-
-- Informações dos autores (orientadora e autor).
-- Texto sobre consonância com diretrizes CAPES/PTT.
-
----
-
-## 9. Referências Científicas
-
-- **PSS-10**: Cohen, S., Kamarck, T., & Mermelstein, R. (1983). A global measure of perceived stress. *Journal of Health and Social Behavior*, 24(4), 385-396.
-- **PSS-10 (Brasil)**: Siqueira Reis, R., Ferreira Hino, A. A., & Romélio Rodriguez Añez, C. (2010). Perceived Stress Scale: Reliability and validity study in Brazil. *Journal of Health Psychology*, 15(1), 107-114.
-- **EET**: Paschoal, T., & Tamayo, A. (2004). Validação da Escala de Estresse no Trabalho. *Estudos de Psicologia*, 9(1), 45-52.
-- **Classificação PSS-10**: Oliveira, J. C. et al. (2021). The impact of COVID-19 on the physical and emotional health of health professionals. *Research, Society and Development*, v. 10, n. 10, e163101018744.
+```tsx
+import { cn } from "@/lib/utils";
+cn("text-sm font-bold", isActive && "text-primary", className)
+```
 
 ---
 
-## 10. Código Completo Comentado
+## 6. Stack Tecnológica
 
-Todo o código-fonte está documentado com comentários detalhados em português brasileiro no arquivo README.md, seção "Código Completo Comentado". Os arquivos incluem:
+| Tecnologia          | Versão   | Uso                                        |
+|---------------------|----------|--------------------------------------------|
+| React               | 18.x     | Biblioteca de UI com hooks e Suspense      |
+| TypeScript          | —        | Tipagem estática                           |
+| Vite                | —        | Bundler com HMR ultra-rápido               |
+| Tailwind CSS        | —        | Estilização utilitária com tokens          |
+| shadcn/ui           | —        | Componentes acessíveis (Radix UI)          |
+| Lucide React        | —        | Ícones SVG                                |
+| TanStack Query      | 5.x      | Cache e estado assíncrono                  |
+| React Router        | 6.x      | Roteamento SPA                            |
 
-- `src/main.tsx` — Ponto de entrada
-- `src/App.tsx` — Rotas e providers
-- `src/lib/utils.ts` — Utilitário cn()
-- `src/data/exams.ts` — Definições das escalas (textos, inversão, labels)
-- `src/components/QuestionCard.tsx` — Cartão de pergunta (memo)
-- `src/components/QuizPlayer.tsx` — Controlador do fluxo
-- `src/components/ResultsView.tsx` — Resultados e e-mail (memo)
-- `src/components/AboutSection.tsx` — Seção sobre + CAPES
-- `src/pages/Index.tsx` — Página principal (lazy loading)
-- `src/index.css` — Design tokens HSL
+---
+
+## 7. Princípios para Desenvolvimento Futuro
+
+### 7.1 Ao Adicionar Novos Componentes
+
+1. Criar em `src/components/` (domínio) ou `src/components/ui/` (base)
+2. Usar apenas tokens semânticos de cor
+3. Aplicar `React.memo` se receber props que raramente mudam
+4. Exportar como `export default` para lazy loading compatível
+
+### 7.2 Ao Integrar Backend
+
+1. Ativar Lovable Cloud antes de implementar
+2. Criar tabelas com RLS habilitado
+3. Usar funções `SECURITY DEFINER` para verificação de roles
+4. Seguir a ordem de otimização de consultas (seção 4.4)
+5. Configurar `staleTime` e `gcTime` no TanStack Query
+
+### 7.3 Ao Adicionar Novas Escalas
+
+1. Definir dados em `src/data/exams.ts` seguindo a interface `Exam`
+2. Adicionar textos das questões como array separado
+3. Especificar itens invertidos no `generateQuestions()`
+4. Adicionar função de classificação em `ResultsView`
+5. Atualizar o fluxo de fases em `Index.tsx`
+
+### 7.4 Ao Modificar o Design
+
+1. Alterar tokens em `index.css` (`:root` e `.dark`)
+2. Verificar se `tailwind.config.ts` mapeia os tokens corretamente
+3. Testar ambos os temas (claro e escuro)
+4. Nunca usar cores hardcoded nos componentes
+
+---
+
+## 8. SEO e Metadados
+
+- Título: `<title>Estresse PROCISA</title>` (< 60 caracteres)
+- Meta description presente
+- Open Graph e Twitter Cards configurados
+- HTML semântico com `<main>`, `<footer>`, `<section>`
+- Imagens com atributo `alt`
+- Viewport responsivo configurado
