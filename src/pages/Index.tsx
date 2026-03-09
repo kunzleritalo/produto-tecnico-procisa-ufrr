@@ -162,9 +162,14 @@ const Index = () => {
                   >
                     <span className="flex items-center justify-center gap-2 mb-1">
                       <HeartPulse className="w-4 h-4 text-primary" />
-                      <span className="font-semibold text-sm">Escala PSS-10</span>
+                      <span className="font-semibold text-sm">Realizar a Escala PSS-10</span>
                     </span>
-                    <span className="block text-[11px] text-muted-foreground">Estresse Percebido · ~3 min</span>
+                    <span className="flex items-center justify-center gap-1 text-[11px] text-muted-foreground">
+                      <span>Estresse Percebido</span>
+                      <span>·</span>
+                      <Clock className="w-3 h-3" />
+                      <span>~3 min</span>
+                    </span>
                   </button>
 
                   {/* Botão EET */}
@@ -174,9 +179,14 @@ const Index = () => {
                   >
                     <span className="flex items-center justify-center gap-2 mb-1">
                       <Briefcase className="w-4 h-4 text-primary" />
-                      <span className="font-semibold text-sm">Escala EET</span>
+                      <span className="font-semibold text-sm">Realizar a Escala EET</span>
                     </span>
-                    <span className="block text-[11px] text-muted-foreground">Estresse no Trabalho · ~7 min</span>
+                    <span className="flex items-center justify-center gap-1 text-[11px] text-muted-foreground">
+                      <span>Estresse no Trabalho</span>
+                      <span>·</span>
+                      <Clock className="w-3 h-3" />
+                      <span>~7 min</span>
+                    </span>
                   </button>
                 </div>
               </div>
