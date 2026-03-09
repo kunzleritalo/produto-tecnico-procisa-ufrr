@@ -114,7 +114,6 @@ const Index = () => {
                   <p className="text-muted-foreground text-left text-xs leading-relaxed">Busca conhecer informações acerca do construto de "Estresse autopercebido"</p>
                   <div className="flex items-center gap-3 mt-3 text-xs text-muted-foreground">
                     <span className="inline-flex items-center gap-1 bg-accent/50 px-2 py-0.5 rounded-full">{exams[0].questions.length} itens</span>
-                    <span className="inline-flex items-center gap-1"><Clock className="w-3 h-3" />~3 min</span>
                   </div>
                   <p className="text-[10px] text-muted-foreground/60 mt-3 leading-tight text-left">
                     Cohen, S., Kamarck, T., & Mermelstein, R. (1983); Siqueira Reis, R., Ferreira Hino, A. A., & Romélio Rodriguez Añez, C. (2010).
