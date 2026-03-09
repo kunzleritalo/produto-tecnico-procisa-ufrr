@@ -157,7 +157,7 @@ const Index = () => {
                     onClick={() => startExams("pss10")}
                     className="group w-full rounded-xl border-2 border-border bg-card hover:border-primary/40 hover:bg-accent/30 px-3 sm:px-4 py-3.5 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
                   >
-                    <span className="block font-semibold text-[11px] sm:text-sm mb-1 group-hover:text-primary transition-colors duration-300"><span className="hidden sm:inline">Realizar a </span><span className="sm:hidden">Realizar a{"\n"}</span>Escala PSS-10</span>
+                    <span className="block font-semibold text-[11px] sm:text-sm mb-1 group-hover:text-primary transition-colors duration-300">Realizar a<br className="sm:hidden" /> Escala PSS-10</span>
                     <span className="flex items-center justify-center gap-1 text-[10px] sm:text-[11px] text-muted-foreground">
                       <Clock className="w-3 h-3 shrink-0 group-hover:animate-[spin_2s_ease-in-out_1]" />
                       <span>~3 min</span>
