@@ -175,7 +175,7 @@ const ResultsView = memo(({ results, mode, onRestart }: ResultsViewProps) => {
               )}
               {exam.id === "prova2" && (
                 <p className="text-[11px] text-muted-foreground/70 leading-snug mt-2">
-                  Valores organizados e categorizados a partir de: PASCHOAL, T.; TAMAYO, A. Validação da escala de estresse no trabalho. <em>Estudos de Psicologia (Natal)</em>, v. 9, n. 1, p. 45-52, 2004.
+                  Os resultados aqui apresentados foram organizados e categorizados a partir do trabalho de: PASCHOAL, T.; TAMAYO, A. Validação da escala de estresse no trabalho. <em>Estudos de Psicologia (Natal)</em>, v. 9, n. 1, p. 45-52, 2004.
                 </p>
               )}
             </div>
