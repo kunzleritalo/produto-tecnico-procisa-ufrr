@@ -3,6 +3,7 @@ import { Exam, getScore } from "@/data/exams";
 import { Home, AlertTriangle, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import procisaLogo from "@/assets/procisa-logo.png";
+import ufrrLogo from "@/assets/ufrr-logo.png";
 
 interface ExamResult {
   exam: Exam;
