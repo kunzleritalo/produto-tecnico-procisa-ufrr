@@ -172,9 +172,9 @@ const Index = () => {
                     onClick={() => startExams("eet")}
                     className="group w-full rounded-xl border-2 border-border bg-card hover:border-primary/40 hover:bg-accent/30 px-3 sm:px-4 py-3.5 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
                   >
-                    <span className="flex items-center justify-center gap-2 font-semibold text-[11px] sm:text-sm mb-1 group-hover:text-primary transition-colors duration-300">
-                      <span>Realizar a<br className="sm:hidden" /> Escala EET</span>
-                      <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                    <span className="flex items-center justify-center gap-2 font-semibold text-[11px] sm:text-xs mb-1 group-hover:text-primary transition-colors duration-300">
+                      <span className="sm:whitespace-nowrap">Realizar a<br className="sm:hidden" /> Escala EET</span>
+                      <ArrowRight className="w-3.5 h-3.5 shrink-0 group-hover:translate-x-1 transition-transform" />
                     </span>
                     <span className="flex items-center justify-center gap-1 text-[10px] sm:text-[11px] text-muted-foreground">
                       <Clock className="w-3 h-3 shrink-0 group-hover:animate-[spin_2s_ease-in-out_1]" />
