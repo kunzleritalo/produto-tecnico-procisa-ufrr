@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Exam } from "@/data/exams";
 import QuestionCard from "./QuestionCard";
 import { Button } from "@/components/ui/button";
@@ -16,9 +16,9 @@ const QuizPlayer = ({ exam, onFinish }: QuizPlayerProps) => {
   const answered = Object.keys(answers).length;
   const allAnswered = answered === total;
 
-  const selectAnswer = (questionId: string, value: number) => {
+  const selectAnswer = useCallback((questionId: string, value: number) => {
     setAnswers((prev) => ({ ...prev, [questionId]: value }));
-  };
+  }, []);
 
   return (
     <div className="w-full max-w-2xl mx-auto">
