@@ -21,12 +21,14 @@ Ferramenta digital para aplicação das escalas **PSS-10** (Escala de Estresse P
 
 ## Visão Geral
 
-A aplicação permite que o usuário realize as escalas PSS-10 e EET — individualmente ou em conjunto — diretamente no navegador. Todos os cálculos são realizados localmente (client-side), sem envio ou armazenamento de dados em servidor. Ao final, os resultados são apresentados com classificações e podem ser enviados por e-mail.
+A aplicação permite que o usuário realize as escalas PSS-10 e EET — individualmente ou em conjunto — diretamente no navegador. Todos os cálculos são realizados localmente (client-side), sem envio ou armazenamento de dados em servidor. Ao final, os resultados são apresentados com classificações e podem ser enviados por e-mail via `mailto:`.
 
 **Autoria:**
 - **Autor:** Me. Ítalo Ribeiro Kunzler Machado Marques
 - **Orientadora:** Prof.ª Dr.ª Edilane Nunes Régis Bezerra
 - **Programa:** PROCISA – UFRR
+
+**URL publicada:** https://estresse-procisa.lovable.app
 
 ---
 
@@ -271,7 +273,7 @@ npm run preview
 
 ## Código-Fonte Completo e Comentado
 
-Abaixo está o código completo de cada arquivo do projeto, com comentários detalhados em português brasileiro.
+Abaixo está o código completo e atualizado de cada arquivo do projeto, com comentários detalhados e minuciosos em português brasileiro.
 
 ---
 
@@ -281,6 +283,7 @@ Abaixo está o código completo de cada arquivo do projeto, com comentários det
 <!doctype html>
 <html lang="en">
   <head>
+    <!-- Codificação de caracteres UTF-8 para suporte a acentos e caracteres especiais -->
     <meta charset="UTF-8" />
     <!-- Define viewport responsivo para dispositivos móveis -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -288,17 +291,20 @@ Abaixo está o código completo de cada arquivo do projeto, com comentários det
     <title>Estresse PROCISA</title>
     <!-- Descrição para mecanismos de busca (SEO) -->
     <meta name="description" content="PROCISA - PSS-10 &amp; EET">
+    <!-- Autor da aplicação -->
     <meta name="author" content="Lovable" />
 
     <!-- Open Graph: tipo de conteúdo para compartilhamento em redes sociais -->
     <meta property="og:type" content="website" />
-    <!-- Imagem de preview ao compartilhar o link -->
+    <!-- Imagem de preview ao compartilhar o link em redes sociais -->
     <meta property="og:image" content="https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/de9a7276-c86c-4e80-b01b-601a96701eca/id-preview-db368fc5--2e580925-cc2b-46a8-befc-04899ac7f6c3.lovable.app-1771540983199.png">
-    <!-- Twitter Card: formato grande com imagem -->
+
+    <!-- Twitter Card: formato grande com imagem para compartilhamento no Twitter/X -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@Lovable" />
     <meta name="twitter:image" content="https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/de9a7276-c86c-4e80-b01b-601a96701eca/id-preview-db368fc5--2e580925-cc2b-46a8-befc-04899ac7f6c3.lovable.app-1771540983199.png">
-    <!-- Títulos e descrições para compartilhamento social -->
+
+    <!-- Títulos e descrições duplicados para Open Graph e Twitter -->
     <meta property="og:title" content="Estresse PROCISA">
     <meta name="twitter:title" content="Estresse PROCISA">
     <meta property="og:description" content="PROCISA - PSS-10 &amp; EET">
@@ -307,7 +313,7 @@ Abaixo está o código completo de cada arquivo do projeto, com comentários det
   <body>
     <!-- Container raiz onde o React monta toda a aplicação -->
     <div id="root"></div>
-    <!-- Carrega o ponto de entrada principal como módulo ES -->
+    <!-- Carrega o ponto de entrada principal como módulo ES6 -->
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
@@ -319,14 +325,17 @@ Abaixo está o código completo de cada arquivo do projeto, com comentários det
 
 ```tsx
 // Importa a função createRoot do React 18 para renderização concorrente
+// createRoot substitui o antigo ReactDOM.render e habilita features do React 18
 import { createRoot } from "react-dom/client";
-// Importa o componente raiz da aplicação
+
+// Importa o componente raiz da aplicação que contém roteamento e provedores
 import App from "./App.tsx";
-// Importa os estilos globais (tokens, Tailwind, utilitários)
+
+// Importa os estilos globais: tokens de design, diretivas Tailwind e utilitários customizados
 import "./index.css";
 
-// Monta a aplicação React no elemento DOM com id "root"
-// O operador "!" (non-null assertion) garante ao TypeScript que o elemento existe
+// Monta a árvore React no elemento DOM com id "root" (definido em index.html)
+// O operador "!" (non-null assertion) garante ao TypeScript que o elemento existe no DOM
 createRoot(document.getElementById("root")!).render(<App />);
 ```
 
@@ -335,30 +344,33 @@ createRoot(document.getElementById("root")!).render(<App />);
 ### `src/App.tsx`
 
 ```tsx
-// Importa os provedores de notificação (Radix Toast e Sonner)
+// Importa os dois sistemas de notificação disponíveis
+// Toaster (Radix Toast) — notificações empilháveis com controle fino
 import { Toaster } from "@/components/ui/toaster";
+// Sonner — notificações mais simples e elegantes (alternativo)
 import { Toaster as Sonner } from "@/components/ui/sonner";
-// Provedor de tooltips do Radix UI
+// TooltipProvider do Radix UI — necessário para que qualquer componente Tooltip funcione
 import { TooltipProvider } from "@/components/ui/tooltip";
-// React Router para navegação SPA (Single Page Application)
+// React Router DOM — gerencia navegação SPA (Single Page Application) baseada em URL
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 // Páginas da aplicação
-import Index from "./pages/Index";
-import NotFound from "./pages/NotFound";
+import Index from "./pages/Index";       // Tela principal com escalas
+import NotFound from "./pages/NotFound"; // Página 404 para rotas inexistentes
 
-// Componente raiz: envolve toda a aplicação com provedores de contexto
+// Componente raiz: envolve toda a aplicação com provedores de contexto global
+// A ordem dos provedores importa: TooltipProvider > Toasters > Router
 const App = () => (
   <TooltipProvider>
-    {/* Sistema de notificações Toast (Radix) */}
+    {/* Renderiza toasts ativos na tela (Radix) */}
     <Toaster />
-    {/* Sistema de notificações Sonner (alternativo) */}
+    {/* Renderiza notificações Sonner */}
     <Sonner />
-    {/* Roteador: gerencia navegação baseada em URL */}
+    {/* BrowserRouter utiliza a History API do navegador para navegação sem reload */}
     <BrowserRouter>
       <Routes>
-        {/* Rota principal — tela de boas-vindas e escalas */}
+        {/* Rota "/" → Tela principal com boas-vindas e escalas */}
         <Route path="/" element={<Index />} />
-        {/* Rota curinga — qualquer URL não reconhecida exibe 404 */}
+        {/* Rota curinga "*" → Qualquer URL não reconhecida exibe página 404 */}
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
@@ -374,83 +386,80 @@ export default App;
 
 ```css
 /* ══════════════════════════════════════════════════════════════
-   IMPORTAÇÃO DE FONTES — deve vir ANTES das diretivas @tailwind
-   para evitar erro de build "import must precede all other statements"
+   IMPORTAÇÃO DE FONTES EXTERNAS (Google Fonts)
+   IMPORTANTE: As declarações @import DEVEM vir ANTES das diretivas
+   @tailwind para evitar o erro de build:
+   "import must precede all other statements"
    ══════════════════════════════════════════════════════════════ */
+
+/* Space Grotesk: fonte geométrica para headings (h1-h6) */
+/* Inter: fonte humanista para corpo de texto */
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap');
+
+/* Work Sans: fonte sans-serif padrão do Tailwind (font-family geral) */
 @import url("https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&display=swap");
+
+/* Lora: fonte serifada para uso especial (citações, destaques) */
 @import url("https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&display=swap");
+
+/* Inconsolata: fonte monoespaçada para código e dados técnicos */
 @import url("https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;700&display=swap");
 
-/* Diretivas Tailwind: injetam base, componentes e utilitários */
+/* Diretivas Tailwind: injetam reset (base), componentes e classes utilitárias */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /* ══════════════════════════════════════════════════════════════
-   DESIGN TOKENS — Tema Claro (padrão)
-   Todas as cores usam HSL sem a função hsl() para compatibilidade
-   com Tailwind (ex: bg-primary → hsl(var(--primary)))
+   DESIGN TOKENS — TEMA CLARO (:root)
+
+   Todos os valores de cor usam formato HSL PURO (sem a função hsl())
+   para compatibilidade com Tailwind CSS, que aplica hsl() automaticamente.
+   Exemplo: bg-primary → hsl(var(--primary))
    ══════════════════════════════════════════════════════════════ */
 @layer base {
   :root {
-    /* ── Superfícies ── */
-    --background: 160 15% 96%;        /* Fundo geral da página */
-    --foreground: 160 10% 9%;         /* Texto principal */
-    --card: 160 10% 99%;              /* Fundo de cards */
-    --card-foreground: 160 10% 9%;    /* Texto em cards */
-    --popover: 160 8% 92%;            /* Fundo de popovers */
+    /* ── Superfícies Principais ── */
+    --background: 160 15% 96%;        /* Fundo geral da página — verde muito claro */
+    --foreground: 160 10% 9%;         /* Texto principal — quase preto com tom esverdeado */
+
+    --card: 160 10% 99%;              /* Fundo de cards — branco suave */
+    --card-foreground: 160 10% 9%;    /* Texto dentro de cards */
+
+    --popover: 160 8% 92%;            /* Fundo de menus, popovers e dropdowns */
     --popover-foreground: 160 10% 9%; /* Texto em popovers */
 
-    /* ── Cores Primárias (Verde Institucional) ── */
-    --primary: 161 93% 30%;           /* Verde principal PROCISA */
-    --primary-foreground: 151 80% 95%;/* Texto sobre o verde */
+    /* ── Cor Primária (Verde Institucional PROCISA) ── */
+    --primary: 161 93% 30%;           /* Verde escuro saturado — identidade visual */
+    --primary-foreground: 151 80% 95%;/* Texto claro para usar sobre fundos verdes */
 
-    /* ── Secundárias e Mutadas ── */
-    --secondary: 160 8% 90%;
-    --secondary-foreground: 160 10% 15%;
-    --muted: 160 5% 63%;
-    --muted-foreground: 160 5% 35%;
+    /* ── Cores Secundárias ── */
+    --secondary: 160 8% 90%;          /* Cinza esverdeado claro para fundos sutis */
+    --secondary-foreground: 160 10% 15%; /* Texto sobre fundos secundários */
 
-    /* ── Acentuação ── */
-    --accent: 166 76% 96%;
-    --accent-foreground: 173 80% 30%;
+    /* ── Textos Mutados (secundários, menos importantes) ── */
+    --muted: 160 5% 63%;              /* Cinza médio para elementos desabilitados */
+    --muted-foreground: 160 5% 35%;   /* Cinza escuro para textos auxiliares */
+
+    /* ── Acentuação (destaques sutis) ── */
+    --accent: 166 76% 96%;            /* Verde muito claro para backgrounds de destaque */
+    --accent-foreground: 173 80% 30%; /* Texto sobre fundos de acento */
 
     /* ── Cores Semânticas de Status ── */
-    --destructive: 0 72% 50%;           /* Vermelho para erros/alertas */
-    --destructive-foreground: 0 85% 97%;
-    --success: 152 60% 40%;             /* Verde para sucesso */
-    --success-foreground: 0 0% 100%;
-    --warning: 38 90% 55%;              /* Amarelo para avisos */
-    --warning-foreground: 0 0% 100%;
+    --destructive: 0 72% 50%;           /* Vermelho para erros e alertas críticos */
+    --destructive-foreground: 0 85% 97%;/* Texto sobre vermelho */
+    --success: 152 60% 40%;             /* Verde para indicar sucesso */
+    --success-foreground: 0 0% 100%;    /* Texto branco sobre verde */
+    --warning: 38 90% 55%;              /* Amarelo/laranja para avisos */
+    --warning-foreground: 0 0% 100%;    /* Texto branco sobre amarelo */
 
     /* ── Bordas e Inputs ── */
-    --border: 160 10% 86%;
-    --input: 160 10% 86%;
-    --ring: 161 93% 30%;               /* Cor do foco (ring) */
-    --radius: 0.75rem;                 /* Border-radius padrão */
+    --border: 160 10% 86%;            /* Cor de borda padrão — cinza claro esverdeado */
+    --input: 160 10% 86%;             /* Cor de borda de inputs */
+    --ring: 161 93% 30%;              /* Cor do anel de foco (focus ring) */
+    --radius: 0.75rem;                /* Border-radius padrão (12px) */
 
-    /* ── Efeitos Visuais ── */
-    --primary-glow: 158 64% 51%;       /* Verde mais claro para gradientes */
-    --gradient-hero: linear-gradient(135deg, hsl(161 93% 30% / 0.08), hsl(166 76% 96% / 0.5));
-    --shadow-card: 0 2px 12px -4px hsl(161 93% 30% / 0.1), 0 1px 4px -2px hsl(0 0% 0% / 0.06);
-    --shadow-card-hover: 0 8px 24px -8px hsl(161 93% 30% / 0.15), 0 2px 8px -2px hsl(0 0% 0% / 0.08);
-
-    /* ── Tipografia ── */
-    --font-heading: 'Space Grotesk', sans-serif;
-    --font-body: 'Inter', sans-serif;
-    --font-sans: 'Work Sans', ui-sans-serif, system-ui, sans-serif;
-    --font-serif: 'Lora', ui-serif, Georgia, serif;
-    --font-mono: 'Inconsolata', ui-monospace, monospace;
-
-    /* ── Charts ── */
-    --chart-1: 158 64% 51%;
-    --chart-2: 141 69% 58%;
-    --chart-3: 172 66% 50%;
-    --chart-4: 82 77% 55%;
-    --chart-5: 0 0% 45%;
-
-    /* ── Sidebar (reservado para futuro) ── */
+    /* ── Sidebar (reservado para expansão futura) ── */
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 0 0% 9%;
     --sidebar-primary: 161 93% 30%;
@@ -461,7 +470,30 @@ export default App;
     --sidebar-ring: 161 93% 30%;
     --sidebar: 0 0% 98%;
 
-    /* ── Sombras Utilitárias ── */
+    /* ── Efeitos Visuais ── */
+    --primary-glow: 158 64% 51%;       /* Verde mais claro usado em gradientes */
+    /* Gradiente sutil para a seção hero (boas-vindas) */
+    --gradient-hero: linear-gradient(135deg, hsl(161 93% 30% / 0.08), hsl(166 76% 96% / 0.5));
+    /* Sombra padrão para cards com tom esverdeado */
+    --shadow-card: 0 2px 12px -4px hsl(161 93% 30% / 0.1), 0 1px 4px -2px hsl(0 0% 0% / 0.06);
+    /* Sombra intensificada para hover em cards */
+    --shadow-card-hover: 0 8px 24px -8px hsl(161 93% 30% / 0.15), 0 2px 8px -2px hsl(0 0% 0% / 0.08);
+
+    /* ── Fontes ── */
+    --font-heading: 'Space Grotesk', sans-serif; /* Para h1-h6 */
+    --font-body: 'Inter', sans-serif;            /* Para corpo de texto */
+    --font-sans: 'Work Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+    --font-serif: 'Lora', ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
+    --font-mono: 'Inconsolata', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+
+    /* ── Cores para Gráficos (reservado para uso futuro) ── */
+    --chart-1: 158 64% 51%;
+    --chart-2: 141 69% 58%;
+    --chart-3: 172 66% 50%;
+    --chart-4: 82 77% 55%;
+    --chart-5: 0 0% 45%;
+
+    /* ── Escala de Sombras Utilitárias ── */
     --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
     --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
     --shadow-sm: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
@@ -476,16 +508,17 @@ export default App;
 
   /* ══════════════════════════════════════════════════════════════
      TEMA ESCURO — sobrescreve tokens para modo dark
+     Ativado adicionando a classe "dark" ao elemento <html>
      ══════════════════════════════════════════════════════════════ */
   .dark {
-    --background: 160 10% 7%;
-    --foreground: 160 5% 96%;
-    --card: 160 8% 11%;
+    --background: 160 10% 7%;           /* Fundo escuro com tom esverdeado */
+    --foreground: 160 5% 96%;           /* Texto claro */
+    --card: 160 8% 11%;                 /* Cards escuros */
     --card-foreground: 160 5% 96%;
     --popover: 160 6% 18%;
     --popover-foreground: 160 5% 96%;
-    --primary: 158 64% 51%;
-    --primary-foreground: 165 91% 9%;
+    --primary: 158 64% 51%;             /* Verde mais claro no dark mode para contraste */
+    --primary-foreground: 165 91% 9%;   /* Texto escuro sobre verde claro */
     --secondary: 160 6% 20%;
     --secondary-foreground: 160 5% 90%;
     --muted: 160 4% 40%;
@@ -526,29 +559,29 @@ export default App;
 }
 
 /* ══════════════════════════════════════════════════════════════
-   ESTILOS BASE GLOBAIS
+   ESTILOS BASE — aplicados a todos os elementos
    ══════════════════════════════════════════════════════════════ */
 @layer base {
-  /* Aplica cor de borda padrão a todos os elementos */
+  /* Garante que todos os elementos usem a cor de borda do design system */
   * {
     @apply border-border;
   }
-  /* Define fundo e fonte do corpo da página */
+  /* Define fonte e cores padrão do body */
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-body);
   }
-  /* Headings usam fonte diferente do corpo */
+  /* Headings usam fonte distinta (Space Grotesk) */
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
   }
 }
 
 /* ══════════════════════════════════════════════════════════════
-   UTILITÁRIOS CUSTOMIZADOS
+   UTILITÁRIOS CUSTOMIZADOS — classes reutilizáveis
    ══════════════════════════════════════════════════════════════ */
 @layer utilities {
-  /* Card com sombra e animação de hover (elevação) */
+  /* Card com sombra elevada e animação de hover */
   .card-elevated {
     box-shadow: var(--shadow-card);
     transition: box-shadow 0.3s ease, transform 0.3s ease;
@@ -557,15 +590,15 @@ export default App;
     box-shadow: var(--shadow-card-hover);
     transform: translateY(-2px);
   }
-  /* Gradiente sutil para seções hero */
+  /* Gradiente sutil para seção hero (boas-vindas) */
   .gradient-hero {
     background: var(--gradient-hero);
   }
-  /* Gradiente primário mais sutil para fundos */
+  /* Gradiente primário sutil para fundos secundários */
   .gradient-primary-subtle {
     background: linear-gradient(135deg, hsl(var(--primary) / 0.06), hsl(var(--accent) / 0.4));
   }
-  /* Texto com gradiente (efeito de cor dinâmica) */
+  /* Texto com gradiente (efeito decorativo) */
   .text-gradient-primary {
     background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
     -webkit-background-clip: text;
@@ -577,36 +610,260 @@ export default App;
 
 ---
 
+### `tailwind.config.ts`
+
+```ts
+import type { Config } from "tailwindcss";
+
+export default {
+  // Ativa tema escuro via classe CSS (class="dark" no <html>)
+  darkMode: ["class"],
+
+  // Caminhos onde o Tailwind busca classes usadas para tree-shaking
+  content: [
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+  ],
+
+  // Prefixo para classes Tailwind (vazio = sem prefixo)
+  prefix: "",
+
+  theme: {
+    // Container centralizado com padding e breakpoint máximo
+    container: {
+      center: true,
+      padding: '2rem',
+      screens: {
+        '2xl': '1400px',
+      },
+    },
+    extend: {
+      // ── Cores mapeadas dos tokens CSS do design system ──
+      // Cada cor usa hsl(var(--token)) para respeitar os tokens definidos em index.css
+      colors: {
+        border: 'hsl(var(--border))',
+        input: 'hsl(var(--input))',
+        ring: 'hsl(var(--ring))',
+        background: 'hsl(var(--background))',
+        foreground: 'hsl(var(--foreground))',
+        primary: {
+          DEFAULT: 'hsl(var(--primary))',
+          foreground: 'hsl(var(--primary-foreground))',
+        },
+        secondary: {
+          DEFAULT: 'hsl(var(--secondary))',
+          foreground: 'hsl(var(--secondary-foreground))',
+        },
+        destructive: {
+          DEFAULT: 'hsl(var(--destructive))',
+          foreground: 'hsl(var(--destructive-foreground))',
+        },
+        muted: {
+          DEFAULT: 'hsl(var(--muted))',
+          foreground: 'hsl(var(--muted-foreground))',
+        },
+        accent: {
+          DEFAULT: 'hsl(var(--accent))',
+          foreground: 'hsl(var(--accent-foreground))',
+        },
+        popover: {
+          DEFAULT: 'hsl(var(--popover))',
+          foreground: 'hsl(var(--popover-foreground))',
+        },
+        card: {
+          DEFAULT: 'hsl(var(--card))',
+          foreground: 'hsl(var(--card-foreground))',
+        },
+        // Cores semânticas de status (registradas para uso com classes Tailwind)
+        success: {
+          DEFAULT: 'hsl(var(--success))',
+          foreground: 'hsl(var(--success-foreground))',
+        },
+        warning: {
+          DEFAULT: 'hsl(var(--warning))',
+          foreground: 'hsl(var(--warning-foreground))',
+        },
+        // Tokens da sidebar (reservados para uso futuro)
+        sidebar: {
+          DEFAULT: 'hsl(var(--sidebar-background))',
+          foreground: 'hsl(var(--sidebar-foreground))',
+          primary: 'hsl(var(--sidebar-primary))',
+          'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
+          accent: 'hsl(var(--sidebar-accent))',
+          'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
+          border: 'hsl(var(--sidebar-border))',
+          ring: 'hsl(var(--sidebar-ring))',
+        },
+      },
+      // ── Border Radius ── derivados do token --radius
+      borderRadius: {
+        lg: 'var(--radius)',
+        md: 'calc(var(--radius) - 2px)',
+        sm: 'calc(var(--radius) - 4px)',
+      },
+      // ── Animações para accordion do Radix UI ──
+      keyframes: {
+        'accordion-down': {
+          from: { height: '0' },
+          to: { height: 'var(--radix-accordion-content-height)' },
+        },
+        'accordion-up': {
+          from: { height: 'var(--radix-accordion-content-height)' },
+          to: { height: '0' },
+        },
+      },
+      animation: {
+        'accordion-down': 'accordion-down 0.2s ease-out',
+        'accordion-up': 'accordion-up 0.2s ease-out',
+      },
+      // ── Sombras mapeadas dos tokens CSS ──
+      boxShadow: {
+        '2xs': 'var(--shadow-2xs)',
+        xs: 'var(--shadow-xs)',
+        sm: 'var(--shadow-sm)',
+        md: 'var(--shadow-md)',
+        lg: 'var(--shadow-lg)',
+        xl: 'var(--shadow-xl)',
+        '2xl': 'var(--shadow-2xl)',
+      },
+      // ── Fontes mapeadas dos tokens CSS ──
+      fontFamily: {
+        sans: ['Work Sans', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'Noto Sans', 'sans-serif'],
+        serif: ['Lora', 'ui-serif', 'Georgia', 'Cambria', 'Times New Roman', 'Times', 'serif'],
+        mono: ['Inconsolata', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', 'monospace'],
+      },
+    },
+  },
+  // Plugin tailwindcss-animate para classes de animação (fade, slide, zoom, etc.)
+  plugins: [require("tailwindcss-animate")],
+} satisfies Config;
+```
+
+---
+
+### `vite.config.ts`
+
+```ts
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react-swc";
+import path from "path";
+import { componentTagger } from "lovable-tagger";
+
+// Configuração do Vite — bundler da aplicação
+export default defineConfig(({ mode }) => ({
+  server: {
+    // Escuta em todas as interfaces de rede (IPv4 e IPv6)
+    host: "::",
+    // Porta de desenvolvimento
+    port: 8080,
+    hmr: {
+      // Desabilita overlay de erros do HMR para não cobrir a interface
+      overlay: false,
+    },
+  },
+  plugins: [
+    // Plugin SWC para compilação rápida de React (JSX/TSX)
+    react(),
+    // Em desenvolvimento, adiciona tags para identificação de componentes no Lovable
+    mode === "development" && componentTagger(),
+  ].filter(Boolean), // Remove valores falsy (quando mode !== "development")
+  resolve: {
+    alias: {
+      // Alias "@" aponta para o diretório src/ para imports mais limpos
+      // Ex.: import X from "@/components/X" em vez de "../../components/X"
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
+}));
+```
+
+---
+
+### `src/lib/utils.ts`
+
+```ts
+// Importa clsx para composição condicional de classes CSS
+import { clsx, type ClassValue } from "clsx";
+// Importa twMerge para resolver conflitos entre classes Tailwind
+// Ex.: cn("px-4", "px-8") → "px-8" (a última vence)
+import { twMerge } from "tailwind-merge";
+
+// Função utilitária cn() — combina clsx + twMerge
+// Usada em todos os componentes para classes condicionais e merge inteligente
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+```
+
+---
+
+### `src/hooks/use-mobile.tsx`
+
+```tsx
+import * as React from "react";
+
+// Breakpoint que define "mobile" (menor que 768px = mobile)
+const MOBILE_BREAKPOINT = 768;
+
+// Hook personalizado para detectar se o viewport é mobile
+// Usa matchMedia para ouvir mudanças de tamanho de tela em tempo real
+export function useIsMobile() {
+  // Estado inicial undefined para evitar mismatch de hidratação (SSR-safe)
+  const [isMobile, setIsMobile] = React.useState<boolean | undefined>(undefined);
+
+  React.useEffect(() => {
+    // Cria media query listener
+    const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`);
+    // Handler chamado quando o tamanho da tela cruza o breakpoint
+    const onChange = () => {
+      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
+    };
+    // Registra o listener
+    mql.addEventListener("change", onChange);
+    // Define o valor inicial
+    setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
+    // Cleanup: remove o listener ao desmontar
+    return () => mql.removeEventListener("change", onChange);
+  }, []);
+
+  // Converte undefined → false com !! para garantir retorno booleano
+  return !!isMobile;
+}
+```
+
+---
+
 ### `src/data/exams.ts`
 
 ```ts
 // ══════════════════════════════════════════════════════════════
-// DEFINIÇÃO DAS ESCALAS (EXAMES)
-// Este arquivo contém todas as definições de dados das escalas,
-// incluindo questões, opções, instruções e função de pontuação.
+// DEFINIÇÕES DAS ESCALAS — dados puros (sem lógica de apresentação)
+// Este arquivo contém todas as questões, configurações e a função de scoring
 // ══════════════════════════════════════════════════════════════
 
-// Interface que define a estrutura de uma questão
+// Interface que define a estrutura de uma questão individual
 export interface Question {
-  id: string;         // Identificador único (ex: "p1q1")
-  text: string;       // Texto completo da questão
-  numOptions: number;  // Quantidade de opções de resposta
-  inverted: boolean;   // Se verdadeiro, pontuação é invertida (ex: 4→0, 3→1)
+  id: string;          // Identificador único (ex.: "p1q1", "p2q5")
+  text: string;        // Texto completo da questão
+  numOptions: number;  // Quantidade de opções disponíveis (5 para ambas as escalas)
+  inverted: boolean;   // Se true, o escore é invertido (4→0, 3→1, etc.)
 }
 
-// Interface que define a estrutura de um exame (escala)
+// Interface que define a estrutura completa de um exame (escala)
 export interface Exam {
-  id: string;             // Identificador do exame ("prova1" ou "prova2")
-  title: string;          // Título completo da escala
-  description: string;    // Descrição curta (ex: "10 itens · Alternativas de 0 a 4")
-  instructions?: string;  // Instruções detalhadas exibidas antes das questões
-  optionLabels?: string[]; // Rótulos textuais para cada valor numérico
-  startFrom?: number;     // Valor inicial das opções (0 para PSS-10, 1 para EET)
-  questions: Question[];  // Array de questões
+  id: string;            // Identificador ("prova1" para PSS-10, "prova2" para EET)
+  title: string;         // Título exibido ao usuário
+  description: string;   // Descrição breve
+  instructions?: string; // Instruções detalhadas (opcional)
+  optionLabels?: string[]; // Rótulos textuais para cada opção (ex.: "Nunca", "Sempre")
+  startFrom?: number;    // Valor inicial das opções (0 para PSS-10, 1 para EET)
+  questions: Question[]; // Array de questões que compõem a escala
 }
 
-// Função auxiliar para gerar um array de questões com padrão repetitivo
-// Recebe: prefixo do id, quantidade, nº de opções, itens invertidos e textos
+// Função utilitária para gerar arrays de questões a partir de textos
+// Recebe: prefixo do ID, quantidade, número de opções, itens invertidos e textos
 function generateQuestions(
   prefix: string,
   count: number,
@@ -615,14 +872,15 @@ function generateQuestions(
   texts?: string[]
 ): Question[] {
   return Array.from({ length: count }, (_, i) => ({
-    id: `${prefix}q${i + 1}`,                          // Gera id sequencial
-    text: texts?.[i] ?? `Item ${i + 1}`,                // Usa texto fornecido ou fallback
-    numOptions,                                          // Número de opções
-    inverted: invertedItems.includes(i + 1),             // Verifica se o item é invertido
+    id: `${prefix}q${i + 1}`,                       // ID gerado automaticamente
+    text: texts?.[i] ?? `Item ${i + 1}`,             // Texto da questão ou fallback
+    numOptions,                                       // Número de opções
+    inverted: invertedItems.includes(i + 1),          // Verifica se é item invertido (1-indexed)
   }));
 }
 
-// ── Textos das 10 questões da PSS-10 ──
+// ── Textos da PSS-10 (Escala de Estresse Percebido) ──
+// 10 itens que avaliam a percepção de estresse nos últimos 30 dias
 const pss10Texts = [
   "Com que frequência você ficou aborrecido por causa de algo que aconteceu inesperadamente? (considere os últimos 30 dias)",
   "Com que frequência você sentiu que foi incapaz de controlar coisas importantes na sua vida? (considere os últimos 30 dias)",
@@ -636,7 +894,8 @@ const pss10Texts = [
   "Com que frequência você sentiu que os problemas acumularam tanto que você não conseguiria resolvê-los? (considere os últimos 30 dias)",
 ];
 
-// ── Textos das 23 questões da EET ──
+// ── Textos da EET (Escala de Estresse no Trabalho) ──
+// 23 itens que avaliam estressores ocupacionais específicos
 const eetTexts = [
   "A forma como as tarefas são distribuídas em minha área tem me deixado nervoso(a).",
   "O tipo de controle existente em meu trabalho me irrita.",
@@ -663,19 +922,18 @@ const eetTexts = [
   "Fico incomodado(a) por meu superior evitar me incumbir de responsabilidades importantes.",
 ];
 
-// ══════════════════════════════════════════════════════════════
-// DEFINIÇÃO DOS EXAMES
-// ══════════════════════════════════════════════════════════════
+// ── Definição das Escalas (exportadas para uso nos componentes) ──
 export const exams: Exam[] = [
   {
     id: "prova1",
     title: "PSS-10 – Escala de Estresse Percebido",
     description: "10 itens · Alternativas de 0 a 4.",
-    // Instruções completas exibidas ao usuário antes de iniciar
+    // Instruções completas exibidas antes das questões
     instructions: "As questões nesta escala perguntam a respeito dos seus sentimentos e pensamentos durante os últimos 30 dias (último mês). Em cada questão, indique a frequência com que você se sentiu ou pensou a respeito da situação vivenciada, seguindo a escala abaixo:\n\n0 – Nunca | 1 – Quase Nunca | 2 – Às Vezes | 3 – Pouco Frequente | 4 – Muito Frequente",
-    // Rótulos textuais correspondentes a cada valor numérico (0-4)
+    // Rótulos textuais para cada valor numérico (0-4)
     optionLabels: ["Nunca", "Quase Nunca", "Às Vezes", "Pouco Frequente", "Muito Frequente"],
-    // Gera 10 questões; itens 4, 5, 7 e 8 são invertidos conforme a escala original
+    // startFrom padrão (0) — não precisa declarar
+    // Itens 4, 5, 7 e 8 são invertidos na PSS-10
     questions: generateQuestions("p1", 10, 5, [4, 5, 7, 8], pss10Texts),
   },
   {
@@ -683,17 +941,17 @@ export const exams: Exam[] = [
     title: "EET – Escala de Estresse no Trabalho",
     description: "23 itens · Alternativas de 1 a 5",
     instructions: "As questões nesta escala listam várias situações que podem ocorrer no dia a dia de seu trabalho. Leia com atenção cada afirmativa e utilize a escala apresentada a seguir para dar sua opinião sobre cada uma delas:\n\n1 – Discordo Totalmente | 2 – Discordo | 3 – Concordo em Parte | 4 – Concordo | 5 – Concordo Totalmente\n\nPara cada item, marque o número que melhor corresponde à sua resposta.\nAo marcar o número 1, você indica discordar totalmente da afirmativa.\nAssinalando o número 5, você indica concordar totalmente com a afirmativa.\nObserve que, quanto menor o número, mais você discorda da afirmativa e, quanto maior o número, mais você concorda com a afirmativa.",
-    // Índice 0 vazio pois a EET começa em 1
+    // EET tem rótulo vazio no índice 0 porque as opções começam em 1
     optionLabels: ["", "Discordo Totalmente", "Discordo", "Concordo em parte", "Concordo", "Concordo Totalmente"],
-    startFrom: 1,  // Opções começam em 1 (não em 0)
-    // Gera 23 questões; nenhum item é invertido na EET
+    startFrom: 1, // Opções começam em 1 (não em 0)
+    // Nenhum item invertido na EET
     questions: generateQuestions("p2", 23, 5, [], eetTexts),
   },
 ];
 
-// Calcula a pontuação de uma questão individual
-// Para itens invertidos: inverte o valor (ex: se numOptions=5, valor 0→4, 1→3, etc.)
-// Para itens normais: retorna o valor selecionado diretamente
+// Função de cálculo de escore para uma questão individual
+// Se o item for invertido, aplica a inversão: (numOptions - 1) - valor
+// Exemplo para PSS-10 (5 opções, 0-4): invertido(3) = 4 - 3 = 1
 export function getScore(question: Question, selectedValue: number): number {
   if (question.inverted) {
     return (question.numOptions - 1) - selectedValue;
@@ -704,297 +962,80 @@ export function getScore(question: Question, selectedValue: number): number {
 
 ---
 
-### `src/pages/Index.tsx`
+### `src/components/QuestionCard.tsx`
 
 ```tsx
-// ══════════════════════════════════════════════════════════════
-// PÁGINA PRINCIPAL — Orquestra todo o fluxo da aplicação
-// Gerencia: tela de boas-vindas, execução das escalas e resultados
-// ══════════════════════════════════════════════════════════════
+// Importa memo do React para memoização do componente
+// memo evita re-renderizações desnecessárias quando as props não mudam
+import { memo } from "react";
+// Importa a interface Question para tipagem das props
+import { Question } from "@/data/exams";
+// Importa a função utilitária cn() para classes condicionais
+import { cn } from "@/lib/utils";
 
-import { useState, useCallback, useMemo, lazy, Suspense } from "react";
-import { exams } from "@/data/exams";
-import QuizPlayer from "@/components/QuizPlayer";
-import { ArrowRight, HeartPulse, Briefcase, Info, Clock } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
-import procisaLogo from "@/assets/procisa-logo.png";
-import ufrrLogo from "@/assets/ufrr-logo.png";
-
-// Lazy loading: componentes pesados só são carregados quando necessários
-const ResultsView = lazy(() => import("@/components/ResultsView"));
-const AboutSection = lazy(() => import("@/components/AboutSection"));
-
-// Tipos para controle de fase (máquina de estados) e modo de aplicação
-type Phase = "welcome" | "exam1" | "exam2" | "results";
-type Mode = "both" | "pss10" | "eet";
-
-// Interface para armazenar respostas de ambos os exames
-interface ExamAnswers {
-  exam1: Record<string, number>;  // Respostas da PSS-10 (chave: id da questão, valor: opção selecionada)
-  exam2: Record<string, number>;  // Respostas da EET
+// Interface de props do componente QuestionCard
+interface QuestionCardProps {
+  question: Question;              // Dados da questão (texto, opções, inversão)
+  selectedOption: number | null;   // Opção atualmente selecionada (null = nenhuma)
+  onSelect: (value: number) => void; // Callback chamado ao selecionar uma opção
+  optionLabels?: string[];         // Rótulos textuais opcionais para cada valor
+  startFrom?: number;              // Valor inicial das opções (0 ou 1)
 }
 
-// Função utilitária para rolar suavemente ao topo da página
-const scrollTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
-
-const Index = () => {
-  // ── Estado ──
-  const [phase, setPhase] = useState<Phase>("welcome");  // Fase atual da aplicação
-  const [mode, setMode] = useState<Mode>("both");        // Modo: ambas, só PSS-10, ou só EET
-  const [answers, setAnswers] = useState<ExamAnswers>({ exam1: {}, exam2: {} });
-
-  // ── Handlers estabilizados com useCallback ──
-
-  // Chamado ao finalizar o primeiro exame (PSS-10)
-  // Se modo é "both", avança para exam2; senão, vai direto para resultados
-  const handleFinishExam1 = useCallback((a: Record<string, number>) => {
-    setAnswers((prev) => ({ ...prev, exam1: a }));
-    setPhase((prev) => mode === "both" ? "exam2" : "results");
-    scrollTop();
-  }, [mode]);
-
-  // Chamado ao finalizar o segundo exame (EET)
-  const handleFinishExam2 = useCallback((a: Record<string, number>) => {
-    setAnswers((prev) => ({ ...prev, exam2: a }));
-    setPhase("results");
-    scrollTop();
-  }, []);
-
-  // Inicia os exames conforme o modo selecionado
-  // Se modo é "eet", pula direto para exam2; caso contrário, começa em exam1
-  const startExams = useCallback((selectedMode: Mode) => {
-    setMode(selectedMode);
-    setAnswers({ exam1: {}, exam2: {} });
-    setPhase(selectedMode === "eet" ? "exam2" : "exam1");
-    scrollTop();
-  }, []);
-
-  // Reinicia toda a aplicação (volta à tela de boas-vindas)
-  const restart = useCallback(() => {
-    setAnswers({ exam1: {}, exam2: {} });
-    setPhase("welcome");
-    scrollTop();
-  }, []);
-
-  // Monta o array de resultados baseado no modo escolhido
-  // useMemo evita recalcular desnecessariamente
-  const results = useMemo(() => {
-    const r = [];
-    if (mode === "both" || mode === "pss10") r.push({ exam: exams[0], answers: answers.exam1 });
-    if (mode === "both" || mode === "eet") r.push({ exam: exams[1], answers: answers.exam2 });
-    return r;
-  }, [mode, answers]);
+// Componente memoizado que renderiza uma questão individual com opções clicáveis
+// Reutilizável para qualquer escala Likert com N opções
+const QuestionCard = memo(({ question, selectedOption, onSelect, optionLabels, startFrom = 0 }: QuestionCardProps) => {
+  // Gera array de valores numéricos para as opções
+  // Ex.: startFrom=0, numOptions=5 → [0, 1, 2, 3, 4]
+  // Ex.: startFrom=1, numOptions=5 → [1, 2, 3, 4, 5]
+  const options = Array.from({ length: question.numOptions }, (_, i) => i + startFrom);
 
   return (
-    <div className="min-h-screen bg-background">
-      <main className="px-4 py-10">
-        {/* ══════════════════════════════════════════════════════
-            FASE: WELCOME — Tela de boas-vindas
-            ══════════════════════════════════════════════════════ */}
-        {phase === "welcome" && (
-          <>
-            <div className="max-w-2xl mx-auto text-center">
-              {/* Logo PROCISA */}
-              <div className="flex items-center justify-center mb-8">
-                <img src={procisaLogo} alt="Logo PROCISA" className="h-16 object-contain" />
-              </div>
-
-              {/* Hero — seção de destaque com gradiente */}
-              <div className="gradient-hero rounded-2xl p-8 mb-8 border border-primary/10">
-                <h2 className="text-4xl font-bold mb-3 tracking-tight">
-                  Bem-vindo(a)
-                </h2>
-                <p className="text-muted-foreground text-base mb-2 max-w-lg mx-auto leading-relaxed">
-                  Esta ferramenta possibilita a realização de escalas validadas para o levantamento de indicativos de estresse. Você pode realizar as escalas individualmente ou ambas em sequência.
-                </p>
-                <p className="text-muted-foreground text-sm max-w-lg mx-auto">
-                  Ao final, será apresentado os escores obtidos com as respectivas classificações, podendo ser enviado por e-mail para registro pessoal.
-                </p>
-              </div>
-
-              {/* Card de instruções gerais */}
-              <div className="rounded-xl border border-border bg-card p-5 max-w-lg mx-auto mb-8 text-left card-elevated">
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <Info className="w-4 h-4 text-primary shrink-0" />
-                  </div>
-                  <p className="text-sm font-semibold">Instruções gerais</p>
-                </div>
-                <ul className="text-xs text-muted-foreground space-y-2 list-none pl-0">
-                  <li className="flex gap-2"><span className="text-primary mt-0.5">•</span><span>Leia cada item com atenção e selecione a alternativa que melhor representa a sua percepção.</span></li>
-                  <li className="flex gap-2"><span className="text-primary mt-0.5">•</span><span>Não existem respostas certas ou erradas — responda de acordo com o que você realmente sente ou vivencia.</span></li>
-                  <li className="flex gap-2"><span className="text-primary mt-0.5">•</span><span>Todas as questões precisam ser respondidas para que o resultado seja calculado.</span></li>
-                  <li className="flex gap-2"><span className="text-primary mt-0.5">•</span><span>Leve o tempo que for necessário.</span></li>
-                  <li className="flex gap-2"><span className="text-primary mt-0.5">•</span><span className="font-semibold">Seus dados não são armazenados — os resultados são calculados localmente no seu dispositivo.</span></li>
-                </ul>
-              </div>
-
-              {/* Cartões das escalas */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-lg mx-auto mb-8">
-                {/* Card PSS-10 */}
-                <div className="rounded-xl border border-border bg-card p-5 text-left">
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                      <HeartPulse className="w-4 h-4 text-primary" />
-                    </div>
-                    <p className="text-xs text-muted-foreground uppercase tracking-wider font-medium">Escala 01</p>
-                  </div>
-                  <p className="font-semibold text-sm mb-1.5">PSS-10 – Escala de Estresse Percebido</p>
-                  <p className="text-muted-foreground text-left text-xs leading-relaxed">Busca conhecer informações acerca do construto de "Estresse autopercebido"</p>
-                  <div className="flex items-center gap-3 mt-3 text-xs text-muted-foreground">
-                    <span className="inline-flex items-center gap-1 bg-accent/50 px-2 py-0.5 rounded-full">{exams[0].questions.length} itens</span>
-                  </div>
-                  <p className="text-[10px] text-muted-foreground/60 mt-3 leading-tight text-left">
-                    Cohen, S., Kamarck, T., & Mermelstein, R. (1983); Siqueira Reis, R., Ferreira Hino, A. A., & Romélio Rodriguez Añez, C. (2010).
-                  </p>
-                </div>
-
-                {/* Card EET */}
-                <div className="rounded-xl border border-border bg-card p-5 text-left">
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                      <Briefcase className="w-4 h-4 text-primary" />
-                    </div>
-                    <p className="text-xs text-muted-foreground uppercase tracking-wider font-medium">Escala 02</p>
-                  </div>
-                  <p className="font-semibold text-sm mb-1.5">EET – Escala de Estresse no Trabalho</p>
-                  <p className="text-xs text-muted-foreground leading-relaxed">Busca melhor compreender o construto de "Estresse ocupacional"</p>
-                  <div className="flex items-center gap-3 mt-3 text-xs text-muted-foreground">
-                    <span className="inline-flex items-center gap-1 bg-accent/50 px-2 py-0.5 rounded-full">{exams[1].questions.length} itens</span>
-                  </div>
-                  <p className="text-[10px] text-muted-foreground/60 mt-3 leading-tight">
-                    PASCHOAL, T.; TAMAYO, A. (2004).
-                  </p>
-                </div>
-              </div>
-
-              {/* Botões de ação */}
-              <div className="flex flex-col gap-3 max-w-md mx-auto">
-                {/* Botão principal — realiza ambas as escalas */}
-                <button
-                  onClick={() => startExams("both")}
-                  className="group relative w-full rounded-xl bg-gradient-to-r from-primary to-primary/80 text-primary-foreground px-5 py-4 font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5 overflow-hidden"
-                >
-                  {/* Efeito de brilho deslizante no hover */}
-                  <span className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary-foreground/10 to-primary/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
-                  <span className="relative flex items-center justify-center gap-2 text-sm sm:text-base">
-                    Realizar ambas as escalas
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </span>
-                  <span className="relative flex items-center justify-center gap-1 text-[11px] sm:text-xs font-normal opacity-80 mt-1">
-                    PSS-10 e EET · <Clock className="w-3 h-3" /> ~10 min
-                  </span>
-                </button>
-
-                {/* Botões individuais (grid 2 colunas) */}
-                <div className="grid grid-cols-2 gap-3">
-                  {/* Botão PSS-10 individual */}
-                  <button
-                    onClick={() => startExams("pss10")}
-                    className="group w-full rounded-xl border-2 border-border bg-card hover:border-primary/40 hover:bg-accent/30 px-3 sm:px-4 py-3.5 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
-                  >
-                    <span className="flex items-center justify-center gap-2 font-semibold text-[11px] sm:text-xs mb-1 group-hover:text-primary transition-colors duration-300">
-                      {/* sm:whitespace-nowrap garante texto em uma linha no desktop */}
-                      {/* br com sm:hidden quebra linha apenas no mobile */}
-                      <span className="sm:whitespace-nowrap">Realizar a<br className="sm:hidden" /> Escala PSS-10</span>
-                      <ArrowRight className="w-3.5 h-3.5 shrink-0 group-hover:translate-x-1 transition-transform" />
-                    </span>
-                    <span className="flex items-center justify-center gap-1 text-[10px] sm:text-[11px] text-muted-foreground">
-                      <Clock className="w-3 h-3 shrink-0 group-hover:animate-[spin_2s_ease-in-out_1]" />
-                      <span>~3 min</span>
-                    </span>
-                  </button>
-
-                  {/* Botão EET individual */}
-                  <button
-                    onClick={() => startExams("eet")}
-                    className="group w-full rounded-xl border-2 border-border bg-card hover:border-primary/40 hover:bg-accent/30 px-3 sm:px-4 py-3.5 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
-                  >
-                    <span className="flex items-center justify-center gap-2 font-semibold text-[11px] sm:text-xs mb-1 group-hover:text-primary transition-colors duration-300">
-                      <span className="sm:whitespace-nowrap">Realizar a<br className="sm:hidden" /> Escala EET</span>
-                      <ArrowRight className="w-3.5 h-3.5 shrink-0 group-hover:translate-x-1 transition-transform" />
-                    </span>
-                    <span className="flex items-center justify-center gap-1 text-[10px] sm:text-[11px] text-muted-foreground">
-                      <Clock className="w-3 h-3 shrink-0 group-hover:animate-[spin_2s_ease-in-out_1]" />
-                      <span>~7 min</span>
-                    </span>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Seção "Sobre" — carregada sob demanda (lazy) com fallback Skeleton */}
-            <Suspense fallback={<Skeleton className="h-64 w-full max-w-3xl mx-auto mt-16 rounded-xl" />}>
-              <AboutSection />
-            </Suspense>
-          </>
-        )}
-
-        {/* ══════════════════════════════════════════════════════
-            FASE: EXAM1 — Aplicação da PSS-10
-            ══════════════════════════════════════════════════════ */}
-        {phase === "exam1" && (
-          <div className="max-w-2xl mx-auto">
-            {/* Logos institucionais */}
-            <div className="flex items-center justify-center gap-4 mb-6">
-              <img src={procisaLogo} alt="Logo PROCISA" className="h-10 object-contain" />
-              <div className="w-px h-8 bg-border" />
-              <img src={ufrrLogo} alt="Brasão UFRR" className="h-10 object-contain" />
-            </div>
-            {/* QuizPlayer recebe o exame e callback de finalização */}
-            <QuizPlayer exam={exams[0]} onFinish={handleFinishExam1} />
-          </div>
-        )}
-
-        {/* ══════════════════════════════════════════════════════
-            FASE: EXAM2 — Aplicação da EET
-            ══════════════════════════════════════════════════════ */}
-        {phase === "exam2" && (
-          <div className="max-w-2xl mx-auto">
-            <div className="flex items-center justify-center gap-4 mb-6">
-              <img src={procisaLogo} alt="Logo PROCISA" className="h-10 object-contain" />
-              <div className="w-px h-8 bg-border" />
-              <img src={ufrrLogo} alt="Brasão UFRR" className="h-10 object-contain" />
-            </div>
-            <QuizPlayer exam={exams[1]} onFinish={handleFinishExam2} />
-          </div>
-        )}
-
-        {/* ══════════════════════════════════════════════════════
-            FASE: RESULTS — Exibição dos resultados (lazy loaded)
-            ══════════════════════════════════════════════════════ */}
-        {phase === "results" && (
-          <Suspense fallback={<Skeleton className="h-64 w-full max-w-3xl mx-auto rounded-xl" />}>
-            <ResultsView results={results} mode={mode} onRestart={restart} />
-          </Suspense>
-        )}
-      </main>
-
-      {/* ══════════════════════════════════════════════════════
-          FOOTER — Rodapé institucional com referências
-          ══════════════════════════════════════════════════════ */}
-      <footer className="w-full border-t border-border bg-card mt-16 py-8 px-4">
-        <div className="max-w-3xl mx-auto text-center text-[11px] text-muted-foreground/80 leading-relaxed space-y-4">
-          <div className="flex items-center justify-center gap-4 mb-4">
-            <img src={procisaLogo} alt="Logo PROCISA" className="h-8 opacity-60" />
-            <div className="w-px h-6 bg-border" />
-            <img src={ufrrLogo} alt="Brasão UFRR" className="h-8 opacity-60" />
-          </div>
-          <p className="font-semibold text-muted-foreground">Esta ferramenta tem finalidade exclusivamente pedagógica e/ou para fins de levantamento de informações acerca dos construtos de estresse.</p>
-          <p>
-            Todos os direitos sobre as escalas pertencem aos seus respectivos criadores. Qualquer uso com finalidade diferente da proposta por esse instrumento não é de responsabilidade dos criadores desta ferramenta.
-          </p>
-          <div className="space-y-1 pt-2 border-t border-border/50">
-            <p><strong>PSS-10</strong> Produzida por Cohen, S., Kamarck, T., &amp; Mermelstein, R. (1983). Adaptação e tradução por Siqueira Reis, R., Ferreira Hino, A. A., &amp; Romélio Rodriguez Añez, C. (2010).</p>
-            <p><strong>EET</strong> Produzida por Paschoal, T. &amp; Tamayo, A. (2004).</p>
-          </div>
-        </div>
-      </footer>
+    // Card com bordas arredondadas, fundo de card e sombra elevada com hover
+    <div className="rounded-xl bg-card border border-border p-6 card-elevated">
+      {/* Texto da questão */}
+      <h3 className="text-lg font-semibold mb-1 leading-relaxed">{question.text}</h3>
+      {/* Espaço invisível para itens invertidos (mantém layout consistente) */}
+      {question.inverted && (
+        <p className="text-xs text-muted-foreground mb-4 italic">​</p>
+      )}
+      {/* Grid de opções: 5 colunas em mobile, flex-wrap em desktop */}
+      <div className="grid grid-cols-5 sm:flex sm:flex-wrap gap-2 sm:gap-3">
+        {options.map((value) => {
+          const isSelected = selectedOption === value;
+          return (
+            // Botão para cada opção de resposta
+            <button
+              key={value}
+              onClick={() => onSelect(value)}
+              className={cn(
+                // Estilos base do botão
+                "min-w-12 h-auto rounded-lg border-2 transition-all duration-200 flex flex-col items-center justify-center text-sm font-bold px-3 py-2 gap-1",
+                // Estilos condicionais: selecionado vs. não selecionado
+                isSelected
+                  ? "border-primary bg-primary text-primary-foreground shadow-sm"
+                  : "border-border hover:border-primary/40 hover:bg-secondary/60 text-muted-foreground"
+              )}>
+              {/* Valor numérico da opção */}
+              <span>{value}</span>
+              {/* Rótulo textual (se disponível para este valor) */}
+              {optionLabels?.[value] && (
+                <span className="text-[10px] font-normal leading-tight text-center">
+                  {optionLabels[value]}
+                </span>
+              )}
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
-};
+});
 
-export default Index;
+// displayName obrigatório para componentes memoizados (facilita debugging no DevTools)
+QuestionCard.displayName = "QuestionCard";
+
+export default QuestionCard;
 ```
 
 ---
@@ -1002,44 +1043,47 @@ export default Index;
 ### `src/components/QuizPlayer.tsx`
 
 ```tsx
-// ══════════════════════════════════════════════════════════════
-// QUIZPLAYER — Controlador de fluxo do questionário
-// Recebe um exame e gerencia as respostas do usuário.
-// Exibe barra de progresso, questões e botão de finalização.
-// ══════════════════════════════════════════════════════════════
-
+// Importa hooks do React para estado local e estabilização de callbacks
 import { useState, useCallback } from "react";
+// Importa a interface Exam para tipagem das props
 import { Exam } from "@/data/exams";
+// Importa o componente de questão individual
 import QuestionCard from "./QuestionCard";
+// Importa o componente Button do design system
 import { Button } from "@/components/ui/button";
+// Ícone de envio (seta para direita) do Lucide
 import { Send } from "lucide-react";
 
-// Props: o exame a ser renderizado e callback ao finalizar
+// Interface de props do QuizPlayer
 interface QuizPlayerProps {
-  exam: Exam;
-  onFinish: (answers: Record<string, number>) => void;
+  exam: Exam;                                      // Escala a ser aplicada
+  onFinish: (answers: Record<string, number>) => void; // Callback com as respostas ao finalizar
 }
 
+// Componente controlador que orquestra a aplicação de uma escala completa
+// Gerencia: estado das respostas, barra de progresso, lista de questões e botão finalizar
 const QuizPlayer = ({ exam, onFinish }: QuizPlayerProps) => {
-  // Estado local: mapa de respostas (id da questão → valor selecionado)
+  // Estado que armazena as respostas: { "p1q1": 3, "p1q2": 1, ... }
   const [answers, setAnswers] = useState<Record<string, number>>({});
 
-  const total = exam.questions.length;          // Total de questões
-  const answered = Object.keys(answers).length;  // Quantas já foram respondidas
-  const allAnswered = answered === total;         // Todas respondidas?
+  // Cálculos derivados do estado
+  const total = exam.questions.length;            // Total de questões
+  const answered = Object.keys(answers).length;   // Quantidade respondida
+  const allAnswered = answered === total;          // Todas respondidas?
 
-  // Registra a resposta de uma questão específica
-  // useCallback evita recriação da função a cada render
+  // Callback estabilizado para selecionar resposta de uma questão
+  // Usa spread para preservar respostas anteriores e atualizar/adicionar a nova
   const selectAnswer = useCallback((questionId: string, value: number) => {
     setAnswers((prev) => ({ ...prev, [questionId]: value }));
   }, []);
 
   return (
     <div className="w-full max-w-2xl mx-auto">
-      {/* Cabeçalho: título, descrição e instruções do exame */}
+      {/* ── Cabeçalho do Exame ── */}
       <div className="mb-6">
         <h2 className="text-2xl font-bold mb-1">{exam.title}</h2>
         <p className="text-muted-foreground text-sm mb-3">{exam.description}</p>
+        {/* Instruções detalhadas (se disponíveis) */}
         {exam.instructions && (
           <div className="rounded-lg border border-border bg-secondary/40 p-4 text-sm text-foreground whitespace-pre-line">
             {exam.instructions}
@@ -1047,7 +1091,8 @@ const QuizPlayer = ({ exam, onFinish }: QuizPlayerProps) => {
         )}
       </div>
 
-      {/* Barra de progresso animada */}
+      {/* ── Barra de Progresso ── */}
+      {/* Mostra visualmente quantas questões foram respondidas */}
       <div className="w-full h-2.5 rounded-full bg-secondary/40 mb-2 overflow-hidden">
         <div
           className="h-full rounded-full bg-gradient-to-r from-primary to-primary/70 transition-all duration-500 ease-out"
@@ -1056,14 +1101,15 @@ const QuizPlayer = ({ exam, onFinish }: QuizPlayerProps) => {
       </div>
       <p className="text-xs text-muted-foreground mb-8">{answered} de {total} respondidos</p>
 
-      {/* Lista de questões */}
+      {/* ── Lista de Questões ── */}
       <div className="space-y-6">
         {exam.questions.map((question, idx) => (
           <div key={question.id}>
+            {/* Indicador numérico da questão */}
             <div className="mb-2 text-sm text-muted-foreground">
               <span>Questão {idx + 1}</span>
             </div>
-            {/* QuestionCard renderiza a questão individual */}
+            {/* Componente QuestionCard memoizado */}
             <QuestionCard
               question={question}
               selectedOption={answers[question.id] ?? null}
@@ -1075,20 +1121,22 @@ const QuizPlayer = ({ exam, onFinish }: QuizPlayerProps) => {
         ))}
       </div>
 
-      {/* Referências bibliográficas específicas de cada escala */}
+      {/* ── Referências Bibliográficas (específicas de cada escala) ── */}
       {exam.id === "prova1" && (
         <div className="rounded-lg border border-border bg-secondary/30 p-4 mt-6 text-xs text-muted-foreground space-y-2">
           <p>COHEN, S., KAMARCK, T., & MERMELSTEIN, R. (1983). A global measure of perceived stress. <em>Journal of Health and Social Behavior</em>, 24, 385-396.</p>
           <p>SIQUEIRA REIS, R., FERREIRA HINO, A. A., & ROMÉLIO RODRIGUEZ AÑEZ, C. (2010). Perceived stress scale: Reliability and validity study in Brazil. <em>Journal of health psychology</em>, 15(1), 107-114.</p>
         </div>
       )}
+
       {exam.id === "prova2" && (
         <div className="rounded-lg border border-border bg-secondary/30 p-4 mt-6 text-xs text-muted-foreground">
           <p>PASCHOAL, T.; TAMAYO, A. Validação da escala de estresse no trabalho. <em>Estudos de Psicologia (Natal)</em>, v. 9, n. 1, p. 45-52, 2004.</p>
         </div>
       )}
 
-      {/* Botão de finalização — habilitado somente quando todas as questões forem respondidas */}
+      {/* ── Botão Finalizar ── */}
+      {/* Desabilitado até que todas as questões sejam respondidas */}
       <div className="flex justify-end mt-8">
         <Button size="lg" onClick={() => onFinish(answers)} disabled={!allAnswered}>
           Finalizar <Send className="w-4 h-4 ml-2" />
@@ -1103,112 +1151,37 @@ export default QuizPlayer;
 
 ---
 
-### `src/components/QuestionCard.tsx`
-
-```tsx
-// ══════════════════════════════════════════════════════════════
-// QUESTIONCARD — Card individual de questão
-// Componente memoizado (React.memo) para evitar re-renderizações
-// quando outras questões são respondidas.
-// ══════════════════════════════════════════════════════════════
-
-import { memo } from "react";
-import { Question } from "@/data/exams";
-import { cn } from "@/lib/utils";
-
-interface QuestionCardProps {
-  question: Question;           // Dados da questão
-  selectedOption: number | null; // Opção atualmente selecionada (null se nenhuma)
-  onSelect: (value: number) => void; // Callback ao selecionar uma opção
-  optionLabels?: string[];      // Rótulos textuais opcionais para cada valor
-  startFrom?: number;           // Valor inicial das opções (padrão: 0)
-}
-
-const QuestionCard = memo(({ question, selectedOption, onSelect, optionLabels, startFrom = 0 }: QuestionCardProps) => {
-  // Gera array de valores numéricos para as opções
-  // Ex: startFrom=0, numOptions=5 → [0, 1, 2, 3, 4]
-  // Ex: startFrom=1, numOptions=5 → [1, 2, 3, 4, 5]
-  const options = Array.from({ length: question.numOptions }, (_, i) => i + startFrom);
-
-  return (
-    <div className="rounded-xl bg-card border border-border p-6 card-elevated">
-      {/* Texto da questão */}
-      <h3 className="text-lg font-semibold mb-1 leading-relaxed">{question.text}</h3>
-      {/* Espaçador invisível para questões invertidas (mantém altura consistente) */}
-      {question.inverted && (
-        <p className="text-xs text-muted-foreground mb-4 italic">​</p>
-      )}
-      {/* Grid de opções: 5 colunas no mobile, flex-wrap no desktop */}
-      <div className="grid grid-cols-5 sm:flex sm:flex-wrap gap-2 sm:gap-3">
-        {options.map((value) => {
-          const isSelected = selectedOption === value;
-          return (
-            <button
-              key={value}
-              onClick={() => onSelect(value)}
-              className={cn(
-                // Estilos base do botão de opção
-                "min-w-12 h-auto rounded-lg border-2 transition-all duration-200 flex flex-col items-center justify-center text-sm font-bold px-3 py-2 gap-1",
-                isSelected
-                  // Estilo quando selecionado: fundo primário com texto claro
-                  ? "border-primary bg-primary text-primary-foreground shadow-sm"
-                  // Estilo padrão: borda neutra com hover sutil
-                  : "border-border hover:border-primary/40 hover:bg-secondary/60 text-muted-foreground"
-              )}>
-              {/* Valor numérico */}
-              <span>{value}</span>
-              {/* Rótulo textual (se disponível para esse valor) */}
-              {optionLabels?.[value] && (
-                <span className="text-[10px] font-normal leading-tight text-center">
-                  {optionLabels[value]}
-                </span>
-              )}
-            </button>
-          );
-        })}
-      </div>
-    </div>
-  );
-});
-
-// displayName ajuda na depuração no React DevTools
-QuestionCard.displayName = "QuestionCard";
-
-export default QuestionCard;
-```
-
----
-
 ### `src/components/ResultsView.tsx`
 
 ```tsx
-// ══════════════════════════════════════════════════════════════
-// RESULTSVIEW — Exibição de resultados das escalas
-// Calcula escores, classifica níveis de estresse, exibe disclaimers
-// e oferece opção de envio por e-mail.
-// ══════════════════════════════════════════════════════════════
-
+// Importa hooks de otimização do React
 import { memo, useMemo, useCallback } from "react";
+// Importa interface Exam e função de scoring
 import { Exam, getScore } from "@/data/exams";
+// Ícones do Lucide
 import { Home, AlertTriangle, Mail } from "lucide-react";
+// Botão do design system
 import { Button } from "@/components/ui/button";
+// Logos institucionais importados como módulos ES6
 import procisaLogo from "@/assets/procisa-logo.png";
 import ufrrLogo from "@/assets/ufrr-logo.png";
 
-// Estrutura de um resultado individual
+// Interface para os resultados de um exame individual
 interface ExamResult {
-  exam: Exam;
-  answers: Record<string, number>;
+  exam: Exam;                          // Dados da escala
+  answers: Record<string, number>;     // Respostas do usuário
 }
 
+// Props do componente ResultsView
 interface ResultsViewProps {
-  results: ExamResult[];              // Array de resultados (1 ou 2 exames)
-  mode: "both" | "pss10" | "eet";    // Modo de aplicação
-  onRestart: () => void;             // Callback para reiniciar
+  results: ExamResult[];               // Array de resultados (1 ou 2 escalas)
+  mode: "both" | "pss10" | "eet";      // Modo de operação
+  onRestart: () => void;               // Callback para voltar à tela inicial
 }
 
-/* ── Funções puras de classificação PSS-10 ── */
-// Baseadas em: OLIVEIRA, J. C. et al. (2021)
+/* ── Funções puras de classificação do estresse ── */
+
+// Classificação PSS-10 (retorna label e classe de cor semântica)
 const getPSSLevel = (score: number) => {
   if (score <= 18) return { label: "Estresse Baixo", color: "text-success" };
   if (score <= 24) return { label: "Estresse Normal", color: "text-warning" };
@@ -1216,15 +1189,14 @@ const getPSSLevel = (score: number) => {
   return { label: "Estresse Muito Alto", color: "text-destructive" };
 };
 
-/* ── Funções puras de classificação EET ── */
-// Baseadas em: PASCHOAL, T.; TAMAYO, A. (2004)
+// Classificação EET (baseada na média aritmética)
 const getEETLevel = (avg: number) => {
   if (avg < 2.5) return { label: "Estresse Baixo ou Leve", color: "text-success" };
   if (avg === 2.5) return { label: "Estresse Médio/Considerável", color: "text-warning" };
   return { label: "Estresse Alto", color: "text-destructive" };
 };
 
-// Versões em texto puro (para o corpo do e-mail)
+// Versões texto puro (sem estilização) para uso no corpo do e-mail
 const getPSSLevelText = (score: number) => {
   if (score <= 18) return "Estresse Baixo";
   if (score <= 24) return "Estresse Normal";
@@ -1238,36 +1210,37 @@ const getEETLevelText = (avg: number) => {
   return "Estresse Alto";
 };
 
-/* ── Textos de disclaimer conforme o modo ── */
+/* ── Textos de aviso (disclaimer) específicos por modo ── */
 const DISCLAIMERS: Record<string, string> = {
   both: `Estas escalas são ferramentas úteis apenas para medir possíveis INDICATIVOS do Estresse Percebido e do Estresse No Trabalho, deste modo, NÃO DEVEM SER UTILIZADAS como ferramentas para o diagnóstico. Cabe lembrar que tais instrumentos não são de uso privativo.\n\nCaso você perceba que o estresse está sendo prejudicial e atrapalhando seu bem-estar procure ajuda qualificada.`,
   pss10: `Esta escala é uma ferramenta útil para medir possíveis INDICATIVOS de Estresse Percebido, deste modo, NÃO DEVE SER UTILIZADA como ferramenta para o diagnóstico. Cabe lembrar que tal instrumento não é de uso privativo.\n\nCaso você perceba que o estresse está sendo prejudicial e atrapalhando seu bem-estar procure ajuda qualificada.`,
   eet: `Esta escala é uma ferramenta útil para medir possíveis INDICATIVOS de Estresse No Trabalho, deste modo, NÃO DEVE SER UTILIZADA como ferramenta para o diagnóstico. Cabe lembrar que tal instrumento não é de uso privativo.\n\nCaso você perceba que o estresse está sendo prejudicial e atrapalhando seu bem-estar procure ajuda qualificada.`,
 };
 
-/* ── Componente principal (memoizado) ── */
+/* ── Componente principal (memoizado para evitar re-renders desnecessários) ── */
 const ResultsView = memo(({ results, mode, onRestart }: ResultsViewProps) => {
+  // Seleciona o disclaimer apropriado com base no modo
   const disclaimer = DISCLAIMERS[mode];
 
-  // Calcula escores totais e médias para cada exame
-  // useMemo evita recalcular em re-renderizações desnecessárias
+  // Calcula os escores a partir das respostas (memoizado — só recalcula quando results muda)
   const computedResults = useMemo(() =>
     results.map(({ exam, answers }) => {
-      // Soma os escores de todas as questões (respeitando inversão)
+      // Soma os escores de todas as questões (aplicando inversão quando necessário)
       const totalScore = exam.questions.reduce((sum, q) => {
         const selected = answers[q.id];
         return sum + (selected != null ? getScore(q, selected) : 0);
       }, 0);
-      // Para EET: calcula média (escore total / 23 questões)
+      // Para EET, calcula a média (total ÷ 23) com 2 casas decimais
       const eetAvg = exam.id === "prova2" ? parseFloat((totalScore / 23).toFixed(2)) : null;
       return { exam, totalScore, eetAvg };
     }),
     [results]
   );
 
-  // Monta o corpo do e-mail com todos os resultados e referências
+  // Constrói o corpo do e-mail em texto puro (memoizado)
   const buildEmailBody = useCallback(() => {
     const now = new Date();
+    // Formata data e hora no padrão brasileiro
     const dataHora = now.toLocaleDateString("pt-BR", {
       day: "2-digit", month: "2-digit", year: "numeric",
     }) + " às " + now.toLocaleTimeString("pt-BR", {
@@ -1278,6 +1251,7 @@ const ResultsView = memo(({ results, mode, onRestart }: ResultsViewProps) => {
     body += "Escores obtidos nas escalas aplicadas\n";
     body += `Data e hora da realização: ${dataHora}\n\n`;
 
+    // Adiciona resultados de cada escala
     computedResults.forEach(({ exam, totalScore, eetAvg }) => {
       body += `━━━ ${exam.title} ━━━\n\n`;
 
@@ -1298,6 +1272,7 @@ const ResultsView = memo(({ results, mode, onRestart }: ResultsViewProps) => {
     body += disclaimer;
     body += "\n\n---\n\n";
 
+    // Referências bibliográficas
     body += "REFERÊNCIAS\n\n";
     if (mode === "both" || mode === "pss10") {
       body += "PSS-10:\n";
@@ -1309,6 +1284,7 @@ const ResultsView = memo(({ results, mode, onRestart }: ResultsViewProps) => {
       body += "Paschoal, T., & Tamayo, A. (2004). Validação da Escala de Estresse no Trabalho. Estudos de Psicologia, 9(1), 45-52.\n\n";
     }
 
+    // Aviso LGPD
     body += "---\n\n";
     body += "AVISO SOBRE PROTEÇÃO DE DADOS\n\n";
     body += "Os dados apresentados neste relatório foram produzidos e coletados em conformidade com a Lei Geral de Proteção de Dados Pessoais (Lei nº 13.709/2018 – LGPD). ";
@@ -1319,7 +1295,7 @@ const ResultsView = memo(({ results, mode, onRestart }: ResultsViewProps) => {
     return body;
   }, [computedResults, disclaimer, mode]);
 
-  // Abre o cliente de e-mail com o corpo pré-preenchido
+  // Handler para abrir cliente de e-mail com resultados pré-preenchidos
   const handleSendEmail = useCallback(() => {
     const subject = encodeURIComponent("Resultado - Escalas de Estresse (PROCISA)");
     const body = encodeURIComponent(buildEmailBody());
@@ -1328,7 +1304,7 @@ const ResultsView = memo(({ results, mode, onRestart }: ResultsViewProps) => {
 
   return (
     <div className="w-full max-w-3xl mx-auto">
-      {/* Cabeçalho com logos e título */}
+      {/* ── Cabeçalho com logos institucionais ── */}
       <div className="text-center mb-10">
         <div className="flex items-center justify-center gap-4 mb-4">
           <img src={procisaLogo} alt="Logo PROCISA" className="h-14 object-contain" />
@@ -1339,7 +1315,7 @@ const ResultsView = memo(({ results, mode, onRestart }: ResultsViewProps) => {
         <p className="text-muted-foreground">Escores obtidos nas escalas aplicadas</p>
       </div>
 
-      {/* Cards de resultado para cada escala */}
+      {/* ── Cards de Resultado (um por escala) ── */}
       <div className="grid gap-8">
         {computedResults.map(({ exam, totalScore, eetAvg }) => {
           const stressLevel = exam.id === "prova1" ? getPSSLevel(totalScore) : null;
@@ -1350,14 +1326,14 @@ const ResultsView = memo(({ results, mode, onRestart }: ResultsViewProps) => {
               <div className="flex items-center justify-between mb-5">
                 <h3 className="text-xl font-bold">{exam.title}</h3>
                 <div className="text-right">
-                  {/* PSS-10: exibe escore total */}
+                  {/* Exibe escore total para PSS-10 */}
                   {exam.id === "prova1" && (
                     <>
                       <p className="text-xs text-muted-foreground uppercase tracking-wide">Escore Total</p>
                       <p className="text-3xl font-bold text-primary">{totalScore}</p>
                     </>
                   )}
-                  {/* EET: exibe escore médio */}
+                  {/* Exibe escore médio para EET */}
                   {exam.id === "prova2" && eetAvg != null && (
                     <>
                       <p className="text-xs text-muted-foreground uppercase tracking-wide">Escore Médio</p>
@@ -1377,7 +1353,7 @@ const ResultsView = memo(({ results, mode, onRestart }: ResultsViewProps) => {
                   )}
                 </div>
               </div>
-              {/* Referência bibliográfica específica */}
+              {/* Referência bibliográfica da categorização */}
               {exam.id === "prova1" && (
                 <p className="text-[11px] text-muted-foreground/70 leading-snug mt-2">
                   Os resultados aqui apresentados foram organizados e categorizados a partir do trabalho de OLIVEIRA, J. C. et al. The impact of COVID-19 on the physical and emotional health of health professionals in the municipality of Baixada Maranhense. <em>Research, Society and Development</em>, v. 10, n. 10, 2021. p. e163101018744.
@@ -1393,7 +1369,7 @@ const ResultsView = memo(({ results, mode, onRestart }: ResultsViewProps) => {
         })}
       </div>
 
-      {/* Disclaimer com ícone de alerta */}
+      {/* ── Disclaimer (aviso importante) ── */}
       <div className="rounded-xl border border-border bg-secondary/30 p-6 mt-8">
         <div className="flex items-start gap-3">
           <AlertTriangle className="w-5 h-5 text-warning mt-0.5 shrink-0" />
@@ -1401,7 +1377,7 @@ const ResultsView = memo(({ results, mode, onRestart }: ResultsViewProps) => {
         </div>
       </div>
 
-      {/* Botões de ação: enviar por e-mail e retornar */}
+      {/* ── Botões de Ação (E-mail e Voltar) ── */}
       <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-10">
         <Button onClick={handleSendEmail} size="lg" variant="outline">
           <Mail className="w-4 h-4 mr-2" /> Enviar por e-mail
@@ -1414,6 +1390,7 @@ const ResultsView = memo(({ results, mode, onRestart }: ResultsViewProps) => {
   );
 });
 
+// displayName obrigatório para componentes memoizados
 ResultsView.displayName = "ResultsView";
 
 export default ResultsView;
@@ -1424,23 +1401,20 @@ export default ResultsView;
 ### `src/components/AboutSection.tsx`
 
 ```tsx
-// ══════════════════════════════════════════════════════════════
-// ABOUTSECTION — Seção institucional "Sobre"
-// Exibe informações sobre o projeto, PROCISA/UFRR e os autores.
-// Carregada via lazy loading (React.lazy) na tela inicial.
-// ══════════════════════════════════════════════════════════════
-
+// Logos e fotos importados como módulos ES6 (processados pelo Vite)
 import procisaLogo from "@/assets/procisa-logo.png";
 import ufrrLogo from "@/assets/ufrr-logo.png";
 import edilanePhoto from "@/assets/edilane-photo.gif";
 import italoPhoto from "@/assets/italo-photo.gif";
 
+// Seção institucional "Sobre" — exibida na tela de boas-vindas
+// Carregada via lazy loading (React.lazy) para não bloquear o carregamento inicial
 const AboutSection = () => {
   return (
     <section className="max-w-3xl mx-auto mt-16 mb-10">
       <h2 className="text-2xl font-bold text-center mb-6">Sobre</h2>
 
-      {/* Card institucional com logos e descrição do projeto */}
+      {/* ── Card institucional com logos ── */}
       <div className="rounded-xl border border-border bg-card p-6 mb-8 text-center">
         <div className="flex items-center justify-center gap-5 mb-5">
           <img src={procisaLogo} alt="Logo PROCISA" className="h-20 object-contain" />
@@ -1451,15 +1425,21 @@ const AboutSection = () => {
           Esta ferramenta digital foi criada pelo Mestre em Ciências da Saúde{" "}
           <strong>Ítalo Ribeiro Kunzler Machado Marques</strong> sob orientação da{" "}
           Professora Doutora <strong>Edilane Nunes Régis Bezerra</strong> dentro do
-          Programa de Pós-graduação em Ciências da Saúde PROCISA – UFRR. Esta aplicação foi desenvolvida em estrita consonância com as diretrizes da Coordenação de Aperfeiçoamento de Pessoal de Nível Superior (CAPES) para a produção de Produtos Técnicos e Tecnológicos (PTT). Seu desenvolvimento fundamenta-se nos critérios de avaliação estabelecidos pelo Relatório do Grupo de Trabalho (GT) de Produção Técnica da CAPES de 2019.
+          Programa de Pós-graduação em Ciências da Saúde PROCISA – UFRR. Esta aplicação
+          foi desenvolvida em estrita consonância com as diretrizes da Coordenação de
+          Aperfeiçoamento de Pessoal de Nível Superior (CAPES) para a produção de
+          Produtos Técnicos e Tecnológicos (PTT). Seu desenvolvimento fundamenta-se nos
+          critérios de avaliação estabelecidos pelo Relatório do Grupo de Trabalho (GT) de
+          Produção Técnica da CAPES de 2019.
         </p>
       </div>
 
-      {/* Grid com perfis dos autores (2 colunas no desktop) */}
+      {/* ── Grid com perfis dos autores ── */}
       <div className="grid gap-8 md:grid-cols-2">
         {/* Perfil da orientadora */}
         <div className="rounded-xl border border-border bg-card p-6">
           <div className="flex flex-col items-center mb-4">
+            {/* Foto com loading="lazy" para otimização de performance */}
             <img
               src={edilanePhoto}
               alt="Profa. Dra. Edilane Nunes Régis Bezerra"
@@ -1513,48 +1493,304 @@ export default AboutSection;
 
 ---
 
-### `src/lib/utils.ts`
-
-```ts
-// Utilitário para combinar classes CSS condicionalmente
-// Usa clsx para lógica condicional e twMerge para resolver conflitos Tailwind
-import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
-
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
-```
-
----
-
-### `src/hooks/use-mobile.tsx`
+### `src/pages/Index.tsx`
 
 ```tsx
-// Hook customizado para detectar se o viewport é mobile
-// Usa matchMedia para escutar mudanças de tamanho de tela
-import * as React from "react";
+// Importa hooks do React para estado, memoização e lazy loading
+import { useState, useCallback, useMemo, lazy, Suspense } from "react";
+// Importa as definições das escalas
+import { exams } from "@/data/exams";
+// Importa o componente que orquestra a aplicação de cada escala
+import QuizPlayer from "@/components/QuizPlayer";
+// Ícones temáticos do Lucide
+import { ArrowRight, HeartPulse, Briefcase, Info, Clock } from "lucide-react";
+// Skeleton para placeholder durante lazy loading
+import { Skeleton } from "@/components/ui/skeleton";
+// Logos importados como módulos ES6
+import procisaLogo from "@/assets/procisa-logo.png";
+import ufrrLogo from "@/assets/ufrr-logo.png";
 
-const MOBILE_BREAKPOINT = 768; // Breakpoint padrão (md no Tailwind)
+/* ── Lazy loading de componentes pesados ──
+   São carregados apenas quando necessário, reduzindo o bundle inicial */
+const ResultsView = lazy(() => import("@/components/ResultsView"));
+const AboutSection = lazy(() => import("@/components/AboutSection"));
 
-export function useIsMobile() {
-  const [isMobile, setIsMobile] = React.useState<boolean | undefined>(undefined);
+// Tipos que definem as fases da aplicação e os modos de operação
+type Phase = "welcome" | "exam1" | "exam2" | "results";
+type Mode = "both" | "pss10" | "eet";
 
-  React.useEffect(() => {
-    // Cria media query listener
-    const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`);
-    const onChange = () => {
-      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
-    };
-    // Escuta mudanças e define valor inicial
-    mql.addEventListener("change", onChange);
-    setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
-    // Cleanup: remove listener ao desmontar
-    return () => mql.removeEventListener("change", onChange);
+// Interface para armazenar respostas de ambos os exames
+interface ExamAnswers {
+  exam1: Record<string, number>; // Respostas PSS-10: { "p1q1": 3, "p1q2": 1, ... }
+  exam2: Record<string, number>; // Respostas EET: { "p2q1": 4, "p2q2": 2, ... }
+}
+
+// Função utilitária para scroll suave ao topo (chamada a cada troca de fase)
+const scrollTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
+
+// ══════════════════════════════════════════════════════════════
+// COMPONENTE PRINCIPAL — Página Index
+// Funciona como uma máquina de estados finita:
+// welcome → exam1 → exam2 → results
+// ══════════════════════════════════════════════════════════════
+const Index = () => {
+  // Estado da fase atual (qual tela está visível)
+  const [phase, setPhase] = useState<Phase>("welcome");
+  // Modo de operação selecionado pelo usuário
+  const [mode, setMode] = useState<Mode>("both");
+  // Respostas acumuladas de ambos os exames
+  const [answers, setAnswers] = useState<ExamAnswers>({ exam1: {}, exam2: {} });
+
+  // Handler chamado ao finalizar a PSS-10
+  // Se mode="both", avança para EET; caso contrário, vai direto para resultados
+  const handleFinishExam1 = useCallback((a: Record<string, number>) => {
+    setAnswers((prev) => ({ ...prev, exam1: a }));
+    setPhase((prev) => mode === "both" ? "exam2" : "results");
+    scrollTop();
+  }, [mode]);
+
+  // Handler chamado ao finalizar a EET — sempre vai para resultados
+  const handleFinishExam2 = useCallback((a: Record<string, number>) => {
+    setAnswers((prev) => ({ ...prev, exam2: a }));
+    setPhase("results");
+    scrollTop();
   }, []);
 
-  return !!isMobile; // Converte undefined para false
-}
+  // Handler para iniciar as escalas conforme o modo escolhido
+  // Reseta as respostas e navega para o primeiro exame apropriado
+  const startExams = useCallback((selectedMode: Mode) => {
+    setMode(selectedMode);
+    setAnswers({ exam1: {}, exam2: {} });
+    setPhase(selectedMode === "eet" ? "exam2" : "exam1");
+    scrollTop();
+  }, []);
+
+  // Handler para reiniciar toda a aplicação (voltar à tela de boas-vindas)
+  const restart = useCallback(() => {
+    setAnswers({ exam1: {}, exam2: {} });
+    setPhase("welcome");
+    scrollTop();
+  }, []);
+
+  // Monta o array de resultados baseado no modo selecionado
+  // Memoizado para evitar recriação desnecessária a cada render
+  const results = useMemo(() => {
+    const r = [];
+    if (mode === "both" || mode === "pss10") r.push({ exam: exams[0], answers: answers.exam1 });
+    if (mode === "both" || mode === "eet") r.push({ exam: exams[1], answers: answers.exam2 });
+    return r;
+  }, [mode, answers]);
+
+  return (
+    <div className="min-h-screen bg-background">
+      <main className="px-4 py-10">
+        {/* ══════════════════════════════════════════════════════
+           FASE: WELCOME — Tela de boas-vindas
+           ══════════════════════════════════════════════════════ */}
+        {phase === "welcome" && (
+          <>
+            <div className="max-w-2xl mx-auto text-center">
+              {/* Logo PROCISA */}
+              <div className="flex items-center justify-center mb-8">
+                <img src={procisaLogo} alt="Logo PROCISA" className="h-16 object-contain" />
+              </div>
+
+              {/* Hero section com gradiente */}
+              <div className="gradient-hero rounded-2xl p-8 mb-8 border border-primary/10">
+                <h2 className="text-4xl font-bold mb-3 tracking-tight">
+                  Bem-vindo(a)
+                </h2>
+                <p className="text-muted-foreground text-base mb-2 max-w-lg mx-auto leading-relaxed">
+                  Esta ferramenta possibilita a realização de escalas validadas para o levantamento de indicativos de estresse. Você pode realizar as escalas individualmente ou ambas em sequência.
+                </p>
+                <p className="text-muted-foreground text-sm max-w-lg mx-auto">
+                  Ao final, será apresentado os escores obtidos com as respectivas classificações, podendo ser enviado por e-mail para registro pessoal.
+                </p>
+              </div>
+
+              {/* Card de instruções gerais */}
+              <div className="rounded-xl border border-border bg-card p-5 max-w-lg mx-auto mb-8 text-left card-elevated">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center">
+                    <Info className="w-4 h-4 text-primary shrink-0" />
+                  </div>
+                  <p className="text-sm font-semibold">Instruções gerais</p>
+                </div>
+                <ul className="text-xs text-muted-foreground space-y-2 list-none pl-0">
+                  <li className="flex gap-2"><span className="text-primary mt-0.5">•</span><span>Leia cada item com atenção e selecione a alternativa que melhor representa a sua percepção.</span></li>
+                  <li className="flex gap-2"><span className="text-primary mt-0.5">•</span><span>Não existem respostas certas ou erradas — responda de acordo com o que você realmente sente ou vivencia.</span></li>
+                  <li className="flex gap-2"><span className="text-primary mt-0.5">•</span><span>Todas as questões precisam ser respondidas para que o resultado seja calculado.</span></li>
+                  <li className="flex gap-2"><span className="text-primary mt-0.5">•</span><span>Leve o tempo que for necessário.</span></li>
+                  <li className="flex gap-2"><span className="text-primary mt-0.5">•</span><span className="font-semibold">Seus dados não são armazenados — os resultados são calculados localmente no seu dispositivo.</span></li>
+                </ul>
+              </div>
+
+              {/* Cards descritivos das escalas (PSS-10 e EET) */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-lg mx-auto mb-8">
+                {/* Card PSS-10 */}
+                <div className="rounded-xl border border-border bg-card p-5 text-left">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                      <HeartPulse className="w-4 h-4 text-primary" />
+                    </div>
+                    <p className="text-xs text-muted-foreground uppercase tracking-wider font-medium">Escala 01</p>
+                  </div>
+                  <p className="font-semibold text-sm mb-1.5">PSS-10 – Escala de Estresse Percebido</p>
+                  <p className="text-muted-foreground text-left text-xs leading-relaxed">Busca conhecer informações acerca do construto de "Estresse autopercebido"</p>
+                  <div className="flex items-center gap-3 mt-3 text-xs text-muted-foreground">
+                    <span className="inline-flex items-center gap-1 bg-accent/50 px-2 py-0.5 rounded-full">{exams[0].questions.length} itens</span>
+                  </div>
+                  <p className="text-[10px] text-muted-foreground/60 mt-3 leading-tight text-left">
+                    Cohen, S., Kamarck, T., & Mermelstein, R. (1983); Siqueira Reis, R., Ferreira Hino, A. A., & Romélio Rodriguez Añez, C. (2010).
+                  </p>
+                </div>
+
+                {/* Card EET */}
+                <div className="rounded-xl border border-border bg-card p-5 text-left">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                      <Briefcase className="w-4 h-4 text-primary" />
+                    </div>
+                    <p className="text-xs text-muted-foreground uppercase tracking-wider font-medium">Escala 02</p>
+                  </div>
+                  <p className="font-semibold text-sm mb-1.5">EET – Escala de Estresse no Trabalho</p>
+                  <p className="text-xs text-muted-foreground leading-relaxed">Busca melhor compreender o construto de "Estresse ocupacional"</p>
+                  <div className="flex items-center gap-3 mt-3 text-xs text-muted-foreground">
+                    <span className="inline-flex items-center gap-1 bg-accent/50 px-2 py-0.5 rounded-full">{exams[1].questions.length} itens</span>
+                  </div>
+                  <p className="text-[10px] text-muted-foreground/60 mt-3 leading-tight">
+                    PASCHOAL, T.; TAMAYO, A. (2004).
+                  </p>
+                </div>
+              </div>
+
+              {/* Botões de ação para iniciar as escalas */}
+              <div className="flex flex-col gap-3 max-w-md mx-auto">
+                {/* Botão principal — ambas as escalas */}
+                <button
+                  onClick={() => startExams("both")}
+                  className="group relative w-full rounded-xl bg-gradient-to-r from-primary to-primary/80 text-primary-foreground px-5 py-4 font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5 overflow-hidden"
+                >
+                  {/* Efeito de brilho no hover */}
+                  <span className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary-foreground/10 to-primary/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+                  <span className="relative flex items-center justify-center gap-2 text-sm sm:text-base">
+                    Realizar ambas as escalas
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </span>
+                  <span className="relative flex items-center justify-center gap-1 text-[11px] sm:text-xs font-normal opacity-80 mt-1">
+                    PSS-10 e EET · <Clock className="w-3 h-3" /> ~10 min
+                  </span>
+                </button>
+
+                {/* Botões secundários — escalas individuais */}
+                <div className="grid grid-cols-2 gap-3">
+                  {/* Botão PSS-10 */}
+                  <button
+                    onClick={() => startExams("pss10")}
+                    className="group w-full rounded-xl border-2 border-border bg-card hover:border-primary/40 hover:bg-accent/30 px-3 sm:px-4 py-3.5 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
+                  >
+                    <span className="flex items-center justify-center gap-2 font-semibold text-[11px] sm:text-xs mb-1 group-hover:text-primary transition-colors duration-300">
+                      <span className="sm:whitespace-nowrap">Realizar a<br className="sm:hidden" /> Escala PSS-10</span>
+                      <ArrowRight className="w-3.5 h-3.5 shrink-0 group-hover:translate-x-1 transition-transform" />
+                    </span>
+                    <span className="flex items-center justify-center gap-1 text-[10px] sm:text-[11px] text-muted-foreground">
+                      <Clock className="w-3 h-3 shrink-0 group-hover:animate-[spin_2s_ease-in-out_1]" />
+                      <span>~3 min</span>
+                    </span>
+                  </button>
+
+                  {/* Botão EET */}
+                  <button
+                    onClick={() => startExams("eet")}
+                    className="group w-full rounded-xl border-2 border-border bg-card hover:border-primary/40 hover:bg-accent/30 px-3 sm:px-4 py-3.5 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
+                  >
+                    <span className="flex items-center justify-center gap-2 font-semibold text-[11px] sm:text-xs mb-1 group-hover:text-primary transition-colors duration-300">
+                      <span className="sm:whitespace-nowrap">Realizar a<br className="sm:hidden" /> Escala EET</span>
+                      <ArrowRight className="w-3.5 h-3.5 shrink-0 group-hover:translate-x-1 transition-transform" />
+                    </span>
+                    <span className="flex items-center justify-center gap-1 text-[10px] sm:text-[11px] text-muted-foreground">
+                      <Clock className="w-3 h-3 shrink-0 group-hover:animate-[spin_2s_ease-in-out_1]" />
+                      <span>~7 min</span>
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Seção Sobre (lazy loaded com Suspense) */}
+            <Suspense fallback={<Skeleton className="h-64 w-full max-w-3xl mx-auto mt-16 rounded-xl" />}>
+              <AboutSection />
+            </Suspense>
+          </>
+        )}
+
+        {/* ══════════════════════════════════════════════════════
+           FASE: EXAM1 — Aplicação da PSS-10
+           ══════════════════════════════════════════════════════ */}
+        {phase === "exam1" && (
+          <div className="max-w-2xl mx-auto">
+            {/* Barra de logos institucional */}
+            <div className="flex items-center justify-center gap-4 mb-6">
+              <img src={procisaLogo} alt="Logo PROCISA" className="h-10 object-contain" />
+              <div className="w-px h-8 bg-border" />
+              <img src={ufrrLogo} alt="Brasão UFRR" className="h-10 object-contain" />
+            </div>
+            <QuizPlayer exam={exams[0]} onFinish={handleFinishExam1} />
+          </div>
+        )}
+
+        {/* ══════════════════════════════════════════════════════
+           FASE: EXAM2 — Aplicação da EET
+           ══════════════════════════════════════════════════════ */}
+        {phase === "exam2" && (
+          <div className="max-w-2xl mx-auto">
+            <div className="flex items-center justify-center gap-4 mb-6">
+              <img src={procisaLogo} alt="Logo PROCISA" className="h-10 object-contain" />
+              <div className="w-px h-8 bg-border" />
+              <img src={ufrrLogo} alt="Brasão UFRR" className="h-10 object-contain" />
+            </div>
+            <QuizPlayer exam={exams[1]} onFinish={handleFinishExam2} />
+          </div>
+        )}
+
+        {/* ══════════════════════════════════════════════════════
+           FASE: RESULTS — Exibição dos resultados
+           ══════════════════════════════════════════════════════ */}
+        {phase === "results" && (
+          <Suspense fallback={<Skeleton className="h-64 w-full max-w-3xl mx-auto rounded-xl" />}>
+            <ResultsView results={results} mode={mode} onRestart={restart} />
+          </Suspense>
+        )}
+      </main>
+
+      {/* ══════════════════════════════════════════════════════
+         FOOTER — Informações legais e referências
+         ══════════════════════════════════════════════════════ */}
+      <footer className="w-full border-t border-border bg-card mt-16 py-8 px-4">
+        <div className="max-w-3xl mx-auto text-center text-[11px] text-muted-foreground/80 leading-relaxed space-y-4">
+          {/* Logos no rodapé */}
+          <div className="flex items-center justify-center gap-4 mb-4">
+            <img src={procisaLogo} alt="Logo PROCISA" className="h-8 opacity-60" />
+            <div className="w-px h-6 bg-border" />
+            <img src={ufrrLogo} alt="Brasão UFRR" className="h-8 opacity-60" />
+          </div>
+          {/* Aviso sobre finalidade pedagógica */}
+          <p className="font-semibold text-muted-foreground">Esta ferramenta tem finalidade exclusivamente pedagógica e/ou para fins de levantamento de informações acerca dos construtos de estresse.</p>
+          <p>
+            Todos os direitos sobre as escalas pertencem aos seus respectivos criadores. Qualquer uso com finalidade diferente da proposta por esse instrumento não é de responsabilidade dos criadores desta ferramenta.
+          </p>
+          {/* Créditos bibliográficos */}
+          <div className="space-y-1 pt-2 border-t border-border/50">
+            <p><strong>PSS-10</strong> Produzida por Cohen, S., Kamarck, T., &amp; Mermelstein, R. (1983). Adaptação e tradução por Siqueira Reis, R., Ferreira Hino, A. A., &amp; Romélio Rodriguez Añez, C. (2010).</p>
+            <p><strong>EET</strong> Produzida por Paschoal, T. &amp; Tamayo, A. (2004).</p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+};
+
+export default Index;
 ```
 
 ---
@@ -1562,23 +1798,28 @@ export function useIsMobile() {
 ### `src/pages/NotFound.tsx`
 
 ```tsx
-// Página 404 — exibida quando o usuário acessa uma rota inexistente
+// React Router para obter a rota atual
 import { useLocation } from "react-router-dom";
+// useEffect para efeitos colaterais (logging)
 import { useEffect } from "react";
 
+// Página 404 — exibida quando o usuário acessa uma rota inexistente
 const NotFound = () => {
+  // Obtém a localização atual (URL) do React Router
   const location = useLocation();
 
-  // Loga o erro no console para depuração
+  // Loga o erro 404 no console para monitoramento/debugging
   useEffect(() => {
     console.error("404 Error: User attempted to access non-existent route:", location.pathname);
   }, [location.pathname]);
 
   return (
+    // Layout centralizado ocupando tela inteira
     <div className="flex min-h-screen items-center justify-center bg-muted">
       <div className="text-center">
         <h1 className="mb-4 text-4xl font-bold">404</h1>
         <p className="mb-4 text-xl text-muted-foreground">Oops! Page not found</p>
+        {/* Link para retornar à página principal */}
         <a href="/" className="text-primary underline hover:text-primary/90">
           Return to Home
         </a>
@@ -1588,673 +1829,4 @@ const NotFound = () => {
 };
 
 export default NotFound;
-```
-
----
-
-### `src/components/ui/button.tsx`
-
-```tsx
-// Componente Button do shadcn/ui — botão com variantes customizáveis
-// Usa class-variance-authority (cva) para definir variantes de estilo
-import * as React from "react";
-import { Slot } from "@radix-ui/react-slot";
-import { cva, type VariantProps } from "class-variance-authority";
-import { cn } from "@/lib/utils";
-
-// Define todas as variantes possíveis do botão
-const buttonVariants = cva(
-  // Classes base compartilhadas por todas as variantes
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
-  {
-    variants: {
-      variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90",
-        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
-        outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
-        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
-      },
-      size: {
-        default: "h-10 px-4 py-2",
-        sm: "h-9 rounded-md px-3",
-        lg: "h-11 rounded-md px-8",
-        icon: "h-10 w-10",
-      },
-    },
-    defaultVariants: {
-      variant: "default",
-      size: "default",
-    },
-  },
-);
-
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
-  asChild?: boolean; // Se true, renderiza como Slot (composição)
-}
-
-// Componente forwardRef para suportar refs externas
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
-    const Comp = asChild ? Slot : "button";
-    return <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props} />;
-  },
-);
-Button.displayName = "Button";
-
-export { Button, buttonVariants };
-```
-
----
-
-### `src/components/ui/skeleton.tsx`
-
-```tsx
-// Componente Skeleton — placeholder visual durante carregamento
-// Exibe um bloco com animação de pulso (animate-pulse)
-import { cn } from "@/lib/utils";
-
-function Skeleton({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn("animate-pulse rounded-md bg-muted", className)} {...props} />;
-}
-
-export { Skeleton };
-```
-
----
-
-### `src/components/ui/sonner.tsx`
-
-```tsx
-// Wrapper do Sonner (biblioteca de toasts moderna)
-// Integra com o tema da aplicação via useTheme
-import { useTheme } from "next-themes";
-import { Toaster as Sonner, toast } from "sonner";
-
-type ToasterProps = React.ComponentProps<typeof Sonner>;
-
-const Toaster = ({ ...props }: ToasterProps) => {
-  const { theme = "system" } = useTheme();
-
-  return (
-    <Sonner
-      theme={theme as ToasterProps["theme"]}
-      className="toaster group"
-      toastOptions={{
-        classNames: {
-          toast: "group toast group-[.toaster]:bg-background group-[.toaster]:text-foreground group-[.toaster]:border-border group-[.toaster]:shadow-lg",
-          description: "group-[.toast]:text-muted-foreground",
-          actionButton: "group-[.toast]:bg-primary group-[.toast]:text-primary-foreground",
-          cancelButton: "group-[.toast]:bg-muted group-[.toast]:text-muted-foreground",
-        },
-      }}
-      {...props}
-    />
-  );
-};
-
-export { Toaster, toast };
-```
-
----
-
-### `src/components/ui/toast.tsx`
-
-```tsx
-// Sistema de Toast completo baseado em Radix UI
-// Inclui: Provider, Viewport, Toast, Action, Close, Title, Description
-// Todas as variantes usam tokens semânticos do design system
-import * as React from "react";
-import * as ToastPrimitives from "@radix-ui/react-toast";
-import { cva, type VariantProps } from "class-variance-authority";
-import { X } from "lucide-react";
-import { cn } from "@/lib/utils";
-
-const ToastProvider = ToastPrimitives.Provider;
-
-// Viewport: área onde os toasts são exibidos (fixo no topo/bottom)
-const ToastViewport = React.forwardRef<
-  React.ElementRef<typeof ToastPrimitives.Viewport>,
-  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Viewport>
->(({ className, ...props }, ref) => (
-  <ToastPrimitives.Viewport
-    ref={ref}
-    className={cn(
-      "fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[420px]",
-      className,
-    )}
-    {...props}
-  />
-));
-ToastViewport.displayName = ToastPrimitives.Viewport.displayName;
-
-// Variantes do toast: default e destructive
-const toastVariants = cva(
-  "group pointer-events-auto relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-md border p-6 pr-8 shadow-lg transition-all data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-top-full data-[state=open]:sm:slide-in-from-bottom-full",
-  {
-    variants: {
-      variant: {
-        default: "border bg-background text-foreground",
-        destructive: "destructive group border-destructive bg-destructive text-destructive-foreground",
-      },
-    },
-    defaultVariants: { variant: "default" },
-  },
-);
-
-const Toast = React.forwardRef<
-  React.ElementRef<typeof ToastPrimitives.Root>,
-  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Root> & VariantProps<typeof toastVariants>
->(({ className, variant, ...props }, ref) => {
-  return <ToastPrimitives.Root ref={ref} className={cn(toastVariants({ variant }), className)} {...props} />;
-});
-Toast.displayName = ToastPrimitives.Root.displayName;
-
-const ToastAction = React.forwardRef<
-  React.ElementRef<typeof ToastPrimitives.Action>,
-  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Action>
->(({ className, ...props }, ref) => (
-  <ToastPrimitives.Action
-    ref={ref}
-    className={cn(
-      "inline-flex h-8 shrink-0 items-center justify-center rounded-md border bg-transparent px-3 text-sm font-medium ring-offset-background transition-colors group-[.destructive]:border-muted/40 hover:bg-secondary group-[.destructive]:hover:border-destructive/30 group-[.destructive]:hover:bg-destructive group-[.destructive]:hover:text-destructive-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 group-[.destructive]:focus:ring-destructive disabled:pointer-events-none disabled:opacity-50",
-      className,
-    )}
-    {...props}
-  />
-));
-ToastAction.displayName = ToastPrimitives.Action.displayName;
-
-const ToastClose = React.forwardRef<
-  React.ElementRef<typeof ToastPrimitives.Close>,
-  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Close>
->(({ className, ...props }, ref) => (
-  <ToastPrimitives.Close
-    ref={ref}
-    className={cn(
-      "absolute right-2 top-2 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity group-hover:opacity-100 group-[.destructive]:text-red-300 hover:text-foreground group-[.destructive]:hover:text-red-50 focus:opacity-100 focus:outline-none focus:ring-2 group-[.destructive]:focus:ring-red-400 group-[.destructive]:focus:ring-offset-red-600",
-      className,
-    )}
-    toast-close=""
-    {...props}
-  >
-    <X className="h-4 w-4" />
-  </ToastPrimitives.Close>
-));
-ToastClose.displayName = ToastPrimitives.Close.displayName;
-
-const ToastTitle = React.forwardRef<
-  React.ElementRef<typeof ToastPrimitives.Title>,
-  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Title>
->(({ className, ...props }, ref) => (
-  <ToastPrimitives.Title ref={ref} className={cn("text-sm font-semibold", className)} {...props} />
-));
-ToastTitle.displayName = ToastPrimitives.Title.displayName;
-
-const ToastDescription = React.forwardRef<
-  React.ElementRef<typeof ToastPrimitives.Description>,
-  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Description>
->(({ className, ...props }, ref) => (
-  <ToastPrimitives.Description ref={ref} className={cn("text-sm opacity-90", className)} {...props} />
-));
-ToastDescription.displayName = ToastPrimitives.Description.displayName;
-
-type ToastProps = React.ComponentPropsWithoutRef<typeof Toast>;
-type ToastActionElement = React.ReactElement<typeof ToastAction>;
-
-export {
-  type ToastProps,
-  type ToastActionElement,
-  ToastProvider,
-  ToastViewport,
-  Toast,
-  ToastTitle,
-  ToastDescription,
-  ToastClose,
-  ToastAction,
-};
-```
-
----
-
-### `src/components/ui/toaster.tsx`
-
-```tsx
-// Componente Toaster — renderiza todos os toasts ativos
-// Consome o estado global de toasts via useToast hook
-import { useToast } from "@/hooks/use-toast";
-import { Toast, ToastClose, ToastDescription, ToastProvider, ToastTitle, ToastViewport } from "@/components/ui/toast";
-
-export function Toaster() {
-  const { toasts } = useToast();
-
-  return (
-    <ToastProvider>
-      {toasts.map(function ({ id, title, description, action, ...props }) {
-        return (
-          <Toast key={id} {...props}>
-            <div className="grid gap-1">
-              {title && <ToastTitle>{title}</ToastTitle>}
-              {description && <ToastDescription>{description}</ToastDescription>}
-            </div>
-            {action}
-            <ToastClose />
-          </Toast>
-        );
-      })}
-      <ToastViewport />
-    </ToastProvider>
-  );
-}
-```
-
----
-
-### `src/components/ui/tooltip.tsx`
-
-```tsx
-// Componente Tooltip baseado em Radix UI
-// Exibe dica contextual ao passar o mouse sobre um elemento
-import * as React from "react";
-import * as TooltipPrimitive from "@radix-ui/react-tooltip";
-import { cn } from "@/lib/utils";
-
-const TooltipProvider = TooltipPrimitive.Provider;
-const Tooltip = TooltipPrimitive.Root;
-const TooltipTrigger = TooltipPrimitive.Trigger;
-
-const TooltipContent = React.forwardRef<
-  React.ElementRef<typeof TooltipPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Content>
->(({ className, sideOffset = 4, ...props }, ref) => (
-  <TooltipPrimitive.Content
-    ref={ref}
-    sideOffset={sideOffset}
-    className={cn(
-      "z-50 overflow-hidden rounded-md border bg-popover px-3 py-1.5 text-sm text-popover-foreground shadow-md animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
-      className,
-    )}
-    {...props}
-  />
-));
-TooltipContent.displayName = TooltipPrimitive.Content.displayName;
-
-export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider };
-```
-
----
-
-### `src/components/ui/use-toast.ts`
-
-```ts
-// Re-exportação do hook useToast para acesso simplificado
-import { useToast, toast } from "@/hooks/use-toast";
-export { useToast, toast };
-```
-
----
-
-### `src/hooks/use-toast.ts`
-
-```ts
-// ══════════════════════════════════════════════════════════════
-// HOOK USE-TOAST — Gerenciamento global de estado de toasts
-// Implementa um mini-store com reducer pattern (sem Redux)
-// ══════════════════════════════════════════════════════════════
-
-import * as React from "react";
-import type { ToastActionElement, ToastProps } from "@/components/ui/toast";
-
-const TOAST_LIMIT = 1;             // Máximo de toasts visíveis simultaneamente
-const TOAST_REMOVE_DELAY = 1000000; // Delay antes de remover do DOM (ms)
-
-// Tipo de um toast individual
-type ToasterToast = ToastProps & {
-  id: string;
-  title?: React.ReactNode;
-  description?: React.ReactNode;
-  action?: ToastActionElement;
-};
-
-// Ações disponíveis no reducer
-const actionTypes = {
-  ADD_TOAST: "ADD_TOAST",
-  UPDATE_TOAST: "UPDATE_TOAST",
-  DISMISS_TOAST: "DISMISS_TOAST",
-  REMOVE_TOAST: "REMOVE_TOAST",
-} as const;
-
-// Gerador de IDs únicos sequenciais
-let count = 0;
-function genId() {
-  count = (count + 1) % Number.MAX_SAFE_INTEGER;
-  return count.toString();
-}
-
-type ActionType = typeof actionTypes;
-type Action =
-  | { type: ActionType["ADD_TOAST"]; toast: ToasterToast }
-  | { type: ActionType["UPDATE_TOAST"]; toast: Partial<ToasterToast> }
-  | { type: ActionType["DISMISS_TOAST"]; toastId?: ToasterToast["id"] }
-  | { type: ActionType["REMOVE_TOAST"]; toastId?: ToasterToast["id"] };
-
-interface State {
-  toasts: ToasterToast[];
-}
-
-// Fila de remoção com timeout
-const toastTimeouts = new Map<string, ReturnType<typeof setTimeout>>();
-
-const addToRemoveQueue = (toastId: string) => {
-  if (toastTimeouts.has(toastId)) return;
-  const timeout = setTimeout(() => {
-    toastTimeouts.delete(toastId);
-    dispatch({ type: "REMOVE_TOAST", toastId });
-  }, TOAST_REMOVE_DELAY);
-  toastTimeouts.set(toastId, timeout);
-};
-
-// Reducer puro que gerencia o estado dos toasts
-export const reducer = (state: State, action: Action): State => {
-  switch (action.type) {
-    case "ADD_TOAST":
-      return { ...state, toasts: [action.toast, ...state.toasts].slice(0, TOAST_LIMIT) };
-    case "UPDATE_TOAST":
-      return { ...state, toasts: state.toasts.map((t) => (t.id === action.toast.id ? { ...t, ...action.toast } : t)) };
-    case "DISMISS_TOAST": {
-      const { toastId } = action;
-      if (toastId) { addToRemoveQueue(toastId); }
-      else { state.toasts.forEach((toast) => addToRemoveQueue(toast.id)); }
-      return { ...state, toasts: state.toasts.map((t) => t.id === toastId || toastId === undefined ? { ...t, open: false } : t) };
-    }
-    case "REMOVE_TOAST":
-      if (action.toastId === undefined) return { ...state, toasts: [] };
-      return { ...state, toasts: state.toasts.filter((t) => t.id !== action.toastId) };
-  }
-};
-
-// Listeners e estado em memória (padrão pub/sub)
-const listeners: Array<(state: State) => void> = [];
-let memoryState: State = { toasts: [] };
-
-function dispatch(action: Action) {
-  memoryState = reducer(memoryState, action);
-  listeners.forEach((listener) => listener(memoryState));
-}
-
-type Toast = Omit<ToasterToast, "id">;
-
-// Função para criar um novo toast
-function toast({ ...props }: Toast) {
-  const id = genId();
-  const update = (props: ToasterToast) => dispatch({ type: "UPDATE_TOAST", toast: { ...props, id } });
-  const dismiss = () => dispatch({ type: "DISMISS_TOAST", toastId: id });
-  dispatch({ type: "ADD_TOAST", toast: { ...props, id, open: true, onOpenChange: (open) => { if (!open) dismiss(); } } });
-  return { id, dismiss, update };
-}
-
-// Hook React para consumir o estado de toasts
-function useToast() {
-  const [state, setState] = React.useState<State>(memoryState);
-  React.useEffect(() => {
-    listeners.push(setState);
-    return () => { const index = listeners.indexOf(setState); if (index > -1) listeners.splice(index, 1); };
-  }, [state]);
-  return { ...state, toast, dismiss: (toastId?: string) => dispatch({ type: "DISMISS_TOAST", toastId }) };
-}
-
-export { useToast, toast };
-```
-
----
-
-### `tailwind.config.ts`
-
-```ts
-// ══════════════════════════════════════════════════════════════
-// CONFIGURAÇÃO DO TAILWIND CSS
-// Define cores semânticas, tipografia, sombras e animações
-// Todas as cores referenciam variáveis CSS HSL do index.css
-// ══════════════════════════════════════════════════════════════
-
-import type { Config } from "tailwindcss";
-
-export default {
-  darkMode: ["class"],  // Modo escuro ativado via classe .dark
-  content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
-  prefix: "",
-  theme: {
-    container: { center: true, padding: '2rem', screens: { '2xl': '1400px' } },
-    extend: {
-      // Cores semânticas — todas usando hsl(var(--token))
-      colors: {
-        border: 'hsl(var(--border))',
-        input: 'hsl(var(--input))',
-        ring: 'hsl(var(--ring))',
-        background: 'hsl(var(--background))',
-        foreground: 'hsl(var(--foreground))',
-        primary: { DEFAULT: 'hsl(var(--primary))', foreground: 'hsl(var(--primary-foreground))' },
-        secondary: { DEFAULT: 'hsl(var(--secondary))', foreground: 'hsl(var(--secondary-foreground))' },
-        destructive: { DEFAULT: 'hsl(var(--destructive))', foreground: 'hsl(var(--destructive-foreground))' },
-        muted: { DEFAULT: 'hsl(var(--muted))', foreground: 'hsl(var(--muted-foreground))' },
-        accent: { DEFAULT: 'hsl(var(--accent))', foreground: 'hsl(var(--accent-foreground))' },
-        popover: { DEFAULT: 'hsl(var(--popover))', foreground: 'hsl(var(--popover-foreground))' },
-        card: { DEFAULT: 'hsl(var(--card))', foreground: 'hsl(var(--card-foreground))' },
-        success: { DEFAULT: 'hsl(var(--success))', foreground: 'hsl(var(--success-foreground))' },
-        warning: { DEFAULT: 'hsl(var(--warning))', foreground: 'hsl(var(--warning-foreground))' },
-        sidebar: {
-          DEFAULT: 'hsl(var(--sidebar-background))',
-          foreground: 'hsl(var(--sidebar-foreground))',
-          primary: 'hsl(var(--sidebar-primary))',
-          'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
-          accent: 'hsl(var(--sidebar-accent))',
-          'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
-          border: 'hsl(var(--sidebar-border))',
-          ring: 'hsl(var(--sidebar-ring))',
-        },
-      },
-      borderRadius: { lg: 'var(--radius)', md: 'calc(var(--radius) - 2px)', sm: 'calc(var(--radius) - 4px)' },
-      keyframes: {
-        'accordion-down': { from: { height: '0' }, to: { height: 'var(--radix-accordion-content-height)' } },
-        'accordion-up': { from: { height: 'var(--radix-accordion-content-height)' }, to: { height: '0' } },
-      },
-      animation: {
-        'accordion-down': 'accordion-down 0.2s ease-out',
-        'accordion-up': 'accordion-up 0.2s ease-out',
-      },
-      boxShadow: {
-        '2xs': 'var(--shadow-2xs)', xs: 'var(--shadow-xs)', sm: 'var(--shadow-sm)',
-        md: 'var(--shadow-md)', lg: 'var(--shadow-lg)', xl: 'var(--shadow-xl)', '2xl': 'var(--shadow-2xl)',
-      },
-      fontFamily: {
-        sans: ['Work Sans', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        serif: ['Lora', 'ui-serif', 'Georgia', 'serif'],
-        mono: ['Inconsolata', 'ui-monospace', 'monospace'],
-      },
-    },
-  },
-  plugins: [require("tailwindcss-animate")],
-} satisfies Config;
-```
-
----
-
-### `vite.config.ts`
-
-```ts
-// Configuração do Vite — build tool e dev server
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react-swc";    // Plugin React com SWC (mais rápido que Babel)
-import path from "path";
-import { componentTagger } from "lovable-tagger"; // Ferramenta de tagging Lovable (só em dev)
-
-export default defineConfig(({ mode }) => ({
-  server: {
-    host: "::",       // Escuta em todas as interfaces (IPv4 e IPv6)
-    port: 8080,       // Porta do dev server
-    hmr: { overlay: false }, // Desativa overlay de erros HMR
-  },
-  plugins: [
-    react(),
-    mode === "development" && componentTagger(), // Tagger só em desenvolvimento
-  ].filter(Boolean),
-  resolve: {
-    alias: { "@": path.resolve(__dirname, "./src") }, // Alias @ → src/
-  },
-}));
-```
-
----
-
-### `vitest.config.ts`
-
-```ts
-// Configuração do Vitest — framework de testes
-import { defineConfig } from "vitest/config";
-import react from "@vitejs/plugin-react-swc";
-import path from "path";
-
-export default defineConfig({
-  plugins: [react()],
-  test: {
-    environment: "jsdom",    // Simula DOM do navegador para testes
-    globals: true,           // Disponibiliza describe, it, expect globalmente
-    setupFiles: ["./src/test/setup.ts"], // Setup executado antes dos testes
-    include: ["src/**/*.{test,spec}.{ts,tsx}"], // Padrão de arquivos de teste
-  },
-  resolve: {
-    alias: { "@": path.resolve(__dirname, "./src") },
-  },
-});
-```
-
----
-
-### `postcss.config.js`
-
-```js
-// Configuração PostCSS: processa CSS com Tailwind e Autoprefixer
-export default {
-  plugins: {
-    tailwindcss: {},    // Processa classes Tailwind
-    autoprefixer: {},   // Adiciona prefixos de vendor automaticamente
-  },
-};
-```
-
----
-
-### `components.json`
-
-```json
-{
-  "$schema": "https://ui.shadcn.com/schema.json",
-  "style": "default",
-  "rsc": false,
-  "tsx": true,
-  "tailwind": {
-    "config": "tailwind.config.ts",
-    "css": "src/index.css",
-    "baseColor": "slate",
-    "cssVariables": true,
-    "prefix": ""
-  },
-  "aliases": {
-    "components": "@/components",
-    "utils": "@/lib/utils",
-    "ui": "@/components/ui",
-    "lib": "@/lib",
-    "hooks": "@/hooks"
-  }
-}
-```
-
----
-
-### `package.json`
-
-```json
-{
-  "name": "vite_react_shadcn_ts",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "build:dev": "vite build --mode development",
-    "lint": "eslint .",
-    "preview": "vite preview",
-    "test": "vitest run",
-    "test:watch": "vitest"
-  },
-  "dependencies": {
-    "@radix-ui/react-slot": "^1.2.3",
-    "@radix-ui/react-toast": "^1.2.14",
-    "@radix-ui/react-tooltip": "^1.2.7",
-    "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
-    "lucide-react": "^0.462.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-router-dom": "^6.30.1",
-    "sonner": "^1.7.4",
-    "tailwind-merge": "^2.6.0",
-    "tailwindcss-animate": "^1.0.7"
-  },
-  "devDependencies": {
-    "@eslint/js": "^9.32.0",
-    "@tailwindcss/typography": "^0.5.16",
-    "@testing-library/jest-dom": "^6.6.0",
-    "@testing-library/react": "^16.0.0",
-    "@types/node": "^22.16.5",
-    "@types/react": "^18.3.23",
-    "@types/react-dom": "^18.3.7",
-    "@vitejs/plugin-react-swc": "^3.11.0",
-    "autoprefixer": "^10.4.21",
-    "eslint": "^9.32.0",
-    "eslint-plugin-react-hooks": "^5.2.0",
-    "eslint-plugin-react-refresh": "^0.4.20",
-    "globals": "^15.15.0",
-    "jsdom": "^20.0.3",
-    "lovable-tagger": "^1.1.13",
-    "postcss": "^8.5.6",
-    "tailwindcss": "^3.4.17",
-    "typescript": "^5.8.3",
-    "typescript-eslint": "^8.38.0",
-    "vite": "^5.4.19",
-    "vitest": "^3.2.4"
-  }
-}
-```
-
----
-
-### `eslint.config.js`
-
-```js
-// Configuração ESLint com TypeScript e plugins React
-import js from "@eslint/js";
-import globals from "globals";
-import reactHooks from "eslint-plugin-react-hooks";
-import reactRefresh from "eslint-plugin-react-refresh";
-import tseslint from "typescript-eslint";
-
-export default tseslint.config(
-  { ignores: ["dist"] }, // Ignora pasta de build
-  {
-    extends: [js.configs.recommended, ...tseslint.configs.recommended],
-    files: ["**/*.{ts,tsx}"],
-    languageOptions: { ecmaVersion: 2020, globals: globals.browser },
-    plugins: { "react-hooks": reactHooks, "react-refresh": reactRefresh },
-    rules: {
-      ...reactHooks.configs.recommended.rules,
-      "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
-      "@typescript-eslint/no-unused-vars": "off", // Desativado para flexibilidade
-    },
-  },
-);
 ```
