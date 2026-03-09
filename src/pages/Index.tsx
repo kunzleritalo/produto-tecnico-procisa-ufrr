@@ -27,7 +27,7 @@ const Index = () => {
 
   const handleFinishExam1 = useCallback((a: Record<string, number>) => {
     setAnswers((prev) => ({ ...prev, exam1: a }));
-    setPhase((prev) => (mode === "both" ? "exam2" : "results"));
+    setPhase((prev) => mode === "both" ? "exam2" : "results");
     scrollTop();
   }, [mode]);
 
@@ -66,17 +66,17 @@ const Index = () => {
       </header>
 
       <main className="px-4 py-10">
-        {phase === "welcome" && (
-          <>
+        {phase === "welcome" &&
+        <>
             <div className="max-w-2xl mx-auto text-center">
               <img src={procisaLogo} alt="Logo PROCISA" className="h-16 mx-auto mb-6" />
 
               <h2 className="text-4xl font-bold mb-4">Bem-vindo(a)</h2>
               <p className="text-muted-foreground text-lg mb-2 max-w-lg mx-auto">
-                Esta ferramenta permite a aplicação de escalas psicométricas validadas para avaliação de indicativos de estresse. Você pode realizar as escalas individualmente ou ambas em sequência.
+                Esta ferramenta possibilita a realização de escalas validadas para o levantamento de indicativos de estresse. Você pode realizar as escalas individualmente ou ambas em sequência.
               </p>
               <p className="text-muted-foreground text-sm mb-6 max-w-lg mx-auto">
-                Ao final, será apresentado o escore obtido com a respectiva classificação, podendo ser enviado por e-mail para registro pessoal.
+                Ao final, será apresentado os escores obtidos com as respectivas classificações, podendo ser enviado por e-mail para registro pessoal.
               </p>
 
               {/* Instruções gerais */}
@@ -88,9 +88,9 @@ const Index = () => {
                 <ul className="text-xs text-muted-foreground space-y-1.5 list-disc list-inside">
                   <li>Leia cada item com atenção e selecione a alternativa que melhor representa a sua percepção.</li>
                   <li>Não existem respostas certas ou erradas — responda de acordo com o que você realmente sente ou vivencia.</li>
-                  <li>Procure responder de forma espontânea, sem refletir por tempo excessivo em cada questão.</li>
                   <li>Todas as questões precisam ser respondidas para que o resultado seja calculado.</li>
-                  <li>Seus dados não são armazenados — os resultados são calculados localmente no seu dispositivo.</li>
+                  <li>Leve o tempo que for necessário.      </li>
+                  <li className="font-semibold">Seus dados não são armazenados — os resultados são calculados localmente no seu dispositivo.</li>
                 </ul>
               </div>
 
@@ -139,34 +139,34 @@ const Index = () => {
               <AboutSection />
             </Suspense>
           </>
-        )}
+        }
 
-        {phase === "exam1" && (
-          <div className="max-w-2xl mx-auto">
+        {phase === "exam1" &&
+        <div className="max-w-2xl mx-auto">
             <img src={procisaLogo} alt="Logo PROCISA" className="h-12 mx-auto mb-6" />
             <QuizPlayer exam={exams[0]} onFinish={handleFinishExam1} />
           </div>
-        )}
+        }
 
-        {phase === "exam2" && (
-          <div className="max-w-2xl mx-auto">
+        {phase === "exam2" &&
+        <div className="max-w-2xl mx-auto">
             <img src={procisaLogo} alt="Logo PROCISA" className="h-12 mx-auto mb-6" />
             <QuizPlayer exam={exams[1]} onFinish={handleFinishExam2} />
           </div>
-        )}
+        }
 
-        {phase === "results" && (
-          <Suspense fallback={<Skeleton className="h-64 w-full max-w-3xl mx-auto rounded-xl" />}>
+        {phase === "results" &&
+        <Suspense fallback={<Skeleton className="h-64 w-full max-w-3xl mx-auto rounded-xl" />}>
             <ResultsView results={results} mode={mode} onRestart={restart} />
           </Suspense>
-        )}
+        }
       </main>
 
       <footer className="w-full border-t border-border bg-secondary/30 mt-16 py-6 px-4">
         <div className="max-w-3xl mx-auto text-center text-[11px] text-muted-foreground/80 leading-relaxed space-y-3">
-          <p className="font-semibold text-muted-foreground">Esta ferramenta tem finalidade exclusivamente pedagógica.</p>
+          <p className="font-semibold text-muted-foreground">Esta ferramenta tem finalidade exclusivamente pedagógica e/ou para fins de levantamento de informações acerca dos construtos de estresse.</p>
           <p>
-            Todos os direitos sobre as escalas pertencem aos seus respectivos criadores. Qualquer uso com finalidade diferente da pedagógica não é de responsabilidade dos criadores desta ferramenta.
+            Todos os direitos sobre as escalas pertencem aos seus respectivos criadores. Qualquer uso com finalidade diferente da proposta por esse instrumento não é de responsabilidade dos criadores desta ferramenta.
           </p>
           <div className="space-y-1">
             <p><strong>PSS-10</strong> Produzida por Cohen, S., Kamarck, T., &amp; Mermelstein, R. (1983). Adaptação e tradução por Siqueira Reis, R., Ferreira Hino, A. A., &amp; Romélio Rodriguez Añez, C. (2010).</p>
@@ -174,8 +174,8 @@ const Index = () => {
           </div>
         </div>
       </footer>
-    </div>
-  );
+    </div>);
+
 };
 
 export default Index;

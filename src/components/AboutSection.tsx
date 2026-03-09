@@ -9,18 +9,18 @@ const AboutSection = () => {
 
       <div className="rounded-xl border border-border bg-card p-6 mb-8 text-center">
         <img src={procisaLogo} alt="Logo PROCISA" className="h-20 mx-auto mb-4" />
-        <p className="text-sm text-muted-foreground text-center">
+        <p className="text-sm text-muted-foreground text-justify">
           Esta ferramenta digital foi criada pelo Mestre em Ciências da Saúde{" "}
           <strong>Ítalo Ribeiro Kunzler Machado Marques</strong> sob orientação da{" "}
           <strong>Professora Doutora Edilane Nunes Régis Bezerra</strong> dentro do
           Programa de Pós-graduação em Ciências da Saúde PROCISA – UFRR.
         </p>
         <p className="text-sm text-muted-foreground text-center mt-3">
-          Esta ferramenta foi desenvolvida em estrita consonância com as diretrizes da
-          Coordenação de Aperfeiçoamento de Pessoal de Nível Superior (CAPES) para a
-          produção de Produtos Técnicos e Tecnológicos (PTT). Seu desenvolvimento
-          fundamenta-se nos critérios de avaliação estabelecidos pelo Relatório do
-          Grupo de Trabalho (GT) de Produção Técnica da CAPES.
+
+
+
+
+
         </p>
       </div>
 
@@ -72,8 +72,8 @@ const AboutSection = () => {
           </p>
         </div>
       </div>
-    </section>
-  );
+    </section>);
+
 };
 
 export default AboutSection;
