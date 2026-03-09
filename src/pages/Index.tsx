@@ -114,7 +114,6 @@ const Index = () => {
                   <p className="text-muted-foreground text-left text-xs leading-relaxed">Busca conhecer informações acerca do construto de "Estresse autopercebido"</p>
                   <div className="flex items-center gap-3 mt-3 text-xs text-muted-foreground">
                     <span className="inline-flex items-center gap-1 bg-accent/50 px-2 py-0.5 rounded-full">{exams[0].questions.length} itens</span>
-                    <span className="inline-flex items-center gap-1"><Clock className="w-3 h-3" />~3 min</span>
                   </div>
                   <p className="text-[10px] text-muted-foreground/60 mt-3 leading-tight text-left">
                     Cohen, S., Kamarck, T., & Mermelstein, R. (1983); Siqueira Reis, R., Ferreira Hino, A. A., & Romélio Rodriguez Añez, C. (2010).
@@ -132,7 +131,6 @@ const Index = () => {
                   <p className="text-xs text-muted-foreground leading-relaxed">Busca melhor compreender o construto de "Estresse ocupacional"</p>
                   <div className="flex items-center gap-3 mt-3 text-xs text-muted-foreground">
                     <span className="inline-flex items-center gap-1 bg-accent/50 px-2 py-0.5 rounded-full">{exams[1].questions.length} itens</span>
-                    <span className="inline-flex items-center gap-1"><Clock className="w-3 h-3" />~7 min</span>
                   </div>
                   <p className="text-[10px] text-muted-foreground/60 mt-3 leading-tight">
                     PASCHOAL, T.; TAMAYO, A. (2004).
@@ -151,7 +149,9 @@ const Index = () => {
                     Realizar ambas as escalas (PSS-10 e EET)
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </span>
-                  <span className="relative block text-xs font-normal opacity-80 mt-1">Recomendado · ~10 min</span>
+                  <span className="relative flex items-center justify-center gap-1 text-xs font-normal opacity-80 mt-1">
+                    Recomendado · <Clock className="w-3 h-3" /> ~10 min
+                  </span>
                 </button>
 
                 <div className="grid grid-cols-2 gap-3">
@@ -160,10 +160,7 @@ const Index = () => {
                     onClick={() => startExams("pss10")}
                     className="group w-full rounded-xl border-2 border-border bg-card hover:border-primary/40 hover:bg-accent/30 px-4 py-3.5 transition-all duration-300 hover:-translate-y-0.5 card-elevated"
                   >
-                    <span className="flex items-center justify-center gap-2 mb-1">
-                      <HeartPulse className="w-4 h-4 text-primary" />
-                      <span className="font-semibold text-sm">Realizar a Escala PSS-10</span>
-                    </span>
+                    <span className="block font-semibold text-sm mb-1">Realizar a Escala PSS-10</span>
                     <span className="flex items-center justify-center gap-1 text-[11px] text-muted-foreground">
                       <span>Estresse Percebido</span>
                       <span>·</span>
@@ -177,10 +174,7 @@ const Index = () => {
                     onClick={() => startExams("eet")}
                     className="group w-full rounded-xl border-2 border-border bg-card hover:border-primary/40 hover:bg-accent/30 px-4 py-3.5 transition-all duration-300 hover:-translate-y-0.5 card-elevated"
                   >
-                    <span className="flex items-center justify-center gap-2 mb-1">
-                      <Briefcase className="w-4 h-4 text-primary" />
-                      <span className="font-semibold text-sm">Realizar a Escala EET</span>
-                    </span>
+                    <span className="block font-semibold text-sm mb-1">Realizar a Escala EET</span>
                     <span className="flex items-center justify-center gap-1 text-[11px] text-muted-foreground">
                       <span>Estresse no Trabalho</span>
                       <span>·</span>
