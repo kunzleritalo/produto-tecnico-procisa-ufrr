@@ -1,7 +1,6 @@
 import { useState, useCallback, useMemo, lazy, Suspense } from "react";
 import { exams } from "@/data/exams";
 import QuizPlayer from "@/components/QuizPlayer";
-import { Button } from "@/components/ui/button";
 import { ArrowRight, HeartPulse, Briefcase, Info, Clock } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import procisaLogo from "@/assets/procisa-logo.png";
