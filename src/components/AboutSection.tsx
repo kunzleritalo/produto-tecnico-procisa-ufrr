@@ -24,7 +24,7 @@ const AboutSection = () => {
 
       <div className="grid gap-8 md:grid-cols-2">
         {/* Edilane */}
-        <div className="rounded-xl border border-border bg-card p-6">
+        <div className="rounded-xl border border-border bg-card p-6 card-elevated">
           <div className="flex flex-col items-center mb-4">
             <img
               src={edilanePhoto}
