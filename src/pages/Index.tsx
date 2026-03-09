@@ -131,7 +131,6 @@ const Index = () => {
                   <p className="text-xs text-muted-foreground leading-relaxed">Busca melhor compreender o construto de "Estresse ocupacional"</p>
                   <div className="flex items-center gap-3 mt-3 text-xs text-muted-foreground">
                     <span className="inline-flex items-center gap-1 bg-accent/50 px-2 py-0.5 rounded-full">{exams[1].questions.length} itens</span>
-                    <span className="inline-flex items-center gap-1"><Clock className="w-3 h-3" />~7 min</span>
                   </div>
                   <p className="text-[10px] text-muted-foreground/60 mt-3 leading-tight">
                     PASCHOAL, T.; TAMAYO, A. (2004).
