@@ -149,7 +149,9 @@ const Index = () => {
                     Realizar ambas as escalas (PSS-10 e EET)
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </span>
-                  <span className="relative block text-xs font-normal opacity-80 mt-1">Recomendado · ~10 min</span>
+                  <span className="relative flex items-center justify-center gap-1 text-xs font-normal opacity-80 mt-1">
+                    Recomendado · <Clock className="w-3 h-3" /> ~10 min
+                  </span>
                 </button>
 
                 <div className="grid grid-cols-2 gap-3">
