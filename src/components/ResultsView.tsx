@@ -130,7 +130,11 @@ const ResultsView = memo(({ results, mode, onRestart }: ResultsViewProps) => {
   return (
     <div className="w-full max-w-3xl mx-auto">
       <div className="text-center mb-10">
-        <img src={procisaLogo} alt="Logo PROCISA" className="h-14 mx-auto mb-4" />
+        <div className="flex items-center justify-center gap-4 mb-4">
+          <img src={procisaLogo} alt="Logo PROCISA" className="h-14 object-contain" />
+          <div className="w-px h-10 bg-border" />
+          <img src={ufrrLogo} alt="Brasão UFRR" className="h-14 object-contain" />
+        </div>
         <h2 className="text-3xl font-bold mb-2">Resultado Final</h2>
         <p className="text-muted-foreground">Escores obtidos nas escalas aplicadas</p>
       </div>
