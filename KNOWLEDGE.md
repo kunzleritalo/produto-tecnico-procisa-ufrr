@@ -1307,7 +1307,7 @@ const Index = () => {
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </span>
                   <span className="relative flex items-center justify-center gap-1 text-[11px] sm:text-xs font-normal opacity-80 mt-1">
-                    PSS-10 e EET · <Clock className="w-3 h-3" /> ~10 min
+                    PSS-10 e EET · <Clock className="w-3 h-3 group-hover:animate-[spin_2s_ease-in-out_1]" /> ~10 min
                   </span>
                 </button>
 
