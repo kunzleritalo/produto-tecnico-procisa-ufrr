@@ -103,9 +103,9 @@ const Index = () => {
 
               {/* Cartões das escalas */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-lg mx-auto mb-8">
-                <div className="rounded-xl border border-border bg-card p-5 text-left card-elevated group">
+                <div className="rounded-xl border border-border bg-card p-5 text-left">
                   <div className="flex items-center gap-2 mb-3">
-                    <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/15 transition-colors">
+                    <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
                       <HeartPulse className="w-4 h-4 text-primary" />
                     </div>
                     <p className="text-xs text-muted-foreground uppercase tracking-wider font-medium">Escala 01</p>
@@ -120,9 +120,9 @@ const Index = () => {
                   </p>
                 </div>
 
-                <div className="rounded-xl border border-border bg-card p-5 text-left card-elevated group">
+                <div className="rounded-xl border border-border bg-card p-5 text-left">
                   <div className="flex items-center gap-2 mb-3">
-                    <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/15 transition-colors">
+                    <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
                       <Briefcase className="w-4 h-4 text-primary" />
                     </div>
                     <p className="text-xs text-muted-foreground uppercase tracking-wider font-medium">Escala 02</p>
@@ -142,15 +142,15 @@ const Index = () => {
                 {/* Botão principal — ambas as escalas */}
                 <button
                   onClick={() => startExams("both")}
-                  className="group relative w-full rounded-xl bg-gradient-to-r from-primary to-primary/80 text-primary-foreground px-6 py-4 font-semibold text-base shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5 overflow-hidden"
+                  className="group relative w-full rounded-xl bg-gradient-to-r from-primary to-primary/80 text-primary-foreground px-5 py-4 font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5 overflow-hidden"
                 >
                   <span className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary-foreground/10 to-primary/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
-                  <span className="relative flex items-center justify-center gap-2">
-                    Realizar ambas as escalas (PSS-10 e EET)
+                  <span className="relative flex items-center justify-center gap-2 text-sm sm:text-base">
+                    Realizar ambas as escalas
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </span>
-                  <span className="relative flex items-center justify-center gap-1 text-xs font-normal opacity-80 mt-1">
-                    Recomendado · <Clock className="w-3 h-3" /> ~10 min
+                  <span className="relative flex items-center justify-center gap-1 text-[11px] sm:text-xs font-normal opacity-80 mt-1">
+                    PSS-10 e EET · <Clock className="w-3 h-3" /> ~10 min
                   </span>
                 </button>
 
@@ -158,13 +158,11 @@ const Index = () => {
                   {/* Botão PSS-10 */}
                   <button
                     onClick={() => startExams("pss10")}
-                    className="group w-full rounded-xl border-2 border-border bg-card hover:border-primary/40 hover:bg-accent/30 px-4 py-3.5 transition-all duration-300 hover:-translate-y-0.5 card-elevated"
+                    className="w-full rounded-xl border-2 border-border bg-card hover:border-primary/40 hover:bg-accent/30 px-3 sm:px-4 py-3.5 transition-colors duration-200"
                   >
-                    <span className="block font-semibold text-sm mb-1">Realizar a Escala PSS-10</span>
-                    <span className="flex items-center justify-center gap-1 text-[11px] text-muted-foreground">
-                      <span>Estresse Percebido</span>
-                      <span>·</span>
-                      <Clock className="w-3 h-3" />
+                    <span className="block font-semibold text-xs sm:text-sm mb-1">Realizar a Escala PSS-10</span>
+                    <span className="flex items-center justify-center gap-1 text-[10px] sm:text-[11px] text-muted-foreground">
+                      <Clock className="w-3 h-3 shrink-0" />
                       <span>~3 min</span>
                     </span>
                   </button>
@@ -172,13 +170,11 @@ const Index = () => {
                   {/* Botão EET */}
                   <button
                     onClick={() => startExams("eet")}
-                    className="group w-full rounded-xl border-2 border-border bg-card hover:border-primary/40 hover:bg-accent/30 px-4 py-3.5 transition-all duration-300 hover:-translate-y-0.5 card-elevated"
+                    className="w-full rounded-xl border-2 border-border bg-card hover:border-primary/40 hover:bg-accent/30 px-3 sm:px-4 py-3.5 transition-colors duration-200"
                   >
-                    <span className="block font-semibold text-sm mb-1">Realizar a Escala EET</span>
-                    <span className="flex items-center justify-center gap-1 text-[11px] text-muted-foreground">
-                      <span>Estresse no Trabalho</span>
-                      <span>·</span>
-                      <Clock className="w-3 h-3" />
+                    <span className="block font-semibold text-xs sm:text-sm mb-1">Realizar a Escala EET</span>
+                    <span className="flex items-center justify-center gap-1 text-[10px] sm:text-[11px] text-muted-foreground">
+                      <Clock className="w-3 h-3 shrink-0" />
                       <span>~7 min</span>
                     </span>
                   </button>
